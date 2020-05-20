@@ -43,7 +43,7 @@ namespace RectAngle
 					Console.ResetColor();
 				}
 				Console.WriteLine("\nВведите \"exit\" для выхода ИЛИ стороны прямоугольника через запятую (a, b) для вычисления площади:\n");
-				str = Console.ReadLine().Replace(" ", "");
+				str = Console.ReadLine().Trim();
 				// Осуществим предварительную проверку ввода на пустую строку или на наличие команды выхода:
 				if (str.ToLower() == "exit") { Console.Clear(); break; }
 				else if (str == "") { Console.Clear(); continue; }
