@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RectAngle
-{
+{ // Написать программу, которая определяет площадь прямоугольника со сторонами a и b. Если пользователь вводит некорректные значения (отрицательные или ноль)
+  // должно выдаваться сообщение об ошибке. Возможность ввода пользователем строки вида «абвгд» или нецелых чисел игнорировать.
 	class Program
 	{
 		static void Main(string[] args)
@@ -43,7 +44,7 @@ namespace RectAngle
 				Console.WriteLine("\nВведите \"exit\" для выхода ИЛИ стороны прямоугольника через запятую (a, b) для вычисления площади:\n");
 				str = Console.ReadLine().Replace(" ", "");
 				// Осуществим предварительную проверку ввода на пустую строку или на наличие команды выхода:
-				if (str == "exit") { Console.Clear(); break; }
+				if (str.ToLower() == "exit") { Console.Clear(); break; }
 				else if (str == "") { Console.Clear(); continue; }
 				// Осуществим дальнейшую обработку ввода:
 				else

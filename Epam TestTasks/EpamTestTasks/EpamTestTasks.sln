@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpamTestTasks", "EpamTestTa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.1_Rectangle", "..\1.1.1_Rectangle\1.1.1_Rectangle.csproj", "{B73FF999-ED0A-4976-95F3-94393F749D2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.2_Triangle", "..\1.1.2_Triangle\1.1.2_Triangle.csproj", "{23065F83-74F1-4A23-9259-1EB86A48803D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B73FF999-ED0A-4976-95F3-94393F749D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B73FF999-ED0A-4976-95F3-94393F749D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B73FF999-ED0A-4976-95F3-94393F749D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23065F83-74F1-4A23-9259-1EB86A48803D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23065F83-74F1-4A23-9259-1EB86A48803D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23065F83-74F1-4A23-9259-1EB86A48803D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23065F83-74F1-4A23-9259-1EB86A48803D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
