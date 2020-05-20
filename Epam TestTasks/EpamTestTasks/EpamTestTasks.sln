@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.2_Triangle", "..\1.1.2_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.3_AnotherTriangle", "..\1.1.3_AnotherTriangle\1.1.3_AnotherTriangle.csproj", "{8C4FD48B-E3E2-4C62-8AE5-77EBED669B30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.4_XmasTree", "..\1.1.4_XmasTree\1.1.4_XmasTree.csproj", "{3E6CBC49-8813-4816-927C-D5EE5EBE4E3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8C4FD48B-E3E2-4C62-8AE5-77EBED669B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C4FD48B-E3E2-4C62-8AE5-77EBED669B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C4FD48B-E3E2-4C62-8AE5-77EBED669B30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E6CBC49-8813-4816-927C-D5EE5EBE4E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E6CBC49-8813-4816-927C-D5EE5EBE4E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E6CBC49-8813-4816-927C-D5EE5EBE4E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6CBC49-8813-4816-927C-D5EE5EBE4E3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
