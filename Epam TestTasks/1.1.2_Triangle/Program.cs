@@ -25,7 +25,8 @@ namespace Triangle
 				{
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.Write("К вводу допускаются целые положительные числа [0 < вводимое число < 256] или фраза 'exit'!!!\n");
-					Console.WriteLine("24 строки полностью умещаются в окно комендной строки стандартного размера.");
+					Console.WriteLine("\n24 строка полностью умещаются в окно командной строки стандартного размера.");
+					Console.WriteLine("Треугольник размером до 120 строк корректно отрисовывается в окне командной строки стандартного размера.");
 					Console.ResetColor();
 				}
 				else if (error == 0)
@@ -49,21 +50,19 @@ namespace Triangle
 
 		}
 	}
-
 	class Triangle
 	{
-		private byte strings;
+		private byte strings;   // Колличество строк треугольника
 		public Triangle(byte snum)
 		{
 			strings = snum;
 		}
-
 		public void Draw()
 		{
 			Console.ForegroundColor = ConsoleColor.Green;
 			for (byte i = 0; i < strings; i++)
 			{
-				Console.WriteLine(String.Concat(Enumerable.Repeat("*", i+1)));
+				Console.WriteLine(new string('*', i + 1));
 			}
 			Console.ResetColor();
 		}
