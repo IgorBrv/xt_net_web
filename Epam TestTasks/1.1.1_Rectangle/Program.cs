@@ -19,7 +19,8 @@ namespace RectAngle
 			Console.Clear();
 			while (true)
 			{
-				Console.BackgroundColor = ConsoleColor.Red;
+				Console.BackgroundColor = ConsoleColor.Green;
+				Console.ForegroundColor = ConsoleColor.Black;
 				Console.WriteLine("\nВЫЧИСЛЕНИЕ ПЛОЩАДИ ПРЯМОУГОЛЬНИКА\n");
 				Console.ResetColor();
 				//Введём несколько уточняющих принтов отображающихся в случае некорректного ввода
