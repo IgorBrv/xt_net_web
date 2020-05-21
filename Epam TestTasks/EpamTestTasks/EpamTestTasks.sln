@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.4_XmasTree", "..\1.1.4_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.5_SumOfNumbers", "..\1.1.5_SumOfNumbers\1.1.5_SumOfNumbers.csproj", "{D90EFE35-FFDD-489A-B015-3EC39009CA94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.6_FontAjustment", "..\1.1.6_FontAjustment\1.1.6_FontAjustment.csproj", "{18948788-9637-4EDB-8F60-2CAAA69AFE55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.7_ArrayProcessing", "..\1.1.7_ArrayProcessing\1.1.7_ArrayProcessing.csproj", "{09698FF5-5F3E-48C7-AC17-D480923DED11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{D90EFE35-FFDD-489A-B015-3EC39009CA94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D90EFE35-FFDD-489A-B015-3EC39009CA94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D90EFE35-FFDD-489A-B015-3EC39009CA94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18948788-9637-4EDB-8F60-2CAAA69AFE55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18948788-9637-4EDB-8F60-2CAAA69AFE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18948788-9637-4EDB-8F60-2CAAA69AFE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18948788-9637-4EDB-8F60-2CAAA69AFE55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09698FF5-5F3E-48C7-AC17-D480923DED11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09698FF5-5F3E-48C7-AC17-D480923DED11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09698FF5-5F3E-48C7-AC17-D480923DED11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09698FF5-5F3E-48C7-AC17-D480923DED11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

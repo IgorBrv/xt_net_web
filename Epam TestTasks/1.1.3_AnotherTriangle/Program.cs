@@ -27,13 +27,13 @@ namespace Triangle
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.Write("К вводу допускаются целые положительные числа [0 < вводимое число < 256] или фраза 'exit'!!!\n");
 					Console.WriteLine("\n24 строка полностью умещаются в окно командной строки стандартного размера.");
-					Console.WriteLine("Треугольник размером до 60 строк корректно отрисовывается в окне командной строки стандартного размера.");
+					Console.WriteLine("Треугольник размером до 58 строк корректно отрисовывается в окне командной строки стандартного размера.");
 					Console.ResetColor();
 				}
 				else if (error == 0)
 				{
 					Equi_Triangle triangle = new Equi_Triangle(num);
-					triangle.Draw();
+					triangle.Draw_Numbered();
 				}
 				Console.WriteLine("\nВведите \"exit\" для выхода ИЛИ желаемое колличество строк для ОТРИСОВКИ треугольника:\n");
 				str = Console.ReadLine().Trim();
@@ -66,6 +66,19 @@ namespace Triangle
 				string str = new string('*', 1 + i*2);
 				string filler = new string(' ', strings-1-(str.Length-1)/2);
 				Console.WriteLine(filler + str);
+			}
+			Console.ResetColor();
+		}
+
+		public void Draw_Numbered()
+		{
+			Console.ForegroundColor = ConsoleColor.Green;
+			for (byte i = 0; i < strings; i++)
+			{
+				string num = $"{i+1}| ".PadLeft(5);
+				string str = new string('*', 1 + i * 2);
+				string filler = new string(' ', strings - 1 - (str.Length - 1) / 2);
+				Console.WriteLine(num + filler + str);
 			}
 			Console.ResetColor();
 		}
