@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Xml.Schema;
 
 namespace ArrayProcessing
-{
+{  //Написать программу, которая генерирует случайным образом элементы массива, определяет для него максимальное и 
+   //минимальное значения, сортирует массив и выводит полученный результат на экран.
 	class Program
-	{  //Написать программу, которая генерирует случайным образом элементы массива, определяет для него максимальное и 
-	   //минимальное значения, сортирует массив и выводит полученный результат на экран.
+	{  
 		static void Main(string[] args)
 		{ 
 			Random rand = new Random();
@@ -30,14 +30,6 @@ namespace ArrayProcessing
 				Console.ResetColor();
 				Console.WriteLine(string.Join(", ", lst));
 
-				lst = ArrayTools.Quicksort(lst);  // Сортировка массива
-
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine("\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:\n");
-				Console.ResetColor();
-				Console.WriteLine(string.Join(", ", lst));
-
 				Console.BackgroundColor = ConsoleColor.Cyan;
 				Console.ForegroundColor = ConsoleColor.Black;
 				Console.Write("\n\n Минимальный  элемент массива:");
@@ -50,6 +42,14 @@ namespace ArrayProcessing
 				Console.ResetColor();
 				Console.WriteLine(" " + ArrayTools.Max(lst));
 
+				lst = ArrayTools.Quicksort(lst);  // Сортировка массива
+
+				Console.BackgroundColor = ConsoleColor.Cyan;
+				Console.ForegroundColor = ConsoleColor.Black;
+				Console.WriteLine("\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:\n");
+				Console.ResetColor();
+				Console.WriteLine(string.Join(", ", lst));
+
 				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода: ");
 				string input = Console.ReadLine().Trim().ToLower();
 				if (input == "exit") break;
@@ -61,7 +61,7 @@ namespace ArrayProcessing
 	class ArrayTools
 	{
 		static public int[] Quicksort(int[] array)
-		{  // Метод приводящий массив int[] к list<int> для передачи в Quicksort_List
+		{  // Метод приводящий массив int[] к list<int> для передачи в Quicksort(List<int>)
 			return Quicksort(array.ToList()).ToArray();
 		}
 		static public List<int> Quicksort(List<int> array)
@@ -69,16 +69,16 @@ namespace ArrayProcessing
 			if (array.Count < 2) return array;
 			else
 			{
-				List<int> less = new List<int>();
+				List<int> less    = new List<int>();
 				List<int> greater = new List<int>();
-				List<int> middle = new List<int> { array[0] };
+				List<int> middle  = new List<int> { array[0] };
 				for (int i = 1; i < array.Count; i++)
 				{
 					if      (array[i] <  middle[0])    less.Add(array[i]);
 					else if (array[i] == middle[0])  middle.Add(array[i]);
 					else if (array[i] >  middle[0]) greater.Add(array[i]);
 				}
-				return Quicksort(less).Concat(middle).ToList().Concat(Quicksort(greater)).ToList();
+				return Quicksort(less).Concat(middle).ToList().Concat(Quicksort(greater)).ToList(); // Quicksort(less) + middle + Quicksort(greater)
 			}
 		}
 		static public int Max(int[] list)
