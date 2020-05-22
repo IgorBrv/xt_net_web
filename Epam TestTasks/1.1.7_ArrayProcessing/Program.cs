@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
+using Outputlib;
+
 
 namespace ArrayProcessing
-{  //Написать программу, которая генерирует случайным образом элементы массива, определяет для него максимальное и 
-   //минимальное значения, сортирует массив и выводит полученный результат на экран.
+{   //Написать программу, которая генерирует случайным образом элементы массива, определяет для него максимальное и 
+    //минимальное значения, сортирует массив и выводит полученный результат на экран.
 	class Program
 	{  
 		static void Main(string[] args)
@@ -19,35 +17,20 @@ namespace ArrayProcessing
 				int[] lst = new int[rand.Next(14, 24)];  // Генерация массива случайной длины
 				for (byte i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-100, 100); }  // Наполнение массива случайными числами
 
-				Console.BackgroundColor = ConsoleColor.Green;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine($"\n ПРОГРАММА, КОТОРАЯ ГЕНЕРИРУЕТ СЛУЧАЙНЫЙ МАССИВ, СОРТИРУЕТ ЕГО И НАХОДИТ MAX/MIN ЗНАЧЕНИЯ \n\n"); ; ;
-				Console.ResetColor();
+				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ГЕНЕРИРУЕТ СЛУЧАЙНЫЙ МАССИВ, СОРТИРУЕТ ЕГО И НАХОДИТ MAX/MIN ЗНАЧЕНИЯ \n");
 
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine(" Массив чисел случйной длины со случайным наполнением:\n");
-				Console.ResetColor();
+				Output.Print("b", "c", "\n Массив чисел случйной длины со случайным наполнением:\n");
 				Console.WriteLine(string.Join(", ", lst));
 
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.Write("\n\n Минимальный  элемент массива:");
-				Console.ResetColor();
+				Output.Print("b", "c", "\n\n Минимальный  элемент массива:");
 				Console.WriteLine(" " + ArrayTools.Min(lst));
 
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.Write("\n\n Максимальный элемент массива:");
-				Console.ResetColor();
+				Output.Print("b", "c", "\n\n Максимальный элемент массива:");
 				Console.WriteLine(" " + ArrayTools.Max(lst));
 
 				lst = ArrayTools.Quicksort(lst);  // Сортировка массива
 
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine("\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:\n");
-				Console.ResetColor();
+				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:\n");
 				Console.WriteLine(string.Join(", ", lst));
 
 				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода: ");

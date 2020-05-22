@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
+using Outputlib;
 
 namespace NonNegativeSum
 {  // Написать программу, которая определяет сумму неотрицательных элементов в одномерном

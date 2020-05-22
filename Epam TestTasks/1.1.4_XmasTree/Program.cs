@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Runtime.ExceptionServices;
-using System.Text;
-using System.Threading.Tasks;
+using Outputlib;   // Кастомная библиотека вывода текста в цвете
+
 
 namespace XmasTree
-{  // Написать программу, которая запрашивает с клавиатуры число N и выводит на экран изображение ЁЛКИ, состоящее из N элементов:
+{   // Написать программу, которая запрашивает с клавиатуры число N и выводит на экран изображение ЁЛКИ, состоящее из N элементов:
 	class Program
 	{
 		static void Main(string[] args)
@@ -15,32 +11,31 @@ namespace XmasTree
 			string str;
 			byte num = 0;
 			int error = -1;
+			bool numbered = true;
 			Console.Clear();
 			while (true)
 			{
-				Console.BackgroundColor = ConsoleColor.Green;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine("\n ОТРИСОВКА ЁЛКИ ИЗ ЗАДАННОГО КОЛЛИЧЕСТВА ЭЛЕМЕНТОВ \n");
-				Console.ResetColor();
+				Output.Print("b", "g", "\n ОТРИСОВКА ЁЛКИ ИЗ ЗАДАННОГО КОЛЛИЧЕСТВА ЭЛЕМЕНТОВ \n");
 				//Введём несколько уточняющих принтов отображающихся в случае некорректного ввода
 				if (error == 1)
 				{
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.Write("К вводу допускаются целые положительные числа [0 < вводимое число < 256] или фраза 'exit'!!!\n");
-					Console.WriteLine("\nЁлка из 6 элементов полностью умещается в окно командной строки стандартного размера.");
-					Console.WriteLine("Ёлка размером до 58 элементов корректно отрисовывается в окне командной строки стандартного размера.");
-					Console.ResetColor();
+					Output.Print("r", "", new string[]
+						{"К вводу допускаются целые положительные числа [0 < вводимое число < 256] или фраза 'exit'!!!\n",
+						 "Ёлка из 6 элементов полностью умещается в окно командной строки стандартного размера.",
+						 "Ёлка размером до 58 элементов корректно отрисовывается в окне командной строки стандартного размера."});
 				}
 				else if (error == 0)
 				{
 					XmasTree triangle = new XmasTree(num);
-					triangle.Draw_Numbered();
+					triangle.Draw(numbered);
 				}
-				Console.WriteLine("\nВведите \"exit\" для выхода ИЛИ желаемое колличество элементов для ОТРИСОВКИ ёлки:\n");
-				str = Console.ReadLine().Trim();
+				Console.Write("\nВведите \"exit\", \"s\" для смены отрисовки ИЛИ колличество строк для ОТРИСОВКИ треугольника:  ");
+				str = Console.ReadLine().Trim().ToLower();
+
 				// Осуществим предварительную проверку ввода на пустую строку или на наличие команды выхода:
-				if (str.ToLower() == "exit") { Console.Clear(); break; }
-				else if (str == "") { Console.Clear(); continue; }
+				if      (str == "exit") { Console.Clear(); break; }
+				else if (str == ""    ) { Console.Clear(); continue; }
+				else if (str == "s"   ) { if (numbered) numbered = false; else numbered = true; }
 				// Осуществим дальнейшую обработку ввода:
 				else
 				{
@@ -55,11 +50,9 @@ namespace XmasTree
 	class XmasTree
 	{
 		private byte strings;  // Колличество строк треугольника
-		public XmasTree(byte snum)
-		{
-			strings = snum;
-		}
-		public void Draw()
+		public XmasTree(byte snum) => strings = snum;
+		public void Draw(bool numbered) { if (numbered) Draw_Numbered(); else Draw_Unnambered(); }
+		private void Draw_Unnambered()
 		{  // Метод простой отрисовки ёлки
 			Console.ForegroundColor = ConsoleColor.Green;
 			for (int x = 1; x <= strings; x++)
@@ -73,7 +66,7 @@ namespace XmasTree
 			}
 			Console.ResetColor();
 		}
-		public void Draw_Numbered()
+		private void Draw_Numbered()
 		{  // Метод отрисовки ёлки с пронумероваными элементами
 			Console.ForegroundColor = ConsoleColor.Green;
 			for (int x = 1; x <= strings; x++)
@@ -81,9 +74,8 @@ namespace XmasTree
 				for (byte i = 0; i < x; i++)
 				{
 					string str = new string('*', 1 + i * 2);
-					string filler = "";
 					string num = "   | ";
-					filler = new string(' ', strings - 1 - (str.Length - 1) / 2);
+					string filler = new string(' ', strings - 1 - (str.Length - 1) / 2);
 					if (i == 0) { num = $"{x}| ".PadLeft(5); }
 					Console.WriteLine(num + filler + str);
 				}

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Outputlib;
 
 namespace Array2D
 {  // Определить сумму элементов двумерного массива, стоящих на чётных позициях
@@ -13,19 +12,12 @@ namespace Array2D
 		{
 			while (true)
 			{
+
+
+				Output.Print("b", "g", $"\n ПРОГРАММА ПОДСЧИТЫВАЮЩАЯ СУММУ ЭЛЕМЕНТОВ НАХОДЯЩИХСЯ ПО ЧЁТНЫМ ПОЗИЦИЯМ \n\n");
+				Output.Print("b", "c", $" Случайным образом сгенерированый двумерный массив:".PadRight(73));
+
 				int[,] array3D = new int[rand.Next(2, 7), rand.Next(2, 7)];
-				//int[,] array3D = new int[rand.Next(2, 5), rand.Next(2, 5)];
-
-				Console.BackgroundColor = ConsoleColor.Green;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine($"\n ПРОГРАММА ПОДСЧИТЫВАЮЩАЯ СУММУ ЭЛЕМЕНТОВ НАХОДЯЩИХСЯ ПО ЧЁТНЫМ ПОЗИЦИЯМ \n\n");
-				Console.ResetColor();
-
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine($" Случайным образом сгенерированый двумерный массив:".PadRight(73));
-				Console.ResetColor();
-
 				MakeSomeMagic(array3D);
 
 				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода:");
@@ -36,7 +28,7 @@ namespace Array2D
 		}
 
 		static void MakeSomeMagic(int[,] array3D)
-		{  // Большой и страшный метод заполняющий и отрисовывающий двухмерный массив
+		{  // Большой и страшный метод заполняющий и одновременно отрисовывающий двухмерный массив
 			List<int> numbers = new List<int>();
 			Console.WriteLine("\n");
 			for (int i = 0; i < array3D.GetLength(0); i++)
@@ -58,11 +50,8 @@ namespace Array2D
 				}
 				Console.WriteLine("|");
 			}
-			Console.BackgroundColor = ConsoleColor.Cyan;
-			Console.ForegroundColor = ConsoleColor.Black;
-			Console.WriteLine("\n\n" + new string(' ', 73));
-			Console.ResetColor();
-			Console.WriteLine($"\nСумма элементов, находящихся в ячейках с чётной суммой адресов: {numbers.Sum()}\nЭлементы: {string.Join(", ", numbers)}");
+			Output.Print("b", "c", "\n\n" + new string(' ', 73));
+			Console.WriteLine($"\nСумма элементов массива стоящих на чётных позициях: {numbers.Sum()}\nЭлементы: {string.Join(", ", numbers)}");
 		}
 	}
 }
