@@ -16,11 +16,11 @@ namespace NoPositive
 			bool positve = false;
 			while (true)
 			{
-				//int[,,] array3D = new int[rand.Next(2, 5), rand.Next(2, 5), rand.Next(2, 5)];
-				int[,,] array3D = new int[,,] { { { 1, 2, 3 }, { 4, 5, 6 } }, { { 7, 8, 9 }, { 10, 11, 12 } }, { { 13, 14, 15 }, { 16, 17, 18 } } };
+				int[,,] array3D = new int[rand.Next(2, 5), rand.Next(2, 5), rand.Next(2, 5)];
+				//int[,,] array3D = new int[,,] { { { 1, 2, 3 }, { 4, 5, 6 } }, { { 7, 8, 9 }, { 10, 11, 12 } }, { { 13, 14, 15 }, { 16, 17, 18 } } };
 				ArrayTools3D artools = new ArrayTools3D(array3D);
 
-				//artools.RandomFill();  // Заполнение массива рандомными цифрами
+				artools.RandomFill();  // Заполнение массива рандомными цифрами
 
 				Console.BackgroundColor = ConsoleColor.Green;
 				Console.ForegroundColor = ConsoleColor.Black;

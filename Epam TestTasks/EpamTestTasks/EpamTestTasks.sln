@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.7_ArrayProcessing", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.8_NoPositive", "..\1.1.8_NoPositive\1.1.8_NoPositive.csproj", "{148304C1-606A-4999-9424-B461594E01DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1.9_NonNegativeSum", "..\1.1.9_NonNegativeSum\1.1.9_NonNegativeSum.csproj", "{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{148304C1-606A-4999-9424-B461594E01DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{148304C1-606A-4999-9424-B461594E01DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{148304C1-606A-4999-9424-B461594E01DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
