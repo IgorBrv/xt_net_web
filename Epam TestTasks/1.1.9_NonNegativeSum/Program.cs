@@ -16,7 +16,7 @@ namespace NonNegativeSum
 				for (byte i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-100, 100); }  // Наполнение массива случайными числами
 
 				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ОПРЕДЕЛЯЕТ СУММУ НЕОТРИЦАТЕЛЬНЫХ ЭЛЕМЕНТОВ В МАССИВЕ \n\n");
-				Output.Print("b", "c", " Массив чисел случйной длины со случайным наполнением:\n");
+				Output.Print("b", "c", " Массив чисел случйной длины со случайным наполнением: \n");
 				Console.WriteLine(string.Join(", ", lst));
 
 				int sum = 0;

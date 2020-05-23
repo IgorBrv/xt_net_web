@@ -41,6 +41,7 @@ namespace SumOfNumbers
 			Console.WriteLine("\nДанный  метод ищет кратные 3  и  5 числа путём простого перебора\n" +
 						 	  "от порога до 0 рекурсивным циклом.\n\n");
 
+			Console.WriteLine(" [ Нажмите ENTER для выхода ]");
 			Console.Read();
 		}
 	}

@@ -18,7 +18,7 @@ namespace Array2D
 				int[,] array3D = new int[rand.Next(2, 7), rand.Next(2, 7)];
 				MakeSomeMagic(array3D);
 
-				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода:");
+				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода: ");
 				string input = Console.ReadLine().Trim().ToLower();
 				if (input == "exit") break;
 				Console.Clear();
@@ -36,7 +36,7 @@ namespace Array2D
 				{
 					array3D[i, j] = rand.Next(-99, 100);   // Заполняем ячейку рандомным значением
 					Console.Write($"|");
-					if ((i + j) % 2 == 0 && (i + j) != 0)  // Если позиция ячейки чётная - меняем цвет и добавляем ячейку в список суммирования
+					if ((i + j) % 2 == 0 && (i + j) != 0)  // Если позиция ячейки чётная - меняем цвет вывода и добавляем ячейку в список суммирования
 					{
 						Console.BackgroundColor = ConsoleColor.Yellow;
 						Console.ForegroundColor = ConsoleColor.Black;

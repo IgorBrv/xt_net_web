@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Outputlib;   // Кастомная библиотека вывода текста в цвете
 
@@ -14,31 +15,21 @@ namespace Doubler
 			string input_two = "";
 			while (true)
 			{
-				Output.Print("b", "g", $"\n ПРОГРАММА УДВАИВАЮЩИЕ В ПЕРВОЙ ВВЕДЁННОЙ СТРОКЕ ВСЕ СИМВОЛЫ ИЗ ВТОРОЙ СТРОКИ \n");
+				Output.Print("b", "g", $"\n ПРОГРАММА УДВАИВАЮЩАЯ В ПЕРВОЙ ВВЕДЁННОЙ СТРОКЕ ВСЕ СИМВОЛЫ ИЗ ВТОРОЙ СТРОКИ \n");
 
 				if (error)
 				{   // Секция отображения ошибки при некорректном вводе
-					Output.Print("r", "", "Необходимо ввести фразу для обработки и СЛОВО для удвоения символов!");
+					Output.Print("r", "", "Необходимо ввести фразу для обработки и слова для удвоения символов!");
 					error = false;
 				}
 				else if (!error && input.Length > 0)
 				{   // Секция обработки ввода 
-
-					Console.WriteLine($"Фраза   для  обработки: {input}");
-					Console.WriteLine($"Источник букв удвоения: {input_two}");
-					input_two = input_two.ToLower();
-					List<string> processing = new List<string>();
-					foreach (char i in input)
-					{
-						if (input_two.Contains(i.ToString().ToLower())) processing.Add(new string(i, 2));
-						else processing.Add(i.ToString());
-					}
-					Console.WriteLine($"Фраза  после обработки: {string.Join("", processing)}");
+					Doubler.Fix(input, input_two);
 				}
 				else Console.WriteLine();
 
 				// Секция ввода
-				Console.WriteLine("\nВведите строку для обработки или 'exit' для выхода, затем введите СЛОВО для удвоения символов:\n");
+				Console.WriteLine("\nВведите строку для обработки или 'exit' для выхода, затем введите слова для удвоения символов:\n");
 				Console.Write("Строка для обработки: ");
 				input = Console.ReadLine();
 				if (input.Trim().ToLower() == "exit") break;
@@ -46,11 +37,26 @@ namespace Doubler
 
 				Console.Write("Cлово  для  удвоения: ");
 				input_two = Console.ReadLine();
-				if (input_two.Split().Length > 1) error = true;
-				else if (input.Trim() == "" || input_two.Trim() == "") error = true;
+				if (input.Trim() == "" || input_two.Trim() == "") error = true;
 
 				Console.Clear();
 			}
+		}
+	}
+	class Doubler
+	{
+		static public void Fix(string input, string input_two)
+		{
+			Console.WriteLine($"Фраза   для  обработки: {input}");
+			Console.WriteLine($"Источник букв удвоения: {input_two}");
+			input_two = input_two.ToLower().Replace(" ", "");
+			List<string> processing = new List<string>();
+			foreach (char i in input) // переберём все буквы строки в цикле, добавим их в список обработки необходимое кол-во раз.
+			{
+				if (input_two.Contains(i.ToString().ToLower())) processing.Add(new string(i, 2));
+				else processing.Add(i.ToString());
+			}
+			Console.WriteLine($"Фраза  после обработки: {string.Join("", processing)}");
 		}
 	}
 }

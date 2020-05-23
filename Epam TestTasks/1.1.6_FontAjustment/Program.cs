@@ -106,7 +106,6 @@ namespace FontAjustment
 				case 3:
 					state ^= FontAtr.Underline; break;
 			}
-			if (state.ToString() == "0") { state |= FontAtr.None; }
 		}
 	}
 }
