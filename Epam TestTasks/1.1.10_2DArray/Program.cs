@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Outputlib;
+using Outputlib;   // Кастомная библиотека вывода текста в цвете
 
 namespace Array2D
 {  // Определить сумму элементов двумерного массива, стоящих на чётных позициях
@@ -34,9 +34,9 @@ namespace Array2D
 				Console.Write(" ");
 				for (int j = 0; j < array3D.GetLength(1); j++)
 				{
-					array3D[i, j] = rand.Next(-99, 100);  // Заполняем ячейку
+					array3D[i, j] = rand.Next(-99, 100);   // Заполняем ячейку рандомным значением
 					Console.Write($"|");
-					if ((i + j) % 2 == 0 && (i + j) != 0)
+					if ((i + j) % 2 == 0 && (i + j) != 0)  // Если позиция ячейки чётная - меняем цвет и добавляем ячейку в список суммирования
 					{
 						Console.BackgroundColor = ConsoleColor.Yellow;
 						Console.ForegroundColor = ConsoleColor.Black;

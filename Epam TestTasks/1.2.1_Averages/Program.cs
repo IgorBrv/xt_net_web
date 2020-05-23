@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Outputlib;
+using Outputlib;   // Кастомная библиотека вывода текста в цвете
 
 namespace Averages
 {   // Напишите программу, которая определяет среднюю длину слова во введённой текстовой строке.
 	// Учтите, что символы пунктуации на длину слов влиять не должны
 	class Program
 	{
-		static Random rand = new Random();
 		static void Main(string[] args)
 		{
 			bool error = false;
@@ -19,20 +14,25 @@ namespace Averages
 			while (true)
 			{
 				Output.Print("b", "g", $"\n ПРОГРАММА ПОДСЧИТЫВАЮЩАЯ СРЕДНЮЮ ДЛИНУ СЛОВА ВО ВВЕДЁННОЙ СТРОКЕ \n");
-				StringBuilder sb = new StringBuilder();
-
+				
 				if (error)
-				{
+				{	// Секция отображения ошибки при некорректном вводе
 					Output.Print("r", "", "Необходимо ввести фразу для обработки!");
 					error = false;
 				}
 				else if (!error && input.Length>0)
-				{
+				{   // Секция обработки ввода 
 					Output.Print("b", "c", "", $" ВВЕДЁННАЯ ФРАЗА:".PadRight(66), "");
 					Console.WriteLine($"{input}\n");
+					StringBuilder sb = new StringBuilder();
+
 					int summ = 0;
 					int number = 0;
-					for (int i = 0; i < input.Length; i++) if (!Char.IsPunctuation(input[i])) sb.Append(input[i]);
+					for (int i = 0; i < input.Length; i++)
+					{
+						if (!Char.IsPunctuation(input[i])) sb.Append(input[i]);
+						else sb.Append(' ');
+					}
 					string[] words = sb.ToString().Split();
 					for (int i = 0; i < words.Length; i++)
 					{
@@ -51,9 +51,10 @@ namespace Averages
 				}
 				else Console.WriteLine();
 
+				// Секция ввода
 				Console.WriteLine("\nВведите строку для обработки или 'exit' для выхода:\n");
 				input = Console.ReadLine();
-				if (input == "exit") break;
+				if		(input == "exit"   ) break;
 				else if (input.Trim() == "") error = true;
 
 				Console.Clear();

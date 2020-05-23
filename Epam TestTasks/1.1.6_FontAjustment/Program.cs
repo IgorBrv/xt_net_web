@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Outputlib;
+using Outputlib;   // Кастомная библиотека вывода текста в цвете
 
 
 namespace FontAjustment

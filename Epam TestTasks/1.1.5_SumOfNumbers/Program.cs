@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using Outputlib;
+using Outputlib;   // Кастомная библиотека вывода текста в цвете
 
 
 namespace SumOfNumbers
