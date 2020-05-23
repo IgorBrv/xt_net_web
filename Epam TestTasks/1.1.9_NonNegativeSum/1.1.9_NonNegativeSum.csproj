@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3242B101-32AD-4BE2-9BB6-18D25D65A5CE}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._1._9_NonNegativeSum</RootNamespace>
-    <AssemblyName>1.1.9_NonNegativeSum</AssemblyName>
+    <RootNamespace>NonNegativeSum</RootNamespace>
+    <AssemblyName>NonNegativeSum</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

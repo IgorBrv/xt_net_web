@@ -27,17 +27,17 @@ namespace Lowercase
 					StringBuilder sb = new StringBuilder();
 
 					for (int i = 0; i < input.Length; i++)
-					{
+					{   // удалим из строки все знаки пунктуации:
 						if (!Char.IsPunctuation(input[i])) sb.Append(input[i]);
 						else sb.Append(' ');
 					}
 
 					List<string> from_lowercase = new List<string>();
 					List<string> from_uppercase = new List<string>();
-					string[] words = sb.ToString().Split();
+					string[] words = sb.ToString().Split(); // разобьём строку на массив слов
 
 					for (int i = 0; i < words.Length; i++)
-					{
+					{   // пройдёмся по полученному массиву, и разнесём слова начинающиеся с мал. и большой букв. по спискам
 						string word = words[i].Trim();
 						if (word != "")
 						{
@@ -48,7 +48,7 @@ namespace Lowercase
 
 					Output.Print("b", "c", "", $" СТАТИСТИКА:".PadRight(71), "");
 					Console.WriteLine($"Слова, начинающиеся с маленькой буквы [{from_lowercase.Count.ToString().PadLeft(2)}]: {string.Join(", ", from_lowercase)}");
-					Console.WriteLine($"Слова,  начинающиеся с большой  буквы [{from_uppercase.Count.ToString().PadLeft(2)}]: {string.Join(", ", from_uppercase)}");
+					Console.WriteLine($"Слова, начинающиеся с  большой  буквы [{from_uppercase.Count.ToString().PadLeft(2)}]: {string.Join(", ", from_uppercase)}");
 				}
 				else Console.WriteLine();
 

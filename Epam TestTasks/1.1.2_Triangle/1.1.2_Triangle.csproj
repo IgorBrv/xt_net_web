@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{23065F83-74F1-4A23-9259-1EB86A48803D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._1._2_Triangle</RootNamespace>
-    <AssemblyName>1.1.2_Triangle</AssemblyName>
+    <RootNamespace>Triangle</RootNamespace>
+    <AssemblyName>Triangle</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

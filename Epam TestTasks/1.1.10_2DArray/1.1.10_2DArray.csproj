@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DB877067-3834-4D1D-90D1-A1BEF9C1AAB4}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._1._10_2DArray</RootNamespace>
-    <AssemblyName>1.1.10_2DArray</AssemblyName>
+    <RootNamespace>Array2D</RootNamespace>
+    <AssemblyName>2DArray</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

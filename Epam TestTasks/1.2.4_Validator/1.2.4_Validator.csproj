@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{148304C1-606A-4999-9424-B461594E01DE}</ProjectGuid>
+    <ProjectGuid>{441BF2A6-A0BC-4171-9172-6C15E25C467B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>NoPositive</RootNamespace>
-    <AssemblyName>NoPositive</AssemblyName>
+    <RootNamespace>Validator</RootNamespace>
+    <AssemblyName>Validator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

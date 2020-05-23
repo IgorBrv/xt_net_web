@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B73FF999-ED0A-4976-95F3-94393F749D2D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._1._1_Rectangle</RootNamespace>
-    <AssemblyName>1.1.1_Rectangle</AssemblyName>
+    <RootNamespace>Rectangle</RootNamespace>
+    <AssemblyName>Rectangle</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{76D5FCD6-2F33-414B-A86F-619761C2CE27}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._2._1_Averages</RootNamespace>
-    <AssemblyName>1.2.1_Averages</AssemblyName>
+    <RootNamespace>Averages</RootNamespace>
+    <AssemblyName>Averages</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

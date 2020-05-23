@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{09698FF5-5F3E-48C7-AC17-D480923DED11}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_1._1._7_ArrayProcessing</RootNamespace>
-    <AssemblyName>1.1.7_ArrayProcessing</AssemblyName>
+    <RootNamespace>ArrayProcessing</RootNamespace>
+    <AssemblyName>ArrayProcessing</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
