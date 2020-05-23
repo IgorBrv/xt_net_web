@@ -15,25 +15,15 @@ namespace NonNegativeSum
 				int[] lst = new int[rand.Next(14, 24)];  // Генерация массива случайной длины
 				for (byte i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-100, 100); }  // Наполнение массива случайными числами
 
-				Console.BackgroundColor = ConsoleColor.Green;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine($"\n ПРОГРАММА, КОТОРАЯ ОПРЕДЕЛЯЕТ СУММУ НЕОТРИЦАТЕЛЬНЫХ ЭЛЕМЕНТОВ В МАССИВЕ \n\n"); ; ;
-				Console.ResetColor();
-
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine(" Массив чисел случйной длины со случайным наполнением:\n");
-				Console.ResetColor();
+				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ОПРЕДЕЛЯЕТ СУММУ НЕОТРИЦАТЕЛЬНЫХ ЭЛЕМЕНТОВ В МАССИВЕ \n\n");
+				Output.Print("b", "c", " Массив чисел случйной длины со случайным наполнением:\n");
 				Console.WriteLine(string.Join(", ", lst));
 
 				int sum = 0;
 				List<int> elems = new List<int>();
 				foreach (int i in lst) if (i > 0) { sum += i; elems.Add(i); }
 
-				Console.BackgroundColor = ConsoleColor.Cyan;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.Write("\n\n Сумма положительных элементов массива:");
-				Console.ResetColor();
+				Output.Print("b", "c", false, "\n\n Сумма положительных элементов массива:");
 				Console.WriteLine($" {sum}, ({string.Join(", ", elems)})");
 
 				Console.Write("\n\nНажмите ENTER для обновления массива или введите 'exit' для выхода: ");

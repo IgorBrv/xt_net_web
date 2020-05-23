@@ -15,18 +15,18 @@ namespace ArrayProcessing
 			while (true)
 			{
 				int[] lst = new int[rand.Next(14, 24)];  // Генерация массива случайной длины
-				for (byte i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-100, 100); }  // Наполнение массива случайными числами
+				for (byte i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-99, 100); }  // Наполнение массива случайными числами
 
 				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ГЕНЕРИРУЕТ СЛУЧАЙНЫЙ МАССИВ, СОРТИРУЕТ ЕГО И НАХОДИТ MAX/MIN ЗНАЧЕНИЯ \n");
 
 				Output.Print("b", "c", "\n Массив чисел случйной длины со случайным наполнением:\n");
 				Console.WriteLine(string.Join(", ", lst));
 
-				Output.Print("b", "c", "\n\n Минимальный  элемент массива:");
-				Console.WriteLine(" " + ArrayTools.Min(lst));
+				Output.Print("b", "c", false, "\n\n Минимальный  элемент массива: ");
+				Console.WriteLine($"[{ArrayTools.Min(lst).ToString().PadLeft(3)}]");
 
-				Output.Print("b", "c", "\n\n Максимальный элемент массива:");
-				Console.WriteLine(" " + ArrayTools.Max(lst));
+				Output.Print("b", "c", false, "\n\n Максимальный элемент массива: ");
+				Console.WriteLine($"[{ArrayTools.Max(lst).ToString().PadLeft(3)}]");
 
 				lst = ArrayTools.Quicksort(lst);  // Сортировка массива
 

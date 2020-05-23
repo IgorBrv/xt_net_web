@@ -12,8 +12,6 @@ namespace Array2D
 		{
 			while (true)
 			{
-
-
 				Output.Print("b", "g", $"\n ПРОГРАММА ПОДСЧИТЫВАЮЩАЯ СУММУ ЭЛЕМЕНТОВ НАХОДЯЩИХСЯ ПО ЧЁТНЫМ ПОЗИЦИЯМ \n\n");
 				Output.Print("b", "c", $" Случайным образом сгенерированый двумерный массив:".PadRight(73));
 
@@ -36,8 +34,7 @@ namespace Array2D
 				Console.Write(" ");
 				for (int j = 0; j < array3D.GetLength(1); j++)
 				{
-					array3D[i, j] = rand.Next(-99, 100);
-					string value = array3D[i, j].ToString().PadLeft(3);
+					array3D[i, j] = rand.Next(-99, 100);  // Заполняем ячейку
 					Console.Write($"|");
 					if ((i + j) % 2 == 0 && (i + j) != 0)
 					{
@@ -45,7 +42,7 @@ namespace Array2D
 						Console.ForegroundColor = ConsoleColor.Black;
 						numbers.Add(array3D[i, j]);
 					}
-					Console.Write($" ({i},{j}) = {value} ");
+					Console.Write($" ({i},{j}) = {array3D[i, j].ToString().PadLeft(3)} ");
 					Console.ResetColor();
 				}
 				Console.WriteLine("|");
