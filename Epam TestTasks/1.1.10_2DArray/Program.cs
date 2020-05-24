@@ -36,7 +36,7 @@ namespace Array2D
 				{
 					array3D[i, j] = rand.Next(-99, 100);   // Заполняем ячейку рандомным значением
 					Console.Write($"|");
-					if ((i + j) % 2 == 0 && (i + j) != 0)  // Если позиция ячейки чётная - меняем цвет вывода и добавляем ячейку в список суммирования
+					if ((i + j) % 2 == 0)  // Если позиция ячейки чётная - меняем цвет вывода и добавляем ячейку в список суммирования
 					{
 						Console.BackgroundColor = ConsoleColor.Yellow;
 						Console.ForegroundColor = ConsoleColor.Black;
