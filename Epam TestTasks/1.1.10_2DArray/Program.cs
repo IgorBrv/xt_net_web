@@ -26,7 +26,7 @@ namespace Array2D
 		}
 
 		static void MakeSomeMagic(int[,] array3D)
-		{  // Большой и страшный метод заполняющий и одновременно отрисовывающий двухмерный массив
+		{  // Большой и страшный метод заполняющий и одновременно отрисовывающий двумерный массив
 			List<int> numbers = new List<int>();
 			Console.WriteLine("\n");
 			for (int i = 0; i < array3D.GetLength(0); i++)

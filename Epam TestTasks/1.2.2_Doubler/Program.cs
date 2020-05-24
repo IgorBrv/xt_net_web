@@ -50,13 +50,13 @@ namespace Doubler
 			Console.WriteLine($"Фраза   для  обработки: {input}");
 			Console.WriteLine($"Источник букв удвоения: {input_two}");
 			input_two = input_two.ToLower().Replace(" ", "");
-			List<string> processing = new List<string>();
+			StringBuilder sb = new StringBuilder();
 			foreach (char i in input) // переберём все буквы строки в цикле, добавим их в список обработки необходимое кол-во раз.
 			{
-				if (input_two.Contains(i.ToString().ToLower())) processing.Add(new string(i, 2));
-				else processing.Add(i.ToString());
+				if (input_two.Contains(i.ToString().ToLower())) sb.Append(new string(i, 2));
+				else sb.Append(i.ToString());
 			}
-			Console.WriteLine($"Фраза  после обработки: {string.Join("", processing)}");
+			Console.WriteLine($"Фраза  после обработки: {sb.ToString()}");
 		}
 	}
 }

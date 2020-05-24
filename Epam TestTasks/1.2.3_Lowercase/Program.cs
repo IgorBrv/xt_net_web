@@ -53,16 +53,12 @@ namespace Lowercase
 
 			List<string> from_lowercase = new List<string>();
 			List<string> from_uppercase = new List<string>();
-			string[] words = sb.ToString().Split(); // разобьём строку на массив слов
+			string[] words = sb.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries); // разобьём строку на массив слов
 
 			for (int i = 0; i < words.Length; i++)
 			{   // пройдёмся по полученному массиву, и разнесём слова начинающиеся с мал. и большой букв. по спискам
-				string word = words[i].Trim();
-				if (word != "")
-				{
-					if (char.IsLower(word[0])) from_lowercase.Add(word);
-					else from_uppercase.Add(word);
-				}
+				if (char.IsLower(words[i][0])) from_lowercase.Add(words[i]);
+				else from_uppercase.Add(words[i]);
 			}
 
 			Output.Print("b", "c", "", $" СТАТИСТИКА:".PadRight(71), "");

@@ -28,9 +28,9 @@ namespace Averages
 
 				// Секция ввода
 				Console.WriteLine("\nВведите строку для обработки или 'exit' для выхода:\n");
-				input = Console.ReadLine();
+				input = Console.ReadLine().Trim();
 				if		(input == "exit"   ) break;
-				else if (input.Trim() == "") error = true;
+				else if (input == ""       ) error = true;
 
 				Console.Clear();
 			}
@@ -52,22 +52,17 @@ namespace Averages
 				if (!Char.IsPunctuation(input[i])) sb.Append(input[i]);
 				else sb.Append(' ');
 			}
-			string[] words = sb.ToString().Split();
+			string[] words = sb.ToString().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			for (int i = 0; i < words.Length; i++)
 			{
-				string word = words[i].Trim();
-				if (word != "")
-				{
-					Console.WriteLine($"{(number + 1).ToString().PadLeft(2)}. Длина: {word.Length.ToString().PadLeft(2)}. Слово: {word}");
-					summ += word.Length;
-					number++;
-				}
+				Console.WriteLine($"{(number + 1).ToString().PadLeft(2)}. Длина: {words[i].Length.ToString().PadLeft(2)}. Слово: {words[i]}");
+				summ += words[i].Length;
+				number++;
 			}
 			Output.Print("b", "c", "", $" СТАТИСТИКА:".PadRight(66), "");
 			Console.WriteLine($"Общее колличество слов: {number}");
 			Console.WriteLine("Сумма букв всех слов".PadLeft(22) + $": { summ}");
 			Console.WriteLine("Средняя длина слова".PadLeft(22) + $": { Math.Round((double)summ / number)} (Без округления: {(double)summ / number})");
-
 		}
 	}
 }
