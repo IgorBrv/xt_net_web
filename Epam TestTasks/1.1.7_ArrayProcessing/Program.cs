@@ -66,7 +66,7 @@ namespace ArrayProcessing
 		}
 		static public IEnumerable<int> Quicksort(List<int> array)
 		{  // Рекурсивный алгоритм быстрой сортировки. Можно добавить дополнительный промежуточный список для расширения рабочего диапазона (Как в ранних комитах)
-			if (array.Count == 1) return array;
+			if (array.Count < 2) return array;
 			else
 			{
 				List<int> less    = new List<int>();
@@ -82,9 +82,9 @@ namespace ArrayProcessing
 
 		static public int[] Replacesort(int[] array)
 		{   // алгоритм сортировки перестановкой
-			for (int i = 0; i < array.Length; i++)
+			for (int i = 0; i < array.Length-1; i++)
 			{
-				for (int j = i; j < array.Length; j++)
+				for (int j = i+1; j < array.Length; j++)
 				{
 					if (array[i] > array[j])
 					{

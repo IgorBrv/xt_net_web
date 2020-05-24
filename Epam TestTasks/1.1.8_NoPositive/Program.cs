@@ -66,14 +66,14 @@ namespace NoPositive
 			{
 				for (int j = 0; j < array3D.GetLength(1); j++)
 				{
-					Console.Write(indent + "(");
+					Console.Write(indent + "|");
 					for (int k = 0; k < array3D.GetLength(2); k++)
 					{
 						string elem = array3D[i, j, k].ToString().PadLeft(3);
 						Console.Write($"{elem}");
-						if (k != array3D.GetLength(2) - 1) Console.Write(",");
+						if (k != array3D.GetLength(2) - 1) Console.Write("|");
 					}
-					Console.WriteLine(")");
+					Console.WriteLine("|");
 				}
 				value += (4 * array3D.GetLength(2)) + 1;
 				indent = new string(' ', value);
