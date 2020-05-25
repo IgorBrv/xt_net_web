@@ -24,17 +24,17 @@ namespace ArrayProcessing
 
 				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ГЕНЕРИРУЕТ СЛУЧАЙНЫЙ МАССИВ, СОРТИРУЕТ ЕГО И НАХОДИТ MAX/MIN ЗНАЧЕНИЯ \n");
 
-				Output.Print("b", "c", "\n Массив чисел случйной длины со случайным наполнением:\n");
+				Output.Print("b", "c", "\n Массив чисел случйной длины со случайным наполнением:".PadRight(91) + "\n");
 				if (lst.Length <= 300) Console.WriteLine(string.Join(", ", lst));
 
-				Output.Print("b", "c", false, "\n\n Минимальный  элемент массива: ");
-				Console.WriteLine($"[{ArrayTools.Min(lst).ToString().PadLeft(3)}]");
+				Console.Write("\nМинимальный  элемент массива: ");
+				Console.WriteLine($"{ArrayTools.Min(lst).ToString().PadLeft(3)}");
 
-				Output.Print("b", "c", false, "\n\n Максимальный элемент массива: ");
-				Console.WriteLine($"[{ArrayTools.Max(lst).ToString().PadLeft(3)}]");
+				Console.Write("\nМаксимальный элемент массива: ");
+				Console.WriteLine($"{ArrayTools.Max(lst).ToString().PadLeft(3)}");
 
 				stopWatch.Start();
-				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:      \n");
+				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:".PadRight(92) + "\n");
 				if (lst.Length > 300) ArrayTools.Quicksort(lst);
 				else Console.WriteLine(string.Join(", ", ArrayTools.Quicksort(lst)));
 				stopWatch.Stop();
@@ -42,7 +42,7 @@ namespace ArrayProcessing
 				stopWatch.Reset();
 
 				stopWatch.Start();
-				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма сортировки перестановкой:\n");
+				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма сортировки перестановкой:".PadRight(92) + "\n");
 				if (lst.Length > 300) ArrayTools.Quicksort(lst);
 				else Console.WriteLine(string.Join(", ", ArrayTools.Replacesort(lst)));
 				stopWatch.Stop();
