@@ -7,11 +7,12 @@ using Outputlib;   // Кастомная библиотека вывода те�
 
 namespace ArrayProcessing
 {   //Написать программу, которая генерирует случайным образом элементы массива, определяет для него максимальное и 
-    //минимальное значения, сортирует массив и выводит полученный результат на экран.
+	//минимальное значения, сортирует массив и выводит полученный результат на экран.
+	//Под именем 1.1.7.2_ArrayProcessing_Custom лежит ввторая реализация с массивами разных типов, написанная исключительно из личного интереса
 	class Program
-	{  
+	{
 		static void Main(string[] args)
-		{ 
+		{
 			Random rand = new Random();
 			Stopwatch stopWatch = new Stopwatch();
 			int input_int = 0;
@@ -19,7 +20,7 @@ namespace ArrayProcessing
 			{
 				int[] lst;
 				if (input_int > 2) { lst = new int[input_int]; input_int = 0; }          // Генерация массива динной в введённое число
-				else { lst = new int[rand.Next(14, 24)]; }					             // Генерация массива случайной длины
+				else { lst = new int[rand.Next(14, 24)]; }                               // Генерация массива случайной длины
 				for (int i = 0; i < lst.Length; i++) { lst[i] = rand.Next(-99, 100); }   // Наполнение массива случайными числами
 
 				Output.Print("b", "g", $"\n ПРОГРАММА, КОТОРАЯ ГЕНЕРИРУЕТ СЛУЧАЙНЫЙ МАССИВ, СОРТИРУЕТ ЕГО И НАХОДИТ MAX/MIN ЗНАЧЕНИЯ \n");
@@ -35,15 +36,15 @@ namespace ArrayProcessing
 
 				stopWatch.Start();
 				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма быстрой сортировки:".PadRight(92) + "\n");
-				if (lst.Length > 300) ArrayTools.Quicksort(lst);
-				else Console.WriteLine(string.Join(", ", ArrayTools.Quicksort(lst)));
+				if (lst.Length > 300) ArrayTools.Quicksort(lst.ToList());
+				else Console.WriteLine(string.Join(", ", ArrayTools.Quicksort(lst.ToList())));
 				stopWatch.Stop();
 				Console.WriteLine($"\nВремя выполнения: {stopWatch.Elapsed}");
 				stopWatch.Reset();
 
 				stopWatch.Start();
 				Output.Print("b", "c", "\n\n Массив чисел, отсортированый при помощи алгоритма сортировки перестановкой:".PadRight(92) + "\n");
-				if (lst.Length > 300) ArrayTools.Quicksort(lst);
+				if (lst.Length > 300) ArrayTools.Replacesort(lst);
 				else Console.WriteLine(string.Join(", ", ArrayTools.Replacesort(lst)));
 				stopWatch.Stop();
 				Console.WriteLine($"\nВремя выполнения: {stopWatch.Elapsed}");
@@ -60,16 +61,12 @@ namespace ArrayProcessing
 
 	class ArrayTools
 	{
-		static public int[] Quicksort(int[] array)
-		{  // Метод приводящий массив int[] к list<int> для передачи в Quicksort(List<int>)
-			return Quicksort(array.ToList()).ToArray();
-		}
 		static public IEnumerable<int> Quicksort(List<int> array)
 		{  // Рекурсивный алгоритм быстрой сортировки. Можно добавить дополнительный промежуточный список для расширения рабочего диапазона (Как в ранних комитах)
 			if (array.Count < 2) return array;
 			else
 			{
-				List<int> less    = new List<int>();
+				List<int> less = new List<int>();
 				List<int> greater = new List<int>();
 				for (int i = 1; i < array.Count; i++)
 				{
@@ -82,9 +79,9 @@ namespace ArrayProcessing
 
 		static public int[] Replacesort(int[] array)
 		{   // алгоритм сортировки перестановкой
-			for (int i = 0; i < array.Length-1; i++)
+			for (int i = 0; i < array.Length - 1; i++)
 			{
-				for (int j = i+1; j < array.Length; j++)
+				for (int j = i + 1; j < array.Length; j++)
 				{
 					if (array[i] > array[j])
 					{

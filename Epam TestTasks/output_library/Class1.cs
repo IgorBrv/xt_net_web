@@ -23,7 +23,6 @@ namespace Outputlib
 			{
 				case "b":
 					font = ConsoleColor.Black; break;
-
 				case "r":
 					font = ConsoleColor.Red; break;
 				default:

@@ -41,7 +41,7 @@ namespace Lowercase
 	{
 		static public void Check(string input)
 		{
-			Output.Print("b", "c", "", $" ВВЕДЁННАЯ ФРАЗА:".PadRight(71), "");
+			Output.Print("b", "c", "", $" ВВЕДЁННАЯ ФРАЗА:".PadRight(70), "");
 			Console.WriteLine($"{input}");
 			StringBuilder sb = new StringBuilder();
 
@@ -61,7 +61,7 @@ namespace Lowercase
 				else from_uppercase.Add(words[i]);
 			}
 
-			Output.Print("b", "c", "", $" СТАТИСТИКА:".PadRight(71), "");
+			Output.Print("b", "c", "", $" СТАТИСТИКА:".PadRight(70), "");
 			Console.WriteLine($"Слова, начинающиеся с маленькой буквы [{from_lowercase.Count.ToString().PadLeft(2)}]: {string.Join(", ", from_lowercase)}");
 			Console.WriteLine($"Слова, начинающиеся с  большой  буквы [{from_uppercase.Count.ToString().PadLeft(2)}]: {string.Join(", ", from_uppercase)}");
 		}
