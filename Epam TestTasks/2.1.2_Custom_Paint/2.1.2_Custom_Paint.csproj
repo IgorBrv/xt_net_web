@@ -43,10 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input.cs" />
+    <Compile Include="Shapes\Circle.cs" />
+    <Compile Include="Shapes\Parallelogram.cs" />
+    <Compile Include="Shapes\Rectangle.cs" />
+    <Compile Include="Shapes\Square.cs" />
+    <Compile Include="Shapes\Ring.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="Runtime.cs" />
-    <Compile Include="Shapes.cs" />
+    <Compile Include="Shapes\Shapes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

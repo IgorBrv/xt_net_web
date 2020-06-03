@@ -1,20 +1,16 @@
 ﻿using System;
-using CStringLib;  // Использование собственной библиотеки по заданию 2.1.1**
-using Outputlib;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
+
 
 namespace Custom_Paint
 {
 	class Runtime
-	{	// Класс рабочего процесса программы
+	{	// Класс рабочего процесса программы, определяет состав и действия меню программы.
+		// Содержание новой страницы передаётся в класс draw для отрисовки и запроса ввода.
 
 		private readonly User user;
+		private char[] toSplit = new char[] { ',', ' ' };
 
 		public Runtime(User user)
 		{
@@ -59,18 +55,21 @@ namespace Custom_Paint
 								 $"{ user.Name }, к вводу допускаются только числа 0, 1, 2, 3, 4, 5!!!",
 								  "  1. Круг\n  2. Кольцо\n  3. Квадрат\n  4. Прямоугольник\n  5. Паралеллограмм\n  0. Отмена\n" };
 			string input = Draw.Form(new int[] { 0, 0, 5 }, strings);
-
+			
 			switch (Int32.Parse(input))
 			{
 				case 1:  // Создание круга
 					
-					strings = new string[] { $"{ user.Name }, введите координаты центра и радиус круга через запятую:",
-											 $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"x, y, радиус\"!"};
-					string[] data = Draw.Form(new int[] { 1, 3, 1, 100 }, strings).Split(',');
+					string[] stringsP1 = new string[] { $"{ user.Name }, введите координаты круга (о координатах см. в комментариях) через запятую:",
+														$"{ user.Name }, к вводу допускаются только числа от -100 до 100 в формате \"x, y\"!"};
+					string[] stringsP2 = new string[] { $"{ user.Name }, введите диаметр круга:",
+														$"{ user.Name }, к вводу допускаются только числа от 1 до 100!"};
+					string[] dataP1 = Draw.Form(new int[] { 1, 2, -100, 100 }, stringsP1).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					string   dataP2 = Draw.Form(new int[] { 0, 1, 100 }, stringsP2);
 
 					try
-					{
-						Circle shape = new Circle(Int32.Parse(data[0]), Int32.Parse(data[1]), Int32.Parse(data[2]), ColorsMenu());
+					{	// Используется parse, т.к. значения уже прогонялись через TryParce в классе Input
+						Circle shape = new Circle(Int32.Parse(dataP1[0]), Int32.Parse(dataP1[1]), Int32.Parse(dataP2), ColorsMenu());
 						user.Shapes.Add(shape);
 						Draw.Form(new int[] { 3 }, new string[] { $"Фигура успешно создана!" });
 					}
@@ -83,13 +82,16 @@ namespace Custom_Paint
 
 				case 2:  // Создание кольца
 
-					strings = new string[] { $"{ user.Name }, введите координаты центра, радиус наружной и внутренней окружностей через запятую:",
-											 $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"x, y, радиус, внутренний радиус\"!"};
-					data = Draw.Form(new int[] { 1, 4, 1, 100 }, strings).Split(',');
+					stringsP1 = new string[] { $"{ user.Name }, введите координаты кольца (о координатах см. в комментариях) через запятую:",
+											   $"{ user.Name }, к вводу допускаются только числа от -100 до 100 в формате \"x, y\"!"};
+					stringsP2 = new string[] { $"{ user.Name }, введите внешний диаметр кольца, внутренний диаметр кольца:",
+											   $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"d1, d2\" (d1 > d2)!"};
+							 dataP1 = Draw.Form(new int[] { 1, 2, -100, 100 }, stringsP1).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					string[] dataP3 = Draw.Form(new int[] { 1, 2,  1, 100 }, stringsP2).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
 
 					try
 					{
-						Ring shape = new Ring(Int32.Parse(data[0]), Int32.Parse(data[1]), Int32.Parse(data[2]), Int32.Parse(data[3]), ColorsMenu());
+						Ring shape = new Ring(Int32.Parse(dataP1[0]), Int32.Parse(dataP1[1]), Int32.Parse(dataP3[0]), Int32.Parse(dataP3[1]), ColorsMenu());
 						user.Shapes.Add(shape);
 						Draw.Form(new int[] { 3 }, new string[] { $"Фигура успешно создана!" });
 					}
@@ -102,13 +104,16 @@ namespace Custom_Paint
 
 				case 3:  // Создание квадрата
 
-					strings = new string[] { $"{ user.Name }, введите координаты левого верхнего угла и длину стороны квадрата через запятую:",
-											 $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"x, y, длина стороны\"!"};
-					data = Draw.Form(new int[] { 1, 3, 1, 100 }, strings).Split(',');
+					stringsP1 = new string[] { $"{ user.Name }, введите координаты квадрата через запятую или пробел:",
+											   $"{ user.Name }, к вводу допускаются только числа от -100 до 100 в формате \"x, y\"!"};
+					stringsP2 = new string[] { $"{ user.Name }, введите длину стороны квадрата:",
+											   $"{ user.Name }, к вводу допускаются только числа от 1 до 100!"};
+					dataP1 = Draw.Form(new int[] { 1, 2, -100, 100 }, stringsP1).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					dataP2 = Draw.Form(new int[] { 0, 1, 100 }, stringsP2);
 
 					try
 					{
-						Square shape = new Square(Int32.Parse(data[0]), Int32.Parse(data[1]), Int32.Parse(data[2]), ColorsMenu());
+						Square shape = new Square(Int32.Parse(dataP1[0]), Int32.Parse(dataP1[1]), Int32.Parse(dataP2), ColorsMenu());
 						user.Shapes.Add(shape);
 						Draw.Form(new int[] { 3 }, new string[] { $"Фигура успешно создана!" });
 					}
@@ -121,13 +126,16 @@ namespace Custom_Paint
 
 				case 4:  // Создание прямоугольника
 
-					strings = new string[] { $"{ user.Name }, введите координаты левого верхнего угла и длину сторон прямоугольника через запятую:",
-											 $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"x, y, сторона_а, сторона_б\"!"};
-					data = Draw.Form(new int[] { 1, 4, 1, 100 }, strings).Split(',');
+					stringsP1 = new string[] { $"{ user.Name }, введите координаты прямоугольника через запятую или пробел:",
+											   $"{ user.Name }, к вводу допускаются только числа от -100 до 100 в формате \"x, y\"!"};
+					stringsP2 = new string[] { $"{ user.Name }, введите длины сторон прямоугольника через запятую:",
+											   $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"a, b\"!"};
+					dataP1 = Draw.Form(new int[] { 1, 2, -100, 100 }, stringsP1).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					dataP3 = Draw.Form(new int[] { 1, 2, 1, 100 }, stringsP2).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
 
 					try
 					{
-						Rectangle shape = new Rectangle(Int32.Parse(data[0]), Int32.Parse(data[1]), Int32.Parse(data[2]), Int32.Parse(data[3]), ColorsMenu());
+						Rectangle shape = new Rectangle(Int32.Parse(dataP1[0]), Int32.Parse(dataP1[1]), Int32.Parse(dataP3[0]), Int32.Parse(dataP3[1]), ColorsMenu());
 						user.Shapes.Add(shape);
 						Draw.Form(new int[] { 3 }, new string[] { $"Фигура успешно создана!" });
 					}
@@ -140,13 +148,19 @@ namespace Custom_Paint
 
 				case 5:  // Создание паралеллограмма
 
-					strings = new string[] { $"{ user.Name }, введите координаты левого верхнего угла, длину сторон паралеллограмма, угол наклона через запятую:",
-											 $"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"x, y, радиус, внутренний радиус, угол\"!"};
-					data = Draw.Form(new int[] { 1, 5, 1, 100 }, strings).Split(',');
+							 stringsP1 = new string[] { $"{ user.Name }, введите координаты паралеллограмма через запятую или пробел:",
+														$"{ user.Name }, к вводу допускаются только числа от -100 до 100 в формате \"x, y\"!"};
+							 stringsP2 = new string[] { $"{ user.Name }, введите длины сторон паралеллограмма через запятую:",
+														$"{ user.Name }, к вводу допускаются только числа от 1 до 100 в формате \"a, b\"!"};
+					string[] stringsP3 = new string[] { $"{ user.Name }, введите угол наклона паралеллограмма через запятую:",
+														$"{ user.Name }, к вводу допускаются только числа от -360 до 360!"};
+					dataP1 = Draw.Form(new int[] { 1, 2, -100, 100 }, stringsP1).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					dataP3 = Draw.Form(new int[] { 1, 2, 1, 100 }, stringsP2).Split(toSplit, StringSplitOptions.RemoveEmptyEntries);
+					dataP2 = Draw.Form(new int[] { 0, 0, 360 }, stringsP3);
 
 					try
 					{
-						Parallelogram shape = new Parallelogram(Int32.Parse(data[0]), Int32.Parse(data[1]), Int32.Parse(data[2]), Int32.Parse(data[3]), Int32.Parse(data[4]), ColorsMenu());
+						Parallelogram shape = new Parallelogram(Int32.Parse(dataP1[0]), Int32.Parse(dataP1[1]), Int32.Parse(dataP3[0]), Int32.Parse(dataP3[1]), Int32.Parse(dataP2), ColorsMenu());
 						user.Shapes.Add(shape);
 						Draw.Form(new int[] { 3 }, new string[] { $"Фигура успешно создана!" });
 					}
@@ -166,7 +180,7 @@ namespace Custom_Paint
 		{
 			string[] strings = { $"{ user.Name }, выберите цвет для фигуры:",
 								 $"{ user.Name }, к вводу допускаются только числа 1, 2, 3!!!",
-								  "  1. Белый\n  2. Красный\n  3. Оранжевый\n  4. Жёлтый\n  5. Зелёный\n  6. Синий\n  7. Фиолетовый\n  8. Чёрный" };
+								  "[cl][bw]  1. Белый\n[cl][wb]  2. Чёрный\n[cl][br]  3. Красный\n[cl][bo]  4. Оранжевый\n[cl][by]  5. Жёлтый\n[cl][bg]  6. Зелёный\n[cl][bs]  7. Синий\n[cl][bv]  8. Фиолетовый" };
 			string input = Draw.Form(new int[] { 0, 1, 8 }, strings);
 
 			switch (Int32.Parse(input))
@@ -174,19 +188,19 @@ namespace Custom_Paint
 				case 1:
 					return Colors.White;
 				case 2:
-					return Colors.Red;
-				case 3:
-					return Colors.Orange;
-				case 4:
-					return Colors.Yellow;
-				case 5:
-					return Colors.Green;
-				case 6:
-					return Colors.Blue;
-				case 7:
-					return Colors.Violet;
-				case 8:
 					return Colors.Black;
+				case 3:
+					return Colors.Red;
+				case 4:
+					return Colors.Orange;
+				case 5:
+					return Colors.Yellow;
+				case 6:
+					return Colors.Green;
+				case 7:
+					return Colors.Blue;
+				case 8:
+					return Colors.Violet;
 				default:
 					return Colors.Default;
 			}
@@ -206,11 +220,38 @@ namespace Custom_Paint
 				int count = 1;
 				foreach (Shapes shape in user.Shapes)
 				{
-					sb.Append($" {count}. {shape.About}\n");
+					string colorCode = GenerateColourString(shape.Color);
+					sb.Append($"{colorCode} {count}. {shape.About}\n");
 					count++;
 				}
 				strings.Add(sb.ToString());
-				Draw.Form(new int[] { 3 }, strings.ToArray());
+				Draw.Form(new int[]  { 3 }, strings.ToArray());
+			}
+		}
+
+		private string GenerateColourString(Colors Color)
+		// Вспомогательный метод формирующий строковый код цвета для класса Draw
+		{
+			switch (Color)
+			{
+				case Colors.White:
+					return "[cl][bw]";
+				case Colors.Black:
+					return "[cl][wb]";
+				case Colors.Red:
+					return "[cl][br]";
+				case Colors.Orange:
+					return "[cl][bo]";
+				case Colors.Yellow:
+					return "[cl][by]";
+				case Colors.Green:
+					return "[cl][bg]";
+				case Colors.Blue:
+					return "[cl][bs]";
+				case Colors.Violet:
+					return "[cl][bv]";
+				default:
+					return string.Empty;
 			}
 		}
 
@@ -224,7 +265,7 @@ namespace Custom_Paint
 			else
 			{
 				user.Shapes.Clear();
-				Draw.Form(new int[] { 3 }, new string[] { "Список нарисованых фигур очищен!", ""});
+				Draw.Form(new int[] { 3 }, new string[] { "Список нарисованых фигур очищен!" });
 			}
 		}
 	}
