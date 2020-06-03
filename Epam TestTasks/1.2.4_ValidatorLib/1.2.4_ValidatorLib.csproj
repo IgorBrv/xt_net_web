@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F8E8B26-602A-4FF3-8B6B-3B03891E7D6F}</ProjectGuid>
+    <ProjectGuid>{8DB1DDE3-6363-434E-B29A-248F967CE903}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>output_library</RootNamespace>
-    <AssemblyName>output_library</AssemblyName>
+    <RootNamespace>ValidatorLib</RootNamespace>
+    <AssemblyName>ValidatorLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,8 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OutputLib.cs" />
+    <Compile Include="ValidatorLib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\output_library\output_library.csproj">
+      <Project>{7f8e8b26-602a-4ff3-8b6b-3b03891e7d6f}</Project>
+      <Name>output_library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

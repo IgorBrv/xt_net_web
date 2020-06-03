@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F8E8B26-602A-4FF3-8B6B-3B03891E7D6F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>output_library</RootNamespace>
-    <AssemblyName>output_library</AssemblyName>
+    <ProjectGuid>{AF335DE4-4332-4B28-BAD8-3A23E1B773B3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Custom_Paint</RootNamespace>
+    <AssemblyName>Custom_Paint</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,8 +43,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OutputLib.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Draw.cs" />
+    <Compile Include="Runtime.cs" />
+    <Compile Include="Shapes.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\1.2.4_ValidatorLib\1.2.4_ValidatorLib.csproj">
+      <Project>{8db1dde3-6363-434e-b29a-248f967ce903}</Project>
+      <Name>1.2.4_ValidatorLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\2.1.1_Custom_String_Lib\2.1.1_Custom_String_Lib.csproj">
+      <Project>{580ab64c-a741-4958-85cd-22cbd07691a1}</Project>
+      <Name>2.1.1_Custom_String_Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\output_library\output_library.csproj">
+      <Project>{7f8e8b26-602a-4ff3-8b6b-3b03891e7d6f}</Project>
+      <Name>output_library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

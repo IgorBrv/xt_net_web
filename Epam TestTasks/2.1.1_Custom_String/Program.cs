@@ -60,6 +60,7 @@ namespace Custom_String
 			customstring.Insert(0, "qwerty");
 			Console.WriteLine($"Insert в строку: {customstring}");
 
+
 			//Поиск по строке
 			List<int> indexes = new List<int>();
 			int index = 0;
