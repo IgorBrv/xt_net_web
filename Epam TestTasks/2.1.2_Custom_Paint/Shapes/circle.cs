@@ -14,7 +14,7 @@ namespace Custom_Paint
 			about.Add($" Диаметр: {d};");
 		}
 
-		public double GetArea()
+		public override double GetArea()
 		{   // Метод возвращающий площадь фигуры
 			return Math.Round(Math.PI * Math.Pow(this.d, 2), 2);
 		}

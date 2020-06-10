@@ -10,7 +10,7 @@ namespace Custom_Paint
 		// Содержание новой страницы передаётся в класс draw для отрисовки и запроса ввода.
 
 		private readonly User user;
-		private char[] toSplit = new char[] { ',', ' ' };
+		private readonly char[] toSplit = new char[] { ',', ' ' };
 
 		public Runtime(User user)
 		{

@@ -12,7 +12,7 @@ namespace Custom_Paint
 			about.Add($" Вторая сторона: {sideB};");
 		}
 
-		public new double GetArea()
+		public override double GetArea()
 		{   // Метод возвращающий площадь фигуры
 			return sideA * sideB;
 		}

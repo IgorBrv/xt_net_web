@@ -31,7 +31,7 @@ namespace Custom_Paint
 			this.y = y;
 			Color = color;
 			string coordinates = $"({x}, {y})".PadLeft(12);
-			about = new List<string> { "", $"| Координаты: {coordinates};" };
+			about = new List<string> { string.Empty, $"| Координаты: {coordinates};" };
 		}
 
 		public string About
@@ -41,6 +41,8 @@ namespace Custom_Paint
 				return string.Join("", about);
 			}
 		}
+
+		public abstract double GetArea();
 	}
 
 

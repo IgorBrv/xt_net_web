@@ -21,10 +21,24 @@ namespace Outputlib
 
 			switch (fnt)
 			{
+				case "r":
+					font = ConsoleColor.DarkRed; break;
+				case "q":
+					font = ConsoleColor.Red; break;
+				case "y":
+					font = ConsoleColor.Yellow; break;
+				case "c":
+					font = ConsoleColor.Cyan; break;
+				case "g":
+					font = ConsoleColor.Green; break;
 				case "b":
 					font = ConsoleColor.Black; break;
-				case "r":
-					font = ConsoleColor.Red; break;
+				case "o":
+					font = ConsoleColor.DarkYellow; break;
+				case "s":
+					font = ConsoleColor.DarkBlue; break;
+				case "v":
+					font = ConsoleColor.DarkMagenta; break;
 				default:
 					font = ConsoleColor.White; break;
 			}

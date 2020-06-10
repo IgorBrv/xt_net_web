@@ -17,9 +17,8 @@ namespace Custom_Paint
 			about[0] = "Кольцо".PadRight(14);
 			about.Add($" Внутренний диаметр: {dOuter};");
 		}
-
-		public new double GetArea()
-		{
+		public override double GetArea()
+		{	// Метод возвращающий площадь фигуры
 			return Math.Round(Math.PI * (Math.Pow(this.dOuter, 2) - Math.Pow(this.dOuter, 2)), 2);
 		}
 	}

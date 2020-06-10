@@ -13,7 +13,7 @@ namespace Custom_Paint
 			about.Add($" Угол: {angle};");
 		}
 
-		public new double GetArea()
+		public override double GetArea()
 		{   // Метод возвращающий площадь фигуры
 			return Math.Round(sideA * sideB * Math.Sin(angle), 2);
 		}

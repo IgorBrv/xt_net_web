@@ -14,7 +14,7 @@ namespace Custom_Paint
 			about.Add($" Сторона: {sideA};");
 		}
 
-		public double GetArea()
+		public override double GetArea()
 		{   // Метод возвращающий площадь фигуры
 			return Math.Round(Math.Pow(sideA, 2), 2);
 		}
