@@ -11,11 +11,11 @@ namespace SnakeGame
 	class FreeLink : AbstractEatableAgingUnit
 	{   // Класс объекта свободного звена, реализует интерфейс IEatable
 		
-		public override char Sign { get; set; } = 'o';
+		public override char Sign { get; protected set; } = 'o';
 
 		public FreeLink(int PosX, int PosY, int age, ObjectDeath objectDeath) : base(PosX, PosY, age, objectDeath)
 		{
-			profit = 1;
+			Profit = 1;
 		}
 
 	}

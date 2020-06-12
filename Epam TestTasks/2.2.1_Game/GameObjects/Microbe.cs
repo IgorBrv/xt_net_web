@@ -14,11 +14,11 @@ namespace SnakeGame
 		private readonly int baseX;
 		private readonly int baseY;
 		private readonly char axis;
-		public override char Sign { get; set; } = 'ж';
+		public override char Sign { get; protected set; } = 'ж';
 
 		public Microbe(int PosX, int PosY, int age, ObjectDeath objectDeath, char[,] drawBuffer) : base(PosX, PosY, age, objectDeath)
 		{
-			profit = -1;
+			Profit = -1;
 
 			switch (Rand.Get(1, 3))
 			{   // выбор рандомного направления движения, происходит при создании объекта

@@ -13,8 +13,8 @@ namespace SnakeGame
 	class Snake : AbstractMovableUnit
 	{   // Класс объекта змейки
 
-		private readonly int[] stats;	// Статистика по съеденым/потеряным звеньям
 		public List<SnakeLink> links;   // Список звеньев змейки
+		private readonly int[] stats;   // Статистика по съеденым/потеряным звеньям
 		private readonly SetStats setStats;	// Делегат передающий статистику
 		private readonly GameOver gameOver;    // Делегат выполняемый в случае смертельной аварии
 		private readonly char[,] drawBuffer;	
@@ -23,7 +23,7 @@ namespace SnakeGame
 		private readonly Dictionary<AbstractUnit, int> touchedUpdates;
 		private readonly char[] acceptedDirectionValues = { 'u', 'd', 'l', 'r' };
 
-		public override char Sign { get; set; } = 'O';
+		public override char Sign { get; protected set; } = 'O';
 
 		private char direction = 'u';
 		public char Direction

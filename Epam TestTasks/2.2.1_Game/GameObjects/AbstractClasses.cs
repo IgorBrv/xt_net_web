@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 namespace SnakeGame
 {
 	abstract class AbstractUnit
-	{	// Абстрактный класс объекта на игровом поле. Имеет координаты.
-		public int PosX;
-		public int PosY;
-		abstract public char Sign { get; set; }
+	{   // Абстрактный класс объекта на игровом поле. Имеет координаты.
+		public int PosX { get; protected set; }
+		public int PosY { get; protected set; }
+		abstract public char Sign { get; protected set; }
 
 		public AbstractUnit(int PosX, int PosY)
 		{
@@ -24,13 +24,13 @@ namespace SnakeGame
 
 	abstract class AbstractEatableUnit : AbstractUnit, IEatable
 	{	// Абстрактный класс СЪЕДОБНОГО объекта на игровом поле. Имеет координаты и коэффицент полезности при съедании
-		public int profit;
+		public int Profit { get; protected set; }
 
 		public AbstractEatableUnit(int PosX, int PosY) : base(PosX, PosY) { }
 
 		public int GetProfit()
 		{
-			return profit;
+			return Profit;
 		}
 	}
 
@@ -89,13 +89,13 @@ namespace SnakeGame
 	abstract class AbstractEatableAgingUnit : AbstractAgingUnit, IEatable
 	{   // Абстрактный класс СЪЕЖЛЮГЛШЛ СТАРЕЮЩЕГО объекта на игровом поле. Имеет координаты и коэффицент полезности при съедании, имеет счётчик старения
 
-		public int profit;
+		public int Profit { get; protected set; }
 
 		public AbstractEatableAgingUnit(int PosX, int PosY, int age, ObjectDeath objectDeath) : base(PosX, PosY, age, objectDeath) { }
 
 		public int GetProfit()
 		{
-			return profit;
+			return Profit;
 		}
 	}
 

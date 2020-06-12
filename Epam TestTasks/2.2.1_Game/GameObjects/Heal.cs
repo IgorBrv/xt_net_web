@@ -11,7 +11,7 @@ namespace SnakeGame.GameObjects
 		public Heal(int PosX, int PosY, int age, ObjectDeath objectDeath, char[,] drawBuffer) : base(PosX, PosY, age, objectDeath, drawBuffer)
 		{
 			Sign = '8';
-			profit = 2;
+			Profit = 2;
 		}
 	}
 }

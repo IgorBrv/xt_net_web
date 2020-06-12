@@ -11,7 +11,7 @@ namespace SnakeGame.GameObjects
 		public PoisonedMicrobe(int PosX, int PosY, int age, ObjectDeath objectDeath, char[,] drawBuffer) : base(PosX, PosY, age, objectDeath, drawBuffer)
 		{
 			Sign = 'Ж';
-			profit = -3;
+			Profit = -3;
 		}
 	}
 }	

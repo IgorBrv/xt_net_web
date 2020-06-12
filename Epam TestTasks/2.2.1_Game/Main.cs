@@ -15,8 +15,8 @@ namespace SnakeGame
 	delegate void ObjectDeath(AbstractUnit unit);   // Делегат, сквозь который юниты сообщают основному процессу о смерти
 	public class Program
 	{
-		static string name = " СНАКА 0.1 ";
-		static Draw draw = new Draw(name);
+		static readonly string name = " СНАКА 0.1 ";
+		static readonly Draw draw = new Draw(name);
 		static void Main()
 		{
 			bool exit = false;

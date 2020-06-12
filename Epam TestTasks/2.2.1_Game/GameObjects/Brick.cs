@@ -8,10 +8,10 @@ namespace SnakeGame
 {
 	class Brick : AbstractEatableUnit
 	{
-		public override char Sign { get; set; } = '▓';
+		public override char Sign { get; protected set; } = '▓';
 		public Brick(int PosX, int PosY) : base(PosX, PosY)
 		{
-			profit = 0;
+			Profit = 0;
 		}
 	}
 }
