@@ -13,7 +13,7 @@ namespace SnakeGame
 	{	// Класс объекта звена змейки, реализует интерфейс IMovable
 		public int newPosX;
 		public int newPosY;
-		public override char Sign { get; set; } = 'o';
+		public override char Sign { get; protected set; } = 'o';
 		public SnakeLink(int PosX, int PosY) : base(PosX, PosY) { }
 
 		public void AddPosition(int newPosX, int newPosY)

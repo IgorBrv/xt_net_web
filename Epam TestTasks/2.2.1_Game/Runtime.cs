@@ -19,10 +19,11 @@ namespace SnakeGame
 		private readonly string name;
 		private readonly char[,] drawBuffer;
 
-		private readonly Generate generate;
+
 		private readonly Snake snake;
-		private readonly GameOver gameOver;
 		private readonly Drawer drawer;
+		private readonly GameOver gameOver;
+		private readonly Generate generate;
 		private readonly SetStats setStats;
 		private readonly ObjectDeath objectDeath;
 		private readonly List<AbstractUnit> units;
