@@ -51,7 +51,7 @@
       <Name>2.1.1_Custom_String_Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\output_library\output_library.csproj">
-      <Project>{7f8e8b26-602a-4ff3-8b6b-3b03891e7d6f}</Project>
+      <Project>{5a586b0e-1c2e-4cd8-8224-d17c07445483}</Project>
       <Name>output_library</Name>
     </ProjectReference>
   </ItemGroup>

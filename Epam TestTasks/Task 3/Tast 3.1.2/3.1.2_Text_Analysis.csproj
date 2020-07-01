@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8C4FD48B-E3E2-4C62-8AE5-77EBED669B30}</ProjectGuid>
+    <ProjectGuid>{9482AA38-4BCB-4880-95B1-E5F003BB0209}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AnotherTriangle</RootNamespace>
-    <AssemblyName>AnotherTriangle</AssemblyName>
+    <RootNamespace>Text_Analysis</RootNamespace>
+    <AssemblyName>3.1.2_Text_Analysis</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,11 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TextProcessing.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalOutput\OutputLib.csproj">
+      <Project>{7f8e8b26-602a-4ff3-8b6b-3b03891e7d6f}</Project>
+      <Name>OutputLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
