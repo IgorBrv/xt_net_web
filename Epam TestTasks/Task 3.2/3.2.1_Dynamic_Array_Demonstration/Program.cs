@@ -3,111 +3,93 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Dynamic_Array;
+using DynamicArrayLib;
 
-namespace Dynamic_Array_Demonstration
+namespace DynamicArrayDemonstration
 {
 	class Program
 	{
 		static void Main(string[] args)
 		{
-			List<string> list = new List<string> { "Один", "два" };
-			list.AsReadOnly();
-			int coynt = list.Count;
-
-			int[] array = new int[3] { 1, 2, 3 };
-
-			int?[] array2 = new int?[3];
-
-
-			Console.WriteLine("!!!" + ReferenceEquals(array, array2));
-
-
-			Console.WriteLine(string.Join(", ", array));
-			Console.WriteLine(string.Join(", ", array2));
-
-			list[1] = "123";
-			foreach (string i in list)
+			Console.WriteLine("Демонстрация работы бибоиотеки Dynamic_Array");
+			DynamicArray<int> da = new DynamicArray<int>();
+			Console.WriteLine($"Создание экземпляра DynamicArray конструктором без параметров, вместимость: {da.Capacity}");
+			DynamicArray<int> da2 = new DynamicArray<int>(4);
+			Console.WriteLine($"Создание экземпляра DynamicArray конструктором с параметром 4, вместимость: {da2.Capacity}");
+			List<int> lst1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+			DynamicArray<int> da3 = new DynamicArray<int>(lst1);
+			Console.WriteLine($"Создание экземпляра DynamicArray конструктором принимающим на вход другую коллекцию IEnumerable\n" +
+				$"Длина коллекции List: {lst1.Count}, вместимость: {lst1.Capacity}, содержимое: {string.Join(", ", lst1)};\n" +
+				$"Длина коллекции DynamicArray: {da3.Count}, вместимость: {da3.Capacity}, содержимое: {da3}");
+			Console.WriteLine("Метод Add, позволяющий добавлять в конец массива новые данные. При нехватке места для добавления элемента массив удваивается: ");
+			int count = 1;
+			while (count < 6)
+			{
+				da2.Add(count);
+				Console.WriteLine($"Колличество элементов: {da2.Count}, вместимость: {da2.Capacity}");
+				count++;
+			}
+			Console.WriteLine($"Метод AddRange добавляющий в конец массива содержимое коллекции IEnumerable. Содержимое коллекции da2 до добавления lst1: {da2}, вместимость: {da2.Capacity}");
+			da2.AddRange(lst1);
+			Console.WriteLine($"Метод AddRange добавляющий в конец массива содержимое коллекции IEnumerable. Содержимое коллекции da2 после добавления lst1: {da2}, вместимость: {da2.Capacity}");
+			da2.Remove(5);
+			Console.WriteLine($"Метод Remove удаляющий из коллекции пепрвое вхождение заданного элемента (5). Содержимое коллекции da2 после удаления 5: {da2}, вместимость: {da2.Capacity}");
+			da2.Insert(4, 5);
+			da2.Insert(4, 5);
+			Console.WriteLine($"Метод Insert, позволяющую вставить объект по нужному индексу Содержимое коллекции da2 после двойного добавления 5: {da2}, вместимость: {da2.Capacity}");
+			Console.WriteLine($"Свйойство Lenght - получение колличества элементов (В данном случае Count): {da2.Count}, вместимость: {da2.Capacity}");
+			Console.WriteLine("Реализация IEnumerable и Ienumerable<T>");
+			foreach (int i in da3)
 			{
 				Console.WriteLine(i);
 			}
+			Console.WriteLine("Реализация доступа по индексу");
+			for (int i = 0; i < da3.Count; i++)
+			{
+				Console.WriteLine(da3[i]);
+			}
+			
+			try
+			{
+				Console.WriteLine(da3[10]);
+			}
+			catch(ArgumentOutOfRangeException ex)
+			{
+				Console.WriteLine($"Демонстрация ошибки при доступе мимо индекса: {ex.Message}");
+			}
 
-			string[] array3 = new string[3] { "один", "два", "три" };
+			Console.WriteLine("Доступ к элементам с конца, при использовании отрицательного индекса:");
 
-			DynamicArray<string> da = new DynamicArray<string>(array3);
-			DynamicArray<string> da2 = new DynamicArray<string>();
-			da.Add("четыре");
-			da2 = (DynamicArray<string>)da.Clone();
-			Console.WriteLine("!!!!!" + da[3]);
-			Console.WriteLine("!!!!!" + da2[3]);
-			Console.WriteLine("!!!!!" + da2.Contains("четыре"));
+			count = -1;
+			while (count >= da3.Count*-1)
+			{
+				Console.WriteLine($"Индекс: {count}; содержимое: {da3[count]}");
+				count--;
+			}
 
-			Test<string> tst = new Test<string>("Один", "Два", "Три");
+			Console.WriteLine($"Метод ToArray возввращающий обычный массив: {string.Join(", ", da3.ToArray())}");
 
-			foreach (string i in tst)
+			DynamicArray<int> da4 = da3.Clone() as DynamicArray<int>;
+
+			Console.WriteLine($"Реализация интерфейса IClonable: {string.Join(", ", da4)}");
+
+			Console.WriteLine($"Перегрузка оператора Equals: {da3.Equals(da4)}, ==, {da3 == da4}");
+
+			CycledDynamicArray<int> cycledArray = new CycledDynamicArray<int>(da3);
+
+			Console.WriteLine("Массив CycledDynamicArray на базе DynamicArray с зацикленным итератором:");
+			count = 0;
+
+			foreach (int i in cycledArray)
 			{
 				Console.WriteLine(i);
+				count++;
+				if (count > 30) break;
 			}
 
 			Console.ReadLine();
-		}
-	}
-
-	class Test<T> : IEnumerator<T>, IEnumerable<T>
-	{
-
-
-
-		T[] baseArray = new T[3];
-
-		public Test(T a, T b, T c)
-		{
-			baseArray[0] = a;
-			baseArray[1] = b;
-			baseArray[2] = c;
-		}
-
-		private T item;
-		private int curIndex = -1;
-
-
-		public T Current => item;
-
-		object IEnumerator.Current => Current;
-
-		public void Dispose()
-		{
-			// На docs.microsoft в данной ситуации сказанно оставить пустую реализацию
-		}
-
-		public bool MoveNext()
-		{
-			if (++curIndex >= baseArray.Length)
-			{
-				return false;
-			}
-			else
-			{
-				item = baseArray[curIndex];
-			}
-			return true;
-		}
-
-		public void Reset()
-		{
-			curIndex = -1;
-		}
-
-		public IEnumerator<T> GetEnumerator()
-		{
-			Console.WriteLine("!!! это");
-			return this;
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return baseArray.GetEnumerator();
 		}
 	}
 }

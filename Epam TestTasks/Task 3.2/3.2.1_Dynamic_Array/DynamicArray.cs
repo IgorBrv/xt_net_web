@@ -1,131 +1,98 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dynamic_Array
+namespace DynamicArrayLib
 {
-    public class DynamicArray<T> : IList<T>, ICloneable
-    {
-        private T[] baseArray;
-        private int count = 0;
-        private bool readOnly = false;
+	public class DynamicArray<T> : AbstractDynamicArray<T>, ICloneable
+    {   // Класс DynamicArray, наследуется от AbstractDynamicArray и, по заданию, реализует интерфейс IClonable
 
-        public DynamicArray()
-        {
-            baseArray = new T[8];
-            Console.WriteLine(baseArray.Length);
-        }
+        private DynamicArrayEnumerator<T> Enumerator;
 
-        public DynamicArray(int capacity)
-        {
-            baseArray = new T[capacity];
-            Console.WriteLine(baseArray.Length);
-        }
+        public DynamicArray() : base() { }
 
-        public DynamicArray(IEnumerable<T> collection)
-        {
-            baseArray = collection.ToArray();
-            this.count = collection.Count();
-        }
+        public DynamicArray(int capacity) : base(capacity) { }
 
-        private DynamicArray(T[] collection, int count)
-        {
+        public DynamicArray(IEnumerable<T> collection) : base(collection) { }
+
+        private DynamicArray(T[] collection, int collectionCount)
+        {   // Вспомогательный конструктор для метода Clone, принимает базовый массив и длинну (т.к. в случае нашей коллекции длинна != длинне базового списка)
+            Count = collectionCount;
             baseArray = new T[collection.Length];
             Array.Copy(collection, baseArray, collection.Length);
-            this.count = count;
         }
 
-        public T this[int index]
-        {
-            get
+        public override IEnumerator<T> GetEnumerator()
+        {   // Перезапись виртуального IEnumerator базового класса
+            if (Enumerator == null)
             {
-                if (count != 0 && index < count)
-                {
-                    return baseArray[index];
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
+                Enumerator = new DynamicArrayEnumerator<T>(this);
             }
-            set
-            {
-                baseArray[index] = value;
-            }
-        }
 
-        public int Count => count;
-
-        public bool IsReadOnly => readOnly;
-
-        public void Add(T item)
-        {
-            if (count >= baseArray.Length)
-            {
-                T[] tempArray = new T[baseArray.Length*2];
-                for (int i = 0; i < count; i++)
-                {
-                    tempArray[i] = baseArray[i];
-                }
-                baseArray = tempArray;
-            }
-            baseArray[count] = item;
-            count++;
-        }
-
-        public void Clear()
-        {
-            baseArray = new T[8];
-            count = 0;
+            return Enumerator.GetEnumerator();
         }
 
         public object Clone()
-        {
-            return new DynamicArray<T>(baseArray, count);
+        {   // Метод прописаный в задании, реализующий интерфейс Clone
+            return new DynamicArray<T>(baseArray, Count);
         }
 
 
-        public bool Contains(T item)
-        {
-            return baseArray.Contains(item);
+        // Небольшая надстройка над родительским классом
+
+        public override int GetHashCode()
+        {   // У стандартных массивов хеш возвращает хеш ссылки, потому, использование baseArray.GetHashCode() не катит
+            // Простейшее переопределение GetHashCode - пересчитать хешкод по содержимому массива.
+
+            int sum = 0;
+            foreach (T item in baseArray)
+            {
+                sum += item.GetHashCode();
+            }
+
+            return sum;
         }
 
-        public void CopyTo(T[] array, int arrayIndex)
+        public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj.GetHashCode() == GetHashCode())
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public static bool operator !=(DynamicArray<T> array1, DynamicArray<T> array2)
         {
-            return (IEnumerator<T>)baseArray.GetEnumerator();
+            return !array1.Equals(array2);
         }
 
-        public int IndexOf(T item)
+        public static bool operator ==(DynamicArray<T> array1, DynamicArray<T> array2)
         {
-            throw new NotImplementedException();
+            return array1.Equals(array2);
         }
 
-        public void Insert(int index, T item)
+        public static implicit operator DynamicArray<T>(List<T> collection)
         {
-            throw new NotImplementedException();
+            return new DynamicArray<T>(collection);
         }
 
-        public bool Remove(T item)
+        public static implicit operator DynamicArray<T>(T[] array)
         {
-            throw new NotImplementedException();
+            return new DynamicArray<T>(array);
         }
 
-        public void RemoveAt(int index)
+        public static implicit operator List<T>(DynamicArray<T> array)
         {
-            throw new NotImplementedException();
+            return array.ToList();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public static implicit operator T[]( DynamicArray<T> array)
         {
-            throw new NotImplementedException();
+            return  array.ToArray();
         }
     }
 }
