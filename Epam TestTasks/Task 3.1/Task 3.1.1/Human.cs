@@ -4,8 +4,14 @@ namespace Task_3_1_1
 {
 	class Human
 	{	// Класс описывающий участника "Слабого звена
+
 		private string name;
 		private bool active = true;
+
+		public Human(int num)
+		{
+			name = $"Человек {num}\n";
+		}
 		public bool Active
 		{
 			get
@@ -24,11 +30,6 @@ namespace Task_3_1_1
 					active = value;
 				}
 			}
-		}	
-
-		public Human(int num)
-		{
-			name = $"Человек {num}\n";
 		}
 
 		public override string ToString()
