@@ -41,10 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CycledDynamicArray.cs" />
-    <Compile Include="DynamicArray.cs" />
-    <Compile Include="DynamicArrayEnumerator.cs" />
     <Compile Include="AbstractDynamicArray.cs" />
+    <Compile Include="IEnumerableExtension.cs" />
+    <Compile Include="CycledDynamicArray.cs" />
+    <Compile Include="DynamicArrayEnumerator.cs" />
+    <Compile Include="DynamicArray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

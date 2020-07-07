@@ -90,7 +90,7 @@ namespace Text_Analysis
 		{   // Метод обрабатывающий полученные списки слов, сортирующий их и выводящий в цельную строку для передачи в draw.
 
 			// Сортировка словарей (Наверное, некорректно, т.к. изначально неупорядоченные сущности, однако, поскольку диктионари
-			// реализуется IEnumerable и можно применить orderby, и в данной ситуации отлично работает, решил сократить код (иначе пришлось бы разворачивать ещё в один блок кода)
+			// реализуется IEnumerable и можно применить orderby, и в данной ситуации отлично работает, решил сократить код (иначе пришлось бы разворачивать ещё в один блок кода) )
 			wordsDict = wordsDict.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 			shortWordsDict = shortWordsDict.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 

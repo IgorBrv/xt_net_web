@@ -10,8 +10,6 @@ namespace DynamicArrayLib
     {   // Класс CycledDynamicArray:  циклический динамический массив (CycledDynamicArray) на основе DynamicArray, отличающийся тем,
         // что при использовании foreach после последнего элемента должен снова идти первый и так по кругу.
 
-        private DynamicArrayEnumerator<T> Enumerator;
-
         public CycledDynamicArray() : base() { }
 
         public CycledDynamicArray(int capacity) : base(capacity) { }
@@ -20,12 +18,19 @@ namespace DynamicArrayLib
 
         public override IEnumerator<T> GetEnumerator()
         {
-            if (Enumerator == null)
-            {
-                Enumerator = new DynamicArrayEnumerator<T>(this, true);
-            }
+            int index = -1;
 
-            return Enumerator.GetEnumerator();
+            while (true)
+            {
+                index++;
+
+                if (index == Count)
+                {
+                    index = 0;
+                }
+
+                yield return baseArray[index];
+            }
         }
 
     }

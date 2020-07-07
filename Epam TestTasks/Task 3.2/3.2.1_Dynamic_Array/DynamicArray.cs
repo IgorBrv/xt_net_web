@@ -9,8 +9,6 @@ namespace DynamicArrayLib
 	public class DynamicArray<T> : AbstractDynamicArray<T>, ICloneable
     {   // Класс DynamicArray, наследуется от AbstractDynamicArray и, по заданию, реализует интерфейс IClonable
 
-        private DynamicArrayEnumerator<T> Enumerator;
-
         public DynamicArray() : base() { }
 
         public DynamicArray(int capacity) : base(capacity) { }
@@ -22,16 +20,6 @@ namespace DynamicArrayLib
             Count = collectionCount;
             baseArray = new T[collection.Length];
             Array.Copy(collection, baseArray, collection.Length);
-        }
-
-        public override IEnumerator<T> GetEnumerator()
-        {   // Перезапись виртуального IEnumerator базового класса
-            if (Enumerator == null)
-            {
-                Enumerator = new DynamicArrayEnumerator<T>(this);
-            }
-
-            return Enumerator.GetEnumerator();
         }
 
         public object Clone()

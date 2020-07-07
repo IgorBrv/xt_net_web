@@ -87,7 +87,10 @@ namespace DynamicArrayLib
             {
                 try
                 {
-                    baseArray.CopyTo(array, arrayIndex);
+                    for (int i = 0; i < Count; i++)
+                    {
+                        array[i + arrayIndex] = baseArray[i];
+                    }
                 }
                 catch (RankException ex)
                 {   // Проброс исключений, который, в данном случае, скорее всего, никогда не произойдёт, исключительно для закрепления пройденного материала
@@ -252,8 +255,10 @@ namespace DynamicArrayLib
 
         public virtual IEnumerator<T> GetEnumerator()
         {   // Виртуальный Ienumerator, предполагает назначение в классе-наследнике своего энумератора.
-
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+            {
+                yield return baseArray[i];
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -261,19 +266,10 @@ namespace DynamicArrayLib
             return GetEnumerator();
         }
 
+
         public override string ToString()
         {   // Метод выводящий строковые отображения элементов массива в одну строку (сделан для демонстрации)
-            return string.Join(", ", ToArray());
-        }
-
-        public List<T> ToList()
-        {   // Метод возвращающий коллекцию ввиде коллекции List
-            return baseArray.Take(baseArray.Length - (baseArray.Length - Count)).ToList();
-        }
-
-        public T[] ToArray()
-        {   // Метод возвращающий коллекцию ввиде массива
-            return baseArray.Take(baseArray.Length - (baseArray.Length - Count)).ToArray();
+            return string.Join(", ", this.ToArray());
         }
 
         protected void ChangeArraySize(Func<int, int> func)

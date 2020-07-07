@@ -11,7 +11,7 @@ namespace DynamicArrayDemonstration
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
 			Console.WriteLine("Демонстрация работы бибоиотеки Dynamic_Array");
 			DynamicArray<int> da = new DynamicArray<int>();
@@ -89,7 +89,40 @@ namespace DynamicArrayDemonstration
 				if (count > 30) break;
 			}
 
+			Console.WriteLine("Перерыв");
+
+			count = 0;
+
+			foreach (int i in cycledArray)
+			{
+				Console.WriteLine(i);
+				count++;
+				if (count > 30) break;
+			}
+
+			Console.WriteLine("Демонстрация работы метода расширения ToDynamicArray:");
+
+			List<int> list1 = new List<int> { 1, 2, 3 };
+			List<int> list2 = new List<int> { 4, 5, 6 };
+			DynamicArray<int> customArray = list1.Concat(list2).ToDynamicArray();
+
+			foreach (int i in customArray)
+			{
+				Console.WriteLine("!" + i);
+			}
+
+			DynamicArray<int> da5 = new DynamicArray<int>(new int[] { 7, 7, 7 });
+
+
+			int[] mass = da3.ToArray();
+
+			da5.CopyTo(mass, 6);
+
+			Console.WriteLine($"Работа метода CopyTo: {string.Join(", ", mass)}");
+
 			Console.ReadLine();
+
+
 		}
 	}
 }

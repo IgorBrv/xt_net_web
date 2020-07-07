@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace DynamicArrayLib
 {
 	class DynamicArrayEnumerator<T> : IEnumerator<T>, IEnumerable<T>
-	{	// Самописный Енумератор для Динамического массива. Предоставляет возможности как обычного итерирования, так и зацикленного.
+	{   // Самописный Енумератор для Динамического массива. Предоставляет возможности как обычного итерирования, так и зацикленного.
+		// !!! Был заменен на yield
 
 		private int curIndex = -1;
 		private bool isLooped = false;
