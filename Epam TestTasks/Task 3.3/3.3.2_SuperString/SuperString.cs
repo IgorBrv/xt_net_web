@@ -10,6 +10,11 @@ namespace SuperString
 
 		public static string CheckLang(this string str)
 		{
+			if (str == string.Empty)
+			{
+				throw new ArgumentException("String is empty");
+			}
+
 			// Отфильтруем строку от знаков препинания:
 			str = string.Join("", str.Where(i => Char.IsLetterOrDigit(i)));
 
