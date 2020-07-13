@@ -10,7 +10,7 @@ using DynamicArrayLib;
 namespace DynamicArrayDemonstration
 {
 	class Program
-	{
+	{	// Демонстрация работы с DynamicArray, написано ужасно, но как лучше не знаю.
 		static void Main()
 		{
 			Console.WriteLine("Демонстрация работы бибоиотеки Dynamic_Array");
@@ -28,7 +28,7 @@ namespace DynamicArrayDemonstration
 			while (count < 6)
 			{
 				da2.Add(count);
-				Console.WriteLine($"Колличество элементов: {da2.Count}, вместимость: {da2.Capacity}");
+				Console.WriteLine($"Колличество элементов: {da2.Count}, вместимость: {da2.Capacity}, коллекция {da2}");
 				count++;
 			}
 			Console.WriteLine($"Метод AddRange добавляющий в конец массива содержимое коллекции IEnumerable. Содержимое коллекции da2 до добавления lst1: {da2}, вместимость: {da2.Capacity}");
@@ -120,9 +120,10 @@ namespace DynamicArrayDemonstration
 
 			Console.WriteLine($"Работа метода CopyTo: {string.Join(", ", mass)}");
 
+			// Работа с InsertWithFeedback:
+			Console.WriteLine(da5.InsertWithFeedback(4, 1));
+			Console.WriteLine(da5);
 			Console.ReadLine();
-
-
 		}
 	}
 }

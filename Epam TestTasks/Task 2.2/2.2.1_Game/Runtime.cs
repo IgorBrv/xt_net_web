@@ -48,8 +48,6 @@ namespace SnakeGame
 			generate = new Generate(drawBuffer, units, objectDeath, freeCells);
 		}
 
-
-
 		public void Run()
 		{
 			GetKeyAsync();	// Запускаем асинхронный метод считывания ввода с клавиатуры

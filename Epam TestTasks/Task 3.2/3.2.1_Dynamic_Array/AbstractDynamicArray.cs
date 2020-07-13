@@ -83,6 +83,7 @@ namespace DynamicArrayLib
 
         public void CopyTo(T[] array, int arrayIndex)
         {   // Метод копирующий элементы коллекции в массив по индексу
+            Console.WriteLine("Произошло это");
             if (array.Length - arrayIndex >= Count)
             {
                 try
@@ -140,22 +141,50 @@ namespace DynamicArrayLib
         {   // Метод вставляющий элемент в коллекцию по заданному индексу
             if (!IsReadOnly)
             {
-                if (baseArray.Length == Count)
+                if (index >= 0 && index <= Count)
                 {
-                    ChangeArraySize(x => x * 2);
-                }
+                    if (baseArray.Length == Count)
+                    {
+                        ChangeArraySize(x => x * 2);
+                    }
 
-                for (int i = Count; i > index; i--)
-                {
-                    baseArray[i] = baseArray[i - 1];
-                }
+                    for (int i = Count; i > index; i--)
+                    {
+                        baseArray[i] = baseArray[i - 1];
+                    }
 
-                baseArray[index] = item;
-                Count++;
+                    baseArray[index] = item;
+                    Count++;
+                }
+                else throw new ArgumentOutOfRangeException("Argument is out of range!");
             }
             else throw new ReadOnlyException("list has readonly:true flag");
         }
 
+        public bool InsertWithFeedback(int index, T item)
+        {   // Дополнительная реализация Insert предписаная заданием. 
+            if (!IsReadOnly)
+            {
+                if (index >= 0 && index <= Count)
+                {
+                    if (baseArray.Length == Count)
+                    {
+                        ChangeArraySize(x => x * 2);
+                    }
+
+                    for (int i = Count; i > index; i--)
+                    {
+                        baseArray[i] = baseArray[i - 1];
+                    }
+
+                    baseArray[index] = item;
+                    Count++;
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
 
         public void Add(T item)
         {   // Метод добавляющий элемент в конец коллекции
@@ -266,10 +295,14 @@ namespace DynamicArrayLib
             return GetEnumerator();
         }
 
+        public T[] ToArray()
+        {   // Метод определенный заданием, возвращающий коллекцию ввиде массива
+            return baseArray.Take(Count).ToArray();
+        }
 
         public override string ToString()
         {   // Метод выводящий строковые отображения элементов массива в одну строку (сделан для демонстрации)
-            return string.Join(", ", this.ToArray());
+            return string.Join(", ", ToArray());
         }
 
         protected void ChangeArraySize(Func<int, int> func)
