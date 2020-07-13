@@ -2,6 +2,7 @@
 namespace PizzaTime
 {
 	public delegate void Notify(int num);
+
 	class Ticket
 	{
 		public event Notify Notifier;

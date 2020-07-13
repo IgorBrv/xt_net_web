@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DynamicArrayLib
 {   // На базе массива (именно массива, специфичные коллекции .NET не использовать) реализовать свой собственный класс DynamicArray<T>,
@@ -312,7 +309,5 @@ namespace DynamicArrayLib
             Array.Copy(baseArray, tempArray, Count);
             baseArray = tempArray;
         }
-
-
     }
 }

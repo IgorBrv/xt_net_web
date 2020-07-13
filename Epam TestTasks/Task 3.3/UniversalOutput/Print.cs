@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Outputlib
-{
+{   // Данная библиотека разрабатывалась ещё во времена первого задания и может иметь ошибки
 	public class Output
 	{	// Класс выполняющий отрисовку цветного текста. Принимает следующие параметры ("цвет текста", "цвет фона", "Отрисовка с новой строки (правда/ложь)", "строки для отрисовки через запятую")
 		static public void Print(string fnt, string bck, bool write = true, params string[] strings)

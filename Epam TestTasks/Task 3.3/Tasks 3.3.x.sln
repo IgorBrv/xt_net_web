@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.3.1_SuperArray", "3.3.1_S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.3.3_PizzaTime", "3.3.3_PizzaTime\3.3.3_PizzaTime.csproj", "{A0670B35-4FC6-46A9-9B58-D0EFDD7BD2EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.3.2_SuperString", "3.3.2_SuperString\3.3.2_SuperString.csproj", "{E6AF6A70-532B-4D1D-AE5D-0CB3E4674748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.3.1_3.3.2_Demonstration", "3.3.1_3.3.2_Demonstration\3.3.1_3.3.2_Demonstration.csproj", "{B980F603-1BA4-4798-A9AE-5C91AA7A126F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{A0670B35-4FC6-46A9-9B58-D0EFDD7BD2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0670B35-4FC6-46A9-9B58-D0EFDD7BD2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0670B35-4FC6-46A9-9B58-D0EFDD7BD2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6AF6A70-532B-4D1D-AE5D-0CB3E4674748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6AF6A70-532B-4D1D-AE5D-0CB3E4674748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6AF6A70-532B-4D1D-AE5D-0CB3E4674748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6AF6A70-532B-4D1D-AE5D-0CB3E4674748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B980F603-1BA4-4798-A9AE-5C91AA7A126F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B980F603-1BA4-4798-A9AE-5C91AA7A126F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B980F603-1BA4-4798-A9AE-5C91AA7A126F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B980F603-1BA4-4798-A9AE-5C91AA7A126F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,7 +7,6 @@ namespace PizzaTime
 	class Customer
 	{   // Класс объекта покупателя
 
-
 		private Ticket ticket;                  // Билетик от заказа
 		private AbstractPizza pizza;            // Контейнер для полученной пиццы
 		private readonly Pizzeria pizzeria;                 // Телефон пиццерии
@@ -96,7 +95,5 @@ namespace PizzaTime
 				goingOut(this);
 			}
 		}
-
-
 	}
 }

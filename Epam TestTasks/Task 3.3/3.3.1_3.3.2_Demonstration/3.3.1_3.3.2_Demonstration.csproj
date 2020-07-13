@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{26711249-DD15-4370-A8C6-EC158FB6F094}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>SuperArray</RootNamespace>
-    <AssemblyName>SuperArray</AssemblyName>
+    <ProjectGuid>{B980F603-1BA4-4798-A9AE-5C91AA7A126F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>_3._3._1_3._3._2_Demonstration</RootNamespace>
+    <AssemblyName>3.3.1_3.3.2_Demonstration</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,11 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SuperArray.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3.3.1_SuperArray\3.3.1_SuperArray.csproj">
+      <Project>{26711249-dd15-4370-a8c6-ec158fb6f094}</Project>
+      <Name>3.3.1_SuperArray</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3.3.2_SuperString\3.3.2_SuperString.csproj">
+      <Project>{e6af6a70-532b-4d1d-ae5d-0cb3e4674748}</Project>
+      <Name>3.3.2_SuperString</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

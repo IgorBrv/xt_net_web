@@ -46,10 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\2.1.1_Custom_String_Lib\2.1.1_Custom_String_Lib.csproj">
-      <Project>{580ab64c-a741-4958-85cd-22cbd07691a1}</Project>
-      <Name>2.1.1_Custom_String_Lib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\output_library\output_library.csproj">
       <Project>{5a586b0e-1c2e-4cd8-8224-d17c07445483}</Project>
       <Name>output_library</Name>

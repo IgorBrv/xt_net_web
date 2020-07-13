@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Outputlib
-{
+{   // Данная библиотека разрабатывалась ещё во времена первого задания и может иметь ошибки
 	class Input
 	{   // Вспомогательный подкласс проверяющий корректность ввода по заданным в переменной mode критериям
 		static public bool Get(ref int[] mode, ref bool error, string input)
