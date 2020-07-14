@@ -119,6 +119,7 @@ namespace DynamicArrayDemonstration
 			// Работа с InsertWithFeedback:
 			Console.WriteLine(da5.InsertWithFeedback(4, 1));
 			Console.WriteLine(da5);
+
 			Console.ReadLine();
 		}
 	}

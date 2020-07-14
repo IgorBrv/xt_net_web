@@ -37,7 +37,7 @@ namespace DynamicArrayLib
         public int Capacity => baseArray.Length;    // Свойство отображающее вместимость внутреннего массива
 
         public int Count { get; set; } = 0;     // Отображает длинну (заполнение) коллекции
-
+        
         public T this[int index]
         {   // Доступ к элементам коллекции по индексу
             get
@@ -80,7 +80,6 @@ namespace DynamicArrayLib
 
         public void CopyTo(T[] array, int arrayIndex)
         {   // Метод копирующий элементы коллекции в массив по индексу
-            Console.WriteLine("Произошло это");
             if (array.Length - arrayIndex >= Count)
             {
                 try
