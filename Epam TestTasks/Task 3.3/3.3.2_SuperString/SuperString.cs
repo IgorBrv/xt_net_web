@@ -10,29 +10,30 @@ namespace SuperString
 
 		public static string CheckLang(this string str)
 		{
-			if (str == string.Empty)
-			{
-				throw new ArgumentException("String is empty");
-			}
-
 			// Отфильтруем строку от знаков препинания:
 			str = string.Join("", str.Where(i => Char.IsLetterOrDigit(i)));
 
-			// Пересчитаем колличество слов состоящих из цифр, английских или русских букв, подошьём результаты в словарь:
-			Dictionary<string, int> types = new Dictionary<string, int>
+			// Добавим проверку на пустоту
+			if (str == string.Empty)
 			{
-				{ "Numbers", str.Count(i => Char.IsNumber(i)) },
-				{ "English", str.Count(i => i < 1000 && Char.IsLetter(i)) },
-				{ "Russian", str.Count(i => i > 1000 && Char.IsLetter(i)) }
-			};
-
-			// Вернём тип из словаря, если в словаре присутствуют слова лишь одного типа
-			if (types.Count(Pair => Pair.Value > 0) == 1)
-			{
-				return types.Where(Pair => Pair.Value > 0).FirstOrDefault().Key;
+				throw new ArgumentException("String is empty or string is not contain any words or numbers!");
 			}
 
-			// Вернём "Mixed", если нескольких типов
+			// Проверим все символы строки на принадлежность к одному типу символов:
+			if (str.All(i => Char.IsNumber(i)))
+			{
+				return "Numbers";
+			}
+			else if (str.All(i => Char.IsLetter(i) && i < 1000))
+			{
+				return "English";
+			}
+			else if (str.All(i => Char.IsLetter(i) && i > 1000))
+			{
+				return "Russian";
+			}
+
+			// При наличии разных типов символов вернём Mixed:
 			return "Mixed";
 		}
 	}

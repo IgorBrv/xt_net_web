@@ -6,9 +6,9 @@ namespace Demonstration
 {
 	class Demonstration
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
-
+			string str = "Привет, мир!";
 			int[] array2 = { 1, 2, 3, 4, 5 };
 			short[] array3 = { 1, 2, 3, 4, 5 };
 			double[] array = { 4, 4, 2, 4, 3, 1, 1, 1, 2 };
@@ -19,7 +19,6 @@ namespace Demonstration
 			// Демонстрация работы среднего:
 			Console.WriteLine($"Демонстрация работы CustomAverage. Массив: {string.Join(", ", array2)}, CustomAverage: {string.Join(", ", array2.CustomAverage())}\n");
 
-
 			// Демонстрация работы обобщённо-костыльного среднего:
 			Console.WriteLine($"Демонстрация работы обобщённого CustomAverage. Массив: {string.Join(", ", array3)}, CustomAverage: {string.Join(", ", array3.CustomAverage())}\n");
 
@@ -28,8 +27,6 @@ namespace Demonstration
 
 			// Демонстрация работы поиска суммы всех элементов:
 			Console.WriteLine($"Демонстрация работы поиска суммы всех эл-тов. Массив: {string.Join(", ", array3)}, Сумма элементов: {string.Join(", ", array3.CustomSum())}\n");
-
-			string str = "Привет, мир!";
 
 			// Демонстрация работы определения языка написания предложения:
 			Console.WriteLine($"Демонстрация определения языка написания предложения. Предложение: '{str}', Язык: {str.CheckLang()}");
