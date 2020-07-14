@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.2.1_DynamicArrayLib", "3.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.2.1_DynamicArrayDemonstration", "3.2.1_Dynamic_Array_Demonstration\3.2.1_DynamicArrayDemonstration.csproj", "{9387CC28-95A8-4127-947E-D74084C239C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3.2.1_DynamicArrayDemonstration_ForTests", "3.2.1_DynamicArrayDemonstration_ForTests\3.2.1_DynamicArrayDemonstration_ForTests.csproj", "{56E051E3-F9C7-4439-A95E-13DC549DD079}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9387CC28-95A8-4127-947E-D74084C239C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9387CC28-95A8-4127-947E-D74084C239C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9387CC28-95A8-4127-947E-D74084C239C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56E051E3-F9C7-4439-A95E-13DC549DD079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56E051E3-F9C7-4439-A95E-13DC549DD079}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56E051E3-F9C7-4439-A95E-13DC549DD079}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56E051E3-F9C7-4439-A95E-13DC549DD079}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
