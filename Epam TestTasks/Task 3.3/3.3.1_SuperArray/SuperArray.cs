@@ -86,7 +86,6 @@ namespace SuperArray
 			return array.CustomSum() / array.Length;
 		}
 
-
 		public static T OftenlyUsed<T>(this T[] array) where T: struct
 		{   // Наиболее часто используемый элемент. Группирует элементы, производит сортирову по колличеству членов в группу
 			// и возвращает наименьший элемент из наиболее часто используемых. 

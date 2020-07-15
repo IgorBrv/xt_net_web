@@ -78,6 +78,12 @@ namespace DynamicArrayLib
             }
         }
 
+
+        /// <exception cref="RankException">Exeption</exception>
+        /// <exception cref="ArrayTypeMismatchException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void CopyTo(T[] array, int arrayIndex)
         {   // Метод копирующий элементы коллекции в массив по индексу
             if (array.Length - arrayIndex >= Count)
@@ -131,8 +137,12 @@ namespace DynamicArrayLib
             return baseArray.Contains(item);
         }
 
+
         //---------Секция методов производящих действия с внутренним массивом и проверяющих свойство isReadOnly------------
 
+
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ReadOnlyException"></exception>
         public void Insert(int index, T item)
         {   // Метод вставляющий элемент в коллекцию по заданному индексу
             if (!IsReadOnly)
@@ -182,6 +192,7 @@ namespace DynamicArrayLib
             return false;
         }
 
+        /// <exception cref="ReadOnlyException"></exception>
         public void Add(T item)
         {   // Метод добавляющий элемент в конец коллекции
             if (!IsReadOnly)
@@ -196,6 +207,7 @@ namespace DynamicArrayLib
             else throw new ReadOnlyException("list has readonly:true flag");
         }
 
+        /// <exception cref="ReadOnlyException"></exception>
         public void AddRange(IEnumerable<T> collection)
         {   // Метод, копирующий содержимое входящей коллекции реализующей IEnumerable в конец данной коллекции
             if (!IsReadOnly)
@@ -213,6 +225,7 @@ namespace DynamicArrayLib
             else throw new ReadOnlyException("list has readonly:true flag");
         }
 
+        /// <exception cref="ReadOnlyException"></exception>
         public bool Remove(T item)
         {   // Метод удаляющий элемент коллекции по первому вхождению.
             if (!IsReadOnly)
@@ -249,6 +262,7 @@ namespace DynamicArrayLib
             else throw new ReadOnlyException("list has readonly:true flag");
         }
 
+        /// <exception cref="ReadOnlyException"></exception>
         public void RemoveAt(int index)
         {   // Метод удаляющий элемент коллекции по индексу
             if (!IsReadOnly)
@@ -266,6 +280,7 @@ namespace DynamicArrayLib
             else throw new ReadOnlyException("list has readonly:true flag");
         }
 
+        /// <exception cref="ReadOnlyException"></exception>
         public void Clear()
         {   // Метод производящий очистку массива до базового состояния
             if (!IsReadOnly)
