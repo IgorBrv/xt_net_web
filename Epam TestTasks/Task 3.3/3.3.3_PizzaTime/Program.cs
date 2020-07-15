@@ -49,6 +49,7 @@ namespace PizzaTime
 
 		private static int ChangeCustomersNumber()
 		{	// Меню выбора колличества покупателей
+
 			string[] strings = { "Введите желаемое колличество покупателей (до 15):", "К вводу допускаются только числа от 1 до 15!" };
 			return Int32.Parse(draw.Form(new int[] { 0, 1, 15 }, strings));
 		}
