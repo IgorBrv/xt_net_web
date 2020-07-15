@@ -12,6 +12,7 @@ namespace SuperArray
 		// - самого часто повторяемого элемента;
 
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static int[] Map(this int[] array, Func<int, int> func)
 		{   // Метод расширения, применяющий функцию передающуюся через делегат к каждому члену массива int
 
@@ -23,6 +24,7 @@ namespace SuperArray
 			return array.Select(item => func(item)).ToArray();
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static double[] Map(this double[] array, Func<double, double> func)
 		{   // Метод расширения, применяющий функцию передающуюся через делегат к каждому члену массива double
 
@@ -34,6 +36,7 @@ namespace SuperArray
 			return array.Select(item => func(item)).ToArray();
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static int CustomSum(this int[] array)
 		{   // Метод расширения возвращающий сумму элементов массива int[]
 			// return array.Sum();
@@ -49,6 +52,7 @@ namespace SuperArray
 			return sum;
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static double CustomSum(this double[] array)
 		{   // Метод расширения возвращающий сумму элементов для массива double[]
 			// return array.Sum();
@@ -64,6 +68,7 @@ namespace SuperArray
 			return sum;
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static double CustomAverage(this int[] array)
 		{   // Метод расширения возвращающий среднее значение для массива int[]
 
@@ -75,6 +80,7 @@ namespace SuperArray
 			return array.CustomSum() / array.Length;
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static double CustomAverage(this double[] array)
 		{   // Метод расширения возвращающий среднее значение для массива double[]
 
@@ -86,6 +92,7 @@ namespace SuperArray
 			return array.CustomSum() / array.Length;
 		}
 
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static T OftenlyUsed<T>(this T[] array) where T: struct
 		{   // Наиболее часто используемый элемент. Группирует элементы, производит сортирову по колличеству членов в группу
 			// и возвращает наименьший элемент из наиболее часто используемых. 
@@ -101,6 +108,8 @@ namespace SuperArray
 
 		// Далее идут супер-обощённые костыли:
 
+
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
 		public static double CustomSum<T>(this T[] array) where T: struct
 		{   // Сверхкостыльный обобщённый метод расширения для возврата суммы элементов массива
 			List<Type> allowedTypes = new List<Type>() { typeof(Int16[]), typeof(Int32[]), typeof(Single[]), typeof(Double[]) };

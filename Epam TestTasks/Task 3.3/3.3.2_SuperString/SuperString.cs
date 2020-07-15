@@ -8,7 +8,9 @@ namespace SuperString
 	{   // Расширьте строку следующим методом: проверка, на каком языке написано слово в строке.
 		// Ограничимся четырьмя вариантами – Russian, English, Number and Mixed.
 
-		public static string CheckLang(this string str)
+
+		/// <exception cref="ArgumentException">Argument cant be null</exception>
+		public static LanguagesList CheckLang(this string str)
 		{
 			// Отфильтруем строку от знаков препинания:
 			str = string.Join("", str.Where(i => Char.IsLetterOrDigit(i)));
@@ -22,19 +24,19 @@ namespace SuperString
 			// Проверим все символы строки на принадлежность к одному типу символов:
 			if (str.All(i => Char.IsNumber(i)))
 			{
-				return "Numbers";
+				return LanguagesList.Numbers;
 			}
 			else if (str.All(i => Char.IsLetter(i) && i < 1000))
 			{
-				return "English";
+				return LanguagesList.English;
 			}
 			else if (str.All(i => Char.IsLetter(i) && i > 1000))
 			{
-				return "Russian";
+				return LanguagesList.Russian;
 			}
 
 			// При наличии разных типов символов вернём Mixed:
-			return "Mixed";
+			return LanguagesList.Mixed;
 		}
 	}
 }
