@@ -11,8 +11,8 @@ namespace PizzaTime
 		private AbstractPizza pizza;            // Контейнер для полученной пиццы
 		private readonly Pizzeria pizzeria;                 // Телефон пиццерии
 		private readonly Pizzas orderedPizza;				// Заказанная пица
-		private readonly Action<Customer> goingOut;			// Делегат, в который клиент принимает функцию отрисовщика, которую оповещает если хочет уйти
-		private readonly Action<Customer> servedTrigger;    // Делегат, в который клиент принимает функцию отрисовщика, которую оповещает о том что обслужен
+		private readonly Action<Customer> goingOut;			// Делегат, в который клиент принимает метод симулятора, которую оповещает если хочет уйти
+		private readonly Action<Customer> servedTrigger;    // Делегат, в который клиент принимает метод симулятора, которую оповещает о том что обслужен
 		private readonly int num;
 
 		public Customer(int num, Pizzeria pizzeria)
@@ -35,7 +35,13 @@ namespace PizzaTime
 		public async void GoingOut()
 		{	// Асинхронный метод, запускающий процесс поедания пищи с последующим оповещением о уходе
 
-			await Task.Run(() => GoingOutAsync());
+			await Task.Run(() =>
+			{   // Клиент кушает 3 секунды и уходит
+
+				Thread.Sleep(TimeSpan.FromSeconds(pizza.EatingTime));
+
+				goingOut?.Invoke(this);
+			});
 		}
 
 		private void GetTicket(Ticket ticket)
@@ -82,17 +88,6 @@ namespace PizzaTime
 					return Pizzas.Imperial;
 				default:
 					return Pizzas.None;
-			}
-		}
-
-		private void GoingOutAsync()
-		{	// Клиент кушает 3 секунды и уходит
-
-			Thread.Sleep(TimeSpan.FromSeconds(pizza.EatingTime));
-
-			if (goingOut != null)
-			{
-				goingOut(this);
 			}
 		}
 	}

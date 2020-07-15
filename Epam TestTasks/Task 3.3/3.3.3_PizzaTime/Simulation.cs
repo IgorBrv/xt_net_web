@@ -78,27 +78,24 @@ namespace PizzaTime
 		}
 
 		private async void LaunchKeysControl()
-		{	// Асинхронный метод запускающий процесс захвата ввода с клавиатуры (для выхода)
-			await Task.Run(() => KeysControl());
-		}
-
-		private void KeysControl()
-		{	// Метод захвата ввода с клавиатуры
-
-			ConsoleKeyInfo key;
-
-			while (!keyCtrlExit)
+		{	// Асинхронный метод запускающий процесс захвата ввода с клавиатуры (для выхода по ESC)
+			await Task.Run(() => 
 			{
-				key = Console.ReadKey();
+				ConsoleKeyInfo key;
 
-				if (key.Key == ConsoleKey.Escape)
+				while (!keyCtrlExit)
 				{
-					keyCtrlExit = true;
-					pizzeria.ClosingTIme();
-					exit = !exit;
+					key = Console.ReadKey();
+
+					if (key.Key == ConsoleKey.Escape)
+					{
+						keyCtrlExit = true;
+						pizzeria.ClosingTIme();
+						exit = !exit;
+					}
+					Thread.Sleep(100);
 				}
-				Thread.Sleep(100);
-			}
+			});
 		}
 	}
 }
