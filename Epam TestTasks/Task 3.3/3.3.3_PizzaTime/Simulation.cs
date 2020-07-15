@@ -78,7 +78,8 @@ namespace PizzaTime
 		}
 
 		private async void LaunchKeysControl()
-		{	// Асинхронный метод запускающий процесс захвата ввода с клавиатуры (для выхода по ESC)
+		{   // Асинхронный метод запускающий процесс захвата ввода с клавиатуры (для выхода по ESC)
+
 			await Task.Run(() => 
 			{
 				ConsoleKeyInfo key;
@@ -93,7 +94,7 @@ namespace PizzaTime
 						pizzeria.ClosingTIme();
 						exit = !exit;
 					}
-					Thread.Sleep(100);
+					Thread.Sleep(50);
 				}
 			});
 		}
