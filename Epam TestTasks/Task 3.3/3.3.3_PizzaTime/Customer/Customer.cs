@@ -38,7 +38,7 @@ namespace PizzaTime
 			await Task.Run(() =>
 			{   // Клиент кушает 3 секунды и уходит
 
-				Thread.Sleep(TimeSpan.FromSeconds(pizza.EatingTime));
+				Task.Delay(TimeSpan.FromSeconds(pizza.EatingTime)).Wait();
 
 				goingOut?.Invoke(this);
 			});

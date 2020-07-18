@@ -94,7 +94,7 @@ namespace PizzaTime
 						pizzeria.ClosingTIme();
 						exit = !exit;
 					}
-					Thread.Sleep(50);
+					Task.Delay(50).Wait();
 				}
 			});
 		}
