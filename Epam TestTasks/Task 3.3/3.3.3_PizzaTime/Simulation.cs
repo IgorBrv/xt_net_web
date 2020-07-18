@@ -15,7 +15,6 @@ namespace PizzaTime
 		private readonly Mutex asyncDelay = new Mutex();
 		private List<Customer> servedCustomers;
 		private List<Customer> custList;
-		private bool keyCtrlExit = false;
 		private bool exit = false;
 		private int custNum = 0;
 
@@ -23,11 +22,13 @@ namespace PizzaTime
 		{
 			Console.CursorVisible = false;
 
-			LaunchKeysControl();						// Запуск обработки ввода с клавиатуры
-			custList = new List<Customer>();			// Список клиентов в очереди
-			servedCustomers = new List<Customer>();		// Список клиентов получивших свой заказ
+			custList = new List<Customer>();						// Список клиентов в очереди
+			servedCustomers = new List<Customer>();					// Список клиентов получивших свой заказ
 			StringBuilder sb = new StringBuilder();
+			Thread KeyControl = new Thread(() => KeysControl());    // Запуск обработки ввода с клавиатуры
 			string[] strings = { "Запущен процесс симуляции. Клиенты в очереди: ", "", "" };
+
+			KeyControl.Start();
 
 			while (!exit)
 			{   // Цикл симуляции
@@ -77,26 +78,24 @@ namespace PizzaTime
 			asyncDelay.ReleaseMutex();
 		}
 
-		private async void LaunchKeysControl()
-		{   // Асинхронный метод запускающий процесс захвата ввода с клавиатуры (для выхода по ESC)
+		private void KeysControl()
+		{   // Метод запукаемый в отдельном потоке, запускающий процесс захвата ввода с клавиатуры (для выхода по ESC)
 
-			await Task.Run(() => 
+			ConsoleKeyInfo key;
+
+			while (true)
 			{
-				ConsoleKeyInfo key;
+				key = Console.ReadKey();
 
-				while (!keyCtrlExit)
+				if (key.Key == ConsoleKey.Escape)
 				{
-					key = Console.ReadKey();
-
-					if (key.Key == ConsoleKey.Escape)
-					{
-						keyCtrlExit = true;
-						pizzeria.ClosingTIme();
-						exit = !exit;
-					}
-					Task.Delay(50).Wait();
+					pizzeria.ClosingTIme();
+					exit = !exit;
+					break;
 				}
-			});
+				Thread.Sleep(50);
+			}
+			Console.WriteLine("Завершение работы");
 		}
 	}
 }
