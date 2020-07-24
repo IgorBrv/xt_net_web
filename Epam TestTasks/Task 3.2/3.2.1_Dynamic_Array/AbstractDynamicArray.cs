@@ -36,7 +36,7 @@ namespace DynamicArrayLib
 
         public int Capacity => baseArray.Length;    // Свойство отображающее вместимость внутреннего массива
 
-        public int Count { get; set; } = 0;     // Отображает длинну (заполнение) коллекции
+        public int Count { get; protected set; } = 0;     // Отображает длинну (заполнение) коллекции
         
         public T this[int index]
         {   // Доступ к элементам коллекции по индексу
