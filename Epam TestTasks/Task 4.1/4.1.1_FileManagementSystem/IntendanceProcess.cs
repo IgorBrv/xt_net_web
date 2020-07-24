@@ -63,6 +63,7 @@ namespace FileManagementSystem
                     {   // Обновлене содержимого окна после изменения файлов:
                         DrawScreen();
                         refreshNeeded = false;
+                        BackupProcess bp = new BackupProcess(path);
                     }
 
                     Thread.Sleep(100);
@@ -70,7 +71,6 @@ namespace FileManagementSystem
 
                 // Вовзрат дирректив на дальнейшие действия в метод main
                 return directive;
-
             }
         }
 

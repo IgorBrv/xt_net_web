@@ -40,7 +40,8 @@ namespace FileManagementSystem
 					case (0):	// Завершение работы
 						exit = true;
 						break;
-					case (1):	// Выбор точки восстановления
+					case (1):   // Выбор точки восстановления
+						runtime = new Runtime(name, workDirectory);
 						break;
 					case (2):	// Выбор рабочей папки
 						CreateConfig();
