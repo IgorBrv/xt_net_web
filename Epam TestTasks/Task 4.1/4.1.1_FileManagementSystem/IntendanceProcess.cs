@@ -12,6 +12,7 @@ namespace FileManagementSystem
 
         private readonly string path;                                      // Путь рабочей дирректории
         private readonly string name;                                      // Имя программы в заголовке
+        private readonly BackupProcess bp;
         private readonly List<string> changedList = new List<string>();    // Список последних изменённых .txt файлов
 
         private int directive = 0;            // Дирректива дальнейших действий возвращаемая функцию main
@@ -23,11 +24,13 @@ namespace FileManagementSystem
         {   // Конструктор класса Runtime
             this.name = name;
             this.path = path;
+            this.bp = new BackupProcess(path);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public int Run()
         {
+            bp.FullBackup();
             // Создание экземпляра файлового наблюдателя:
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
@@ -63,7 +66,7 @@ namespace FileManagementSystem
                     {   // Обновлене содержимого окна после изменения файлов:
                         DrawScreen();
                         refreshNeeded = false;
-                        BackupProcess bp = new BackupProcess(path);
+
                     }
 
                     Thread.Sleep(100);
