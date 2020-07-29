@@ -11,11 +11,10 @@ namespace FileManagementSystem
 	{
 		private static readonly string path = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 		private static readonly string configpath = path + @"\config.cfg";
-		private static readonly string name = " EPAM File Management System";
+		private static readonly string name = " File Management System";
 		private static readonly Draw draw = new Draw(name);
 		private static string workDirectory;
 
-		[STAThread]
 		static void Main()
 		{	// Точка входа приложения
 
@@ -41,6 +40,7 @@ namespace FileManagementSystem
 						exit = true;
 						break;
 					case (1):   // Выбор точки восстановления
+						RestoreMenu.Show(name, workDirectory);
 						runtime = new Runtime(name, workDirectory);
 						break;
 					case (2):	// Выбор рабочей папки

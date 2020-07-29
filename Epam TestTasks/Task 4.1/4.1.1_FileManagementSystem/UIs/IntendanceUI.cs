@@ -12,7 +12,7 @@ namespace FileManagementSystem
 
         private readonly string path;                                      // Путь рабочей дирректории
         private readonly string name;                                      // Имя программы в заголовке
-        private readonly BackupProcess bp;
+        private readonly Backup bp;
         private readonly List<string> changedList = new List<string>();    // Список последних изменённых .txt файлов
 
         private int directive = 0;            // Дирректива дальнейших действий возвращаемая функцию main
@@ -24,24 +24,26 @@ namespace FileManagementSystem
         {   // Конструктор класса Runtime
             this.name = name;
             this.path = path;
-            this.bp = new BackupProcess(path);
+            this.bp = new Backup(path);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public int Run()
         {
-            bp.FullBackup();
             // Создание экземпляра файлового наблюдателя:
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
+
+
                 watcher.Path = path;
                 watcher.IncludeSubdirectories = true;
 
                 // Установка флагов реагирования на изменения:
                 watcher.NotifyFilter = NotifyFilters.LastAccess
                                      | NotifyFilters.LastWrite
-                                     | NotifyFilters.FileName
-                                     | NotifyFilters.DirectoryName;
+                                     | NotifyFilters.DirectoryName
+                                     | NotifyFilters.FileName;
+
 
                 // Фильтр файлов, за которыми ведётся наблюдение:
                 watcher.Filter = "*.txt";
@@ -51,6 +53,10 @@ namespace FileManagementSystem
                 watcher.Created += OnChanged;
                 watcher.Deleted += OnChanged;
                 watcher.Renamed += OnRenamed;
+                watcher.Changed += bp.FileChanged;
+                watcher.Created += bp.FileCreated;
+                watcher.Deleted += bp.FileRemoved;
+                watcher.Renamed += bp.FileRenamed;
 
                 // Запуск наблюдателя:
                 watcher.EnableRaisingEvents = true;
@@ -58,6 +64,20 @@ namespace FileManagementSystem
                 // Запуск обработки ввода с клавиатуры:
                 new Thread(() => Input()).Start();
                 Console.CursorVisible = false;
+
+                // Дополнительно создадим отдельный FileSystemWatcher для наблюдения за переименовыванием и удалением папок
+                FileSystemWatcher dirWatcher = new FileSystemWatcher(path)
+                {
+                    IncludeSubdirectories = true,
+                    NotifyFilter = NotifyFilters.DirectoryName,
+                    EnableRaisingEvents = true
+                };
+                dirWatcher.Deleted += OnChanged;
+                dirWatcher.Renamed += OnRenamed;
+                dirWatcher.Created += OnChanged;
+                dirWatcher.Deleted += bp.FullBackup;
+                dirWatcher.Renamed += bp.FullBackup;
+                dirWatcher.Created += bp.FullBackup;
 
                 while (!exit)
                 {   // Рабочий цикл наблюдателя
@@ -72,6 +92,8 @@ namespace FileManagementSystem
                     Thread.Sleep(100);
                 }
 
+                watcher.Dispose();
+
                 // Вовзрат дирректив на дальнейшие действия в метод main
                 return directive;
             }
@@ -79,7 +101,6 @@ namespace FileManagementSystem
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {   // Обработчик события изменения текстовых файлов:
-
             ChangedItem($" File: {e.FullPath} {e.ChangeType}");
         }
 
@@ -104,7 +125,7 @@ namespace FileManagementSystem
         private void DrawScreen()
         {   // Метод отрисовки содержимого окна:
 
-            Console.Clear();
+            //Console.Clear();
             Output.Print("b", "g", name.PadRight(120));
             Output.Print("b", "c", " Обработка выбранного каталога: ".PadRight(120));
             Console.WriteLine($" Каталог: {path}\n\n 0. Выход\n 1. Восстановление из базы\n 2. Выбор другого каталога\n");

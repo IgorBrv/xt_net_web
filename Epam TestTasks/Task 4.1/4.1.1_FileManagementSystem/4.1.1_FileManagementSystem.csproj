@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -44,14 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackupProcess.cs" />
-    <Compile Include="StringExtension.cs" />
-    <Compile Include="IntendanceProcess.cs" />
+    <Compile Include="Accessory\ChangesObject.cs" />
+    <Compile Include="Accessory\FileObject.cs" />
+    <Compile Include="Accessory\CmapObject.cs" />
+    <Compile Include="Accessory\MD5Calc.cs" />
+    <Compile Include="Backup and Restore classes\Backup.cs" />
+    <Compile Include="Backup and Restore classes\BackupHandler.cs" />
+    <Compile Include="Backup and Restore classes\Restore.cs" />
+    <Compile Include="Backup and Restore classes\RestorHandler.cs" />
+    <Compile Include="Collections Extensions\DictExtension.cs" />
+    <Compile Include="UIs\RestoreUI.cs" />
+    <Compile Include="Collections Extensions\StringExtension.cs" />
+    <Compile Include="UIs\IntendanceUI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UniversalOutput\OutputLib.csproj">
@@ -59,5 +72,6 @@
       <Name>OutputLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
