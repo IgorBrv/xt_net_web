@@ -49,10 +49,10 @@ namespace FileManagementSystem
                 watcher.Filter = "*.txt";
 
                 // Подписка методов класса на события наблюдателя:
-                watcher.Changed += OnChanged;
-                watcher.Created += OnChanged;
-                watcher.Deleted += OnChanged;
-                watcher.Renamed += OnRenamed;
+                //watcher.Changed += OnChanged;
+                //watcher.Created += OnChanged;
+                //watcher.Deleted += OnChanged;
+                //watcher.Renamed += OnRenamed;
                 watcher.Changed += bp.FileChanged;
                 watcher.Created += bp.FileCreated;
                 watcher.Deleted += bp.FileRemoved;
@@ -72,9 +72,9 @@ namespace FileManagementSystem
                     NotifyFilter = NotifyFilters.DirectoryName,
                     EnableRaisingEvents = true
                 };
-                dirWatcher.Deleted += OnChanged;
-                dirWatcher.Renamed += OnRenamed;
-                dirWatcher.Created += OnChanged;
+                //dirWatcher.Deleted += OnChanged;
+                //dirWatcher.Renamed += OnRenamed;
+                //dirWatcher.Created += OnChanged;
                 dirWatcher.Deleted += bp.FullBackup;
                 dirWatcher.Renamed += bp.FullBackup;
                 dirWatcher.Created += bp.FullBackup;

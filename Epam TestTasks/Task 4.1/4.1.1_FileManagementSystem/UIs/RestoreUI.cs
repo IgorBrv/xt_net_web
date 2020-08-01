@@ -12,17 +12,17 @@ namespace FileManagementSystem
 	static class RestoreMenu
 	{	// Меню восстановления файлов из бэкапа
 
-		public static void Show(string name, string path)
+		public static void Show(string name, string workDirectory)
 		{	// Метод занимающийся отрисовкой меню
 
 			bool exit = false;					// Индикатор выхода из меню
 			List<string> backupList;			// Список сохранённых состояния
 			Console.CursorVisible = false;
 
-			if (Directory.Exists($"{path}\\_backup"))
+			if (Directory.Exists($"{workDirectory}\\_backup"))
 			{	// Создание списка сохранённых состояний
 
-				backupList = Directory.GetDirectories($"{path}\\_backup").Select(
+				backupList = Directory.GetDirectories($"{workDirectory}\\_backup").Select(
 					item => item.RTakePart(item.RFind('[') - 1, item.RFindNext('['))).OrderByDescending(item => item).ToList();
 			}
 			else
@@ -80,6 +80,9 @@ namespace FileManagementSystem
 							break;
 						case (ConsoleKey.DownArrow):
 							ListPageDown(ref pos, ref page, backupList.Count());
+							break;
+						case (ConsoleKey.Enter):
+							Restore.RestoreState(workDirectory, backupList[pos]);
 							break;
 						case (ConsoleKey.Escape):
 							exit = true;
