@@ -10,21 +10,21 @@ namespace FileManagementSystem
 	class Runtime
 	{   // Класс в котором происходит наблюдение за изменениями в выбранном каталоге
 
-        private readonly string path;                                      // Путь рабочей дирректории
-        private readonly string name;                                      // Имя программы в заголовке
-        private readonly Backup bp;
-        private readonly List<string> changedList = new List<string>();    // Список последних изменённых .txt файлов
+        private readonly string workDirectory;                                      // Путь рабочей дирректории
+        private readonly string programName;                                      // Имя программы в заголовке
+        private readonly Backup backupAgent;
+        private readonly List<string> changesList = new List<string>();    // Список последних изменений
 
         private int directive = 0;            // Дирректива дальнейших действий возвращаемая функцию main
         private bool exit = false;            // Флаг завершения работы цикла
         private bool refreshNeeded = true;    // Флаг необходимости обновить экран
 
 
-        public Runtime(string name, string path)
+        public Runtime(string name, string workDirectory)
         {   // Конструктор класса Runtime
-            this.name = name;
-            this.path = path;
-            this.bp = new Backup(path);
+            this.programName = name;
+            this.workDirectory = workDirectory;
+            this.backupAgent = new Backup(workDirectory);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -35,7 +35,7 @@ namespace FileManagementSystem
             {
 
 
-                watcher.Path = path;
+                watcher.Path = workDirectory;
                 watcher.IncludeSubdirectories = true;
 
                 // Установка флагов реагирования на изменения:
@@ -53,10 +53,10 @@ namespace FileManagementSystem
                 //watcher.Created += OnChanged;
                 //watcher.Deleted += OnChanged;
                 //watcher.Renamed += OnRenamed;
-                watcher.Changed += bp.FileChanged;
-                watcher.Created += bp.FileCreated;
-                watcher.Deleted += bp.FileRemoved;
-                watcher.Renamed += bp.FileRenamed;
+                watcher.Changed += backupAgent.FileChanged;
+                watcher.Created += backupAgent.FileCreated;
+                watcher.Deleted += backupAgent.FileRemoved;
+                watcher.Renamed += backupAgent.FileRenamed;
 
                 // Запуск наблюдателя:
                 watcher.EnableRaisingEvents = true;
@@ -66,7 +66,7 @@ namespace FileManagementSystem
                 Console.CursorVisible = false;
 
                 // Дополнительно создадим отдельный FileSystemWatcher для наблюдения за переименовыванием и удалением папок
-                FileSystemWatcher dirWatcher = new FileSystemWatcher(path)
+                FileSystemWatcher dirWatcher = new FileSystemWatcher(workDirectory)
                 {
                     IncludeSubdirectories = true,
                     NotifyFilter = NotifyFilters.DirectoryName,
@@ -75,9 +75,9 @@ namespace FileManagementSystem
                 //dirWatcher.Deleted += OnChanged;
                 //dirWatcher.Renamed += OnRenamed;
                 //dirWatcher.Created += OnChanged;
-                dirWatcher.Deleted += bp.FullBackup;
-                dirWatcher.Renamed += bp.FullBackup;
-                dirWatcher.Created += bp.FullBackup;
+                dirWatcher.Deleted += backupAgent.DirrectoryChanges;
+                dirWatcher.Renamed += backupAgent.DirrectoryChanges;
+                dirWatcher.Created += backupAgent.DirrectoryChanges;
 
                 while (!exit)
                 {   // Рабочий цикл наблюдателя
@@ -86,13 +86,13 @@ namespace FileManagementSystem
                     {   // Обновлене содержимого окна после изменения файлов:
                         DrawScreen();
                         refreshNeeded = false;
-
                     }
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(50);
                 }
 
-                watcher.Dispose();
+                // выгружаем наблюдателя дирректорий
+                dirWatcher.Dispose();
 
                 // Вовзрат дирректив на дальнейшие действия в метод main
                 return directive;
@@ -101,6 +101,7 @@ namespace FileManagementSystem
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {   // Обработчик события изменения текстовых файлов:
+
             ChangedItem($" File: {e.FullPath} {e.ChangeType}");
         }
 
@@ -114,10 +115,10 @@ namespace FileManagementSystem
         private void ChangedItem(string item)
         {   // Менеджер списка последних изменений
 
-            changedList.Add(item);
-            if (changedList.Count > 3)
+            changesList.Add(item);
+            if (changesList.Count > 3)
             {
-                changedList.RemoveAt(0);
+                changesList.RemoveAt(0);
             }
             refreshNeeded = true;
         }
@@ -126,11 +127,11 @@ namespace FileManagementSystem
         {   // Метод отрисовки содержимого окна:
 
             //Console.Clear();
-            Output.Print("b", "g", name.PadRight(120));
+            Output.Print("b", "g", programName.PadRight(120));
             Output.Print("b", "c", " Обработка выбранного каталога: ".PadRight(120));
-            Console.WriteLine($" Каталог: {path}\n\n 0. Выход\n 1. Восстановление из базы\n 2. Выбор другого каталога\n");
+            Console.WriteLine($" Каталог: {workDirectory}\n\n 0. Выход\n 1. Восстановление из базы\n 2. Выбор другого каталога\n");
             Output.Print("b", "c", " Последние зафиксированые изменения:".PadRight(120));
-            Console.WriteLine(string.Join("\n", changedList));
+            Console.WriteLine(string.Join("\n", changesList));
         }
 
         private void Input()

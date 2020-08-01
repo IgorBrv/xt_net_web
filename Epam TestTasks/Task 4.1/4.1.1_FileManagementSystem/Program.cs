@@ -15,6 +15,8 @@ namespace FileManagementSystem
 		private static readonly Draw draw = new Draw(name);
 		private static string workDirectory;
 
+
+		[STAThread]
 		static void Main()
 		{	// Точка входа приложения
 
@@ -25,6 +27,11 @@ namespace FileManagementSystem
 			}
 			else
 			{   // В случае отсутствия конфига - создаётся новый config.cfg:
+				CreateConfig();
+			}
+
+			if (!Directory.Exists(workDirectory))
+			{
 				CreateConfig();
 			}
 
@@ -76,7 +83,10 @@ namespace FileManagementSystem
 
 					if (workDirectory != null)
 					{	// Если ссылка на рабочий каталог уже имеется, отмена выбора файла допускается
-						exit = true;
+						if (Directory.Exists(workDirectory))
+						{
+							exit = true;
+						}
 					}
 					else
 					{	// Иначе выбор папки производится в принудительном порядке:
