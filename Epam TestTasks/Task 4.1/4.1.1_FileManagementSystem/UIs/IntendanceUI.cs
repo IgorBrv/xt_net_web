@@ -24,7 +24,7 @@ namespace FileManagementSystem
         {   // Конструктор класса Runtime
             this.programName = name;
             this.workDirectory = workDirectory;
-            this.backupAgent = new Backup(workDirectory);
+            this.backupAgent = new Backup(workDirectory, AddChangedItemToDrawList);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -49,10 +49,6 @@ namespace FileManagementSystem
                 watcher.Filter = "*.txt";
 
                 // Подписка методов класса на события наблюдателя:
-                //watcher.Changed += OnChanged;
-                //watcher.Created += OnChanged;
-                //watcher.Deleted += OnChanged;
-                //watcher.Renamed += OnRenamed;
                 watcher.Changed += backupAgent.FileChanged;
                 watcher.Created += backupAgent.FileCreated;
                 watcher.Deleted += backupAgent.FileRemoved;
@@ -72,9 +68,7 @@ namespace FileManagementSystem
                     NotifyFilter = NotifyFilters.DirectoryName,
                     EnableRaisingEvents = true
                 };
-                //dirWatcher.Deleted += OnChanged;
-                //dirWatcher.Renamed += OnRenamed;
-                //dirWatcher.Created += OnChanged;
+
                 dirWatcher.Deleted += backupAgent.DirrectoryChanges;
                 dirWatcher.Renamed += backupAgent.DirrectoryChanges;
                 dirWatcher.Created += backupAgent.DirrectoryChanges;
@@ -99,24 +93,11 @@ namespace FileManagementSystem
             }
         }
 
-        private void OnChanged(object source, FileSystemEventArgs e)
-        {   // Обработчик события изменения текстовых файлов:
-
-            ChangedItem($" File: {e.FullPath} {e.ChangeType}");
-        }
-
-
-        private void OnRenamed(object source, RenamedEventArgs e)
-        {   // Обработчик события переименовывания текстовых файлов:
-
-            ChangedItem($" File: {e.OldFullPath} renamed to {e.FullPath}");
-        }
-
-        private void ChangedItem(string item)
+        private void AddChangedItemToDrawList(string item)
         {   // Менеджер списка последних изменений
 
             changesList.Add(item);
-            if (changesList.Count > 3)
+            if (changesList.Count > 16)
             {
                 changesList.RemoveAt(0);
             }
@@ -126,7 +107,7 @@ namespace FileManagementSystem
         private void DrawScreen()
         {   // Метод отрисовки содержимого окна:
 
-            //Console.Clear();
+            Console.Clear();
             Output.Print("b", "g", programName.PadRight(120));
             Output.Print("b", "c", " Обработка выбранного каталога: ".PadRight(120));
             Console.WriteLine($" Каталог: {workDirectory}\n\n 0. Выход\n 1. Восстановление из базы\n 2. Выбор другого каталога\n");

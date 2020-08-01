@@ -10,7 +10,7 @@ using Outputlib;
 namespace FileManagementSystem
 {
 	static class RestoreMenu
-	{	// Меню восстановления файлов из бэкапа
+	{	// Класс занимающийся отрисовкой меню восстановления файлов из резервных копий.
 
 		public static void Show(string name, string workDirectory)
 		{	// Метод занимающийся отрисовкой меню
@@ -62,14 +62,13 @@ namespace FileManagementSystem
 				{
 					if (i == pos)
 					{
-						Output.Print("b", "w", $" {backupList[i]} ");
+						Output.Print("b", "w", $" {string.Join("", backupList[i].Take(backupList[i].RFind('.')))} ");
 					}
 					else
 					{
-						Console.WriteLine($"{backupList[i]}  ");
+						Console.WriteLine($"{string.Join("", backupList[i].Take(backupList[i].RFind('.')))}  ");
 					}
 				}
-
 
 				ConsoleKeyInfo key = Console.ReadKey();
 				{
@@ -90,7 +89,6 @@ namespace FileManagementSystem
 					}
 				}
 			}
-
 			Console.CursorVisible = true;
 		}
 
@@ -123,7 +121,5 @@ namespace FileManagementSystem
 				}
 			}
 		}
-
-
 	}
 }

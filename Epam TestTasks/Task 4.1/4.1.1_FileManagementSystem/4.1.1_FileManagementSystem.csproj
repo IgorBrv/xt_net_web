@@ -47,15 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessory\ChangesObject.cs" />
-    <Compile Include="Accessory\FileObject.cs" />
-    <Compile Include="Accessory\CmapObject.cs" />
+    <Compile Include="Objects\ChangesObject.cs" />
+    <Compile Include="Objects\FileObject.cs" />
+    <Compile Include="Objects\CmapObject.cs" />
     <Compile Include="Accessory\MD5Calc.cs" />
     <Compile Include="Backup and Restore classes\Backup.cs" />
     <Compile Include="Backup and Restore classes\BackupHandler.cs" />
     <Compile Include="Backup and Restore classes\Restore.cs" />
     <Compile Include="Backup and Restore classes\RestorHandler.cs" />
-    <Compile Include="Collections Extensions\DictExtension.cs" />
     <Compile Include="UIs\RestoreUI.cs" />
     <Compile Include="Collections Extensions\StringExtension.cs" />
     <Compile Include="UIs\IntendanceUI.cs" />

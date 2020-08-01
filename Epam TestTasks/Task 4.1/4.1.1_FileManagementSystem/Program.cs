@@ -8,7 +8,15 @@ using System.Windows.Forms;
 namespace FileManagementSystem
 {
 	class Program
-	{
+	{   // Программа занимающаяся логгированием состояний файлов .txt в выбранной папке
+		// По задумке:
+		// -программа получает уведомления о изменении файлов от FileSystemWatcher
+		// -при первом запуске программы производится полный бэкап всех .txt файлов в папке
+		// -при удалении/переименовывании файла сохраняется информация о соответствующем действии
+		// -при изменении файла - сохраняется изменённый кусок и его адресс или адресс удалённого куска файла
+		// -при восстановлении - программа берёт полный бэкап, и проходит по списку последующих бэкапов применяя изменения до удовлетворения нужному состоянию
+
+
 		private static readonly string path = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 		private static readonly string configpath = path + @"\config.cfg";
 		private static readonly string name = " File Management System";
@@ -31,7 +39,7 @@ namespace FileManagementSystem
 			}
 
 			if (!Directory.Exists(workDirectory))
-			{
+			{	// Если записанная в конфиге дирректория не существует - создаётся новый config.cfg:
 				CreateConfig();
 			}
 
