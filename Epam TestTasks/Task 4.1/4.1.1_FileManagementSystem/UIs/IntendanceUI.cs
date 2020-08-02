@@ -69,9 +69,9 @@ namespace FileManagementSystem
                     EnableRaisingEvents = true
                 };
 
-                dirWatcher.Deleted += backupAgent.DirrectoryChanges;
-                dirWatcher.Renamed += backupAgent.DirrectoryChanges;
-                dirWatcher.Created += backupAgent.DirrectoryChanges;
+                dirWatcher.Deleted += backupAgent.DirectoryRemoved;
+                dirWatcher.Renamed += backupAgent.DirectoryRenamed;
+                dirWatcher.Created += backupAgent.DirectoryCreated;
 
                 while (!exit)
                 {   // Рабочий цикл наблюдателя

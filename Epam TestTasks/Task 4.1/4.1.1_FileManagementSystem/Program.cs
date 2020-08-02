@@ -4,7 +4,6 @@ using System.IO;
 using Outputlib;
 using System.Windows.Forms;
 
-
 namespace FileManagementSystem
 {
 	class Program
@@ -26,7 +25,7 @@ namespace FileManagementSystem
 
 		[STAThread]
 		static void Main()
-		{	// Точка входа приложения
+		{   // Точка входа приложения
 
 			// Проверка наличия config.cfg:
 			if (File.Exists(configpath))
