@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace FileManagementSystem
 {
 	public static class StringExtension
@@ -55,6 +49,13 @@ namespace FileManagementSystem
 
 		public static string RTakePart(this string str, int posB, int posA)
 		{	// Метод возвращающий подстроку из строки по заданным "координатам"
+
+			if (posA > posB)
+			{
+				int temp = posA;
+				posA = posB;
+				posB = temp;
+			}
 
 			return str.Substring(posA + 1, posB - posA - 1);
 		}

@@ -11,20 +11,21 @@ namespace FileManagementSystem
 	{   // Класс в котором происходит наблюдение за изменениями в выбранном каталоге
 
         private readonly string workDirectory;                                      // Путь рабочей дирректории
-        private readonly string programName;                                      // Имя программы в заголовке
-        private readonly Backup backupAgent;
-        private readonly List<string> changesList = new List<string>();    // Список последних изменений
+        private readonly string programName;                                        // Имя программы в заголовке
+        private readonly List<string> changesList = new List<string>();             // Список последних изменений
 
-        private int directive = 0;            // Дирректива дальнейших действий возвращаемая функцию main
-        private bool exit = false;            // Флаг завершения работы цикла
-        private bool refreshNeeded = true;    // Флаг необходимости обновить экран
-
+        private int directive = 0;                   // Дирректива дальнейших действий возвращаемая функцию main
+        private bool exit = false;                   // Флаг завершения работы цикла
+        private bool refreshNeeded = true;           // Флаг необходимости обновить экран
+        private readonly BackupAgent backupAgent;    // Класс-прослойка, между данным классом, и классом backup, обеспечивающий синхронизацию запросов
 
         public Runtime(string name, string workDirectory)
         {   // Конструктор класса Runtime
+
             this.programName = name;
             this.workDirectory = workDirectory;
-            this.backupAgent = new Backup(workDirectory, AddChangedItemToDrawList);
+            this.backupAgent = new BackupAgent(workDirectory, AddChangedItemToDrawList);
+
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -33,8 +34,6 @@ namespace FileManagementSystem
             // Создание экземпляра файлового наблюдателя:
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
-
-
                 watcher.Path = workDirectory;
                 watcher.IncludeSubdirectories = true;
 
@@ -50,9 +49,9 @@ namespace FileManagementSystem
 
                 // Подписка методов класса на события наблюдателя:
                 watcher.Changed += backupAgent.FileChanged;
-                watcher.Created += backupAgent.FileCreated;
-                watcher.Deleted += backupAgent.FileRemoved;
-                watcher.Renamed += backupAgent.FileRenamed;
+                watcher.Created += backupAgent.FileChanged;
+                watcher.Deleted += backupAgent.FileChanged;
+                watcher.Renamed += backupAgent.FileDirectoryRenamed;
 
                 // Запуск наблюдателя:
                 watcher.EnableRaisingEvents = true;
@@ -69,9 +68,9 @@ namespace FileManagementSystem
                     EnableRaisingEvents = true
                 };
 
-                dirWatcher.Deleted += backupAgent.DirectoryRemoved;
-                dirWatcher.Renamed += backupAgent.DirectoryRenamed;
-                dirWatcher.Created += backupAgent.DirectoryCreated;
+                dirWatcher.Deleted += backupAgent.DirectoryChanged;
+                dirWatcher.Created += backupAgent.DirectoryChanged;
+                dirWatcher.Renamed += backupAgent.FileDirectoryRenamed;
 
                 while (!exit)
                 {   // Рабочий цикл наблюдателя
@@ -97,10 +96,12 @@ namespace FileManagementSystem
         {   // Менеджер списка последних изменений
 
             changesList.Add(item);
+
             if (changesList.Count > 16)
             {
                 changesList.RemoveAt(0);
             }
+
             refreshNeeded = true;
         }
 

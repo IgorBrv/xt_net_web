@@ -2,7 +2,8 @@
 namespace FileManagementSystem
 {
 	public class CMapObject
-	{
+	{   // Класс-контейнер, содержащий в себе сведения о изменении файла (внутренние изменения)
+
 		public string path;
 		public string action;
 		public string rawAdress;
