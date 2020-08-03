@@ -26,8 +26,8 @@ namespace FileManagementSystem
 		private bool exit = false;
 
 
-		private readonly Dictionary<string, DateTime>  FilesLastWriteTimeDates;			// Список файлов со штампом времени последнего изменения
-		private readonly Dictionary<string, DateTime> DirectoriesCreationTimeDates;     // Список папок со штампом времени даты создания
+		private readonly Dictionary<string, DateTime>  filesLastWriteTimeDates;			// Список файлов со штампом времени последнего изменения
+		private readonly Dictionary<string, DateTime> directoriesCreationTimeDates;     // Список папок со штампом времени даты создания
 
 		public BackupAgent(string workDirectory, Action<string> draw, Action wrongDirectory)
 		{	// Конструктор класса
@@ -47,18 +47,18 @@ namespace FileManagementSystem
 
 				// Формирование списков файлов и папок: 
 
-				FilesLastWriteTimeDates = new Dictionary<string, DateTime>();
-				DirectoriesCreationTimeDates = new Dictionary<string, DateTime>() { { workDirectory, Directory.GetCreationTime(workDirectory) } };
+				filesLastWriteTimeDates = new Dictionary<string, DateTime>();
+				directoriesCreationTimeDates = new Dictionary<string, DateTime>() { { workDirectory, Directory.GetCreationTime(workDirectory) } };
 
 				// Занесение в таблицу дат последнего изменения или создания для файлов и папок:
 				foreach (string file in Directory.GetFiles(workDirectory, "*.txt", SearchOption.AllDirectories))
 				{
-					FilesLastWriteTimeDates.Add(file, File.GetLastWriteTime(file));
+					filesLastWriteTimeDates.Add(file, File.GetLastWriteTime(file));
 				}
 
 				foreach (string directory in Directory.GetDirectories(workDirectory, "*", SearchOption.AllDirectories))
 				{
-					DirectoriesCreationTimeDates.Add(directory, Directory.GetCreationTime(directory));
+					directoriesCreationTimeDates.Add(directory, Directory.GetCreationTime(directory));
 				}
 
 				// Запустим метод производящий полный бэкап в указанном в полях класса интервале:
@@ -80,19 +80,19 @@ namespace FileManagementSystem
 			bool newfile = false;
 
 			// Продолжаем дальше, если каталог, содержащий файл содержится в списке каталогов, и если со времени создания диалога прошло более 150 милисекунд (Изначально. Интервал меняется в начале стр):
-			if (DirectoriesCreationTimeDates.ContainsKey(directory) && DateTime.Now.Subtract(DirectoriesCreationTimeDates[directory]).TotalMilliseconds > creationDelay)
+			if (directoriesCreationTimeDates.ContainsKey(directory) && DateTime.Now.Subtract(directoriesCreationTimeDates[directory]).TotalMilliseconds > creationDelay)
 			{
 				// Если файл отсутствует в списке файлов - следовательно он новый и создан НЕ вместе с дирректорией, потому добавляем его в список файлов и присваиваем ему метку нового файла
-				if (!FilesLastWriteTimeDates.ContainsKey(e.FullPath))
+				if (!filesLastWriteTimeDates.ContainsKey(e.FullPath))
 				{
-					FilesLastWriteTimeDates.Add(e.FullPath, File.GetLastWriteTime(e.FullPath));
+					filesLastWriteTimeDates.Add(e.FullPath, File.GetLastWriteTime(e.FullPath));
 					newfile = true;
 				}
 
 				// Если файл является новым, или с момента создания файла прошло более 150мс (Изначально. Интервал меняется в начале стр): передаём информацию о изменении в соответствующие методы класса Backup.
-				if (newfile || DateTime.Now.Subtract(FilesLastWriteTimeDates[e.FullPath]).TotalMilliseconds > creationDelay)
+				if (newfile || DateTime.Now.Subtract(filesLastWriteTimeDates[e.FullPath]).TotalMilliseconds > creationDelay)
 				{
-					FilesLastWriteTimeDates[e.FullPath] = DateTime.Now;
+					filesLastWriteTimeDates[e.FullPath] = DateTime.Now;
 
 					if (!e.FullPath.Contains(backupPath))
 					{
@@ -141,37 +141,37 @@ namespace FileManagementSystem
 			bool justCreated = false;
 
 			// Если список дат создания каталогов НЕ содержит информацию о каталоге:
-			if (!DirectoriesCreationTimeDates.ContainsKey(e.FullPath))
+			if (!directoriesCreationTimeDates.ContainsKey(e.FullPath))
 			{
 				// Добавляем информацию о каталоге в список:
-				DirectoriesCreationTimeDates.Add(e.FullPath, Directory.GetCreationTime(e.FullPath));
+				directoriesCreationTimeDates.Add(e.FullPath, Directory.GetCreationTime(e.FullPath));
 
 				// Сканируем каталог на файлы и подкаталоги, и регистрируем их так же:
 				foreach (string directory in Directory.GetDirectories(e.FullPath, "*", SearchOption.AllDirectories))
 				{
-					if (!DirectoriesCreationTimeDates.ContainsKey(directory))
+					if (!directoriesCreationTimeDates.ContainsKey(directory))
 					{
-						DirectoriesCreationTimeDates.Add(directory, Directory.GetCreationTime(directory));
+						directoriesCreationTimeDates.Add(directory, Directory.GetCreationTime(directory));
 					}
 
 				}
 				foreach (string file in Directory.GetFiles(e.FullPath, ".txt", SearchOption.AllDirectories))
 				{
-					if (!FilesLastWriteTimeDates.ContainsKey(file))
+					if (!filesLastWriteTimeDates.ContainsKey(file))
 					{
-						FilesLastWriteTimeDates.Add(file, File.GetLastWriteTime(file));
+						filesLastWriteTimeDates.Add(file, File.GetLastWriteTime(file));
 					}
 				}
 
 				// Присваиваем каталогу метку нового каталога, если с момента создания РОДИТЕЛЬСКОГО КАТАЛОГА прошло не более 150мс (Изначально, интервал меняется в начале страницы):
-				if (DateTime.Now.Subtract(DirectoriesCreationTimeDates[fatherDirectory]).TotalMilliseconds > creationDelay)
+				if (DateTime.Now.Subtract(directoriesCreationTimeDates[fatherDirectory]).TotalMilliseconds > creationDelay)
 				{
 					justCreated = true;
 				}
 			}
 
 			// Если каталог имеет метку нового каталога, или если с момента создания прошло менее 150мс, передаём информацию о изменении в соответствующие методы класса Backup:
-			if (justCreated == true || DateTime.Now.Subtract(DirectoriesCreationTimeDates[e.FullPath]).TotalMilliseconds > creationDelay)
+			if (justCreated == true || DateTime.Now.Subtract(directoriesCreationTimeDates[e.FullPath]).TotalMilliseconds > creationDelay)
 			{
 				if (!e.FullPath.Contains(backupPath))
 				{
@@ -214,6 +214,46 @@ namespace FileManagementSystem
 			{
 				Thread.Sleep(100);
 			}
+
+			if (Directory.Exists(e.FullPath))
+			{
+				directoriesCreationTimeDates.Add(e.FullPath, directoriesCreationTimeDates[e.OldFullPath]);
+				directoriesCreationTimeDates.Remove(e.OldFullPath);
+
+				List<string> filesInRenamedDirectory = new List<string>();
+
+				foreach(string file in filesLastWriteTimeDates.Keys)
+				{
+					if (file.Contains(e.OldFullPath) && file.Replace($"{e.OldFullPath}\\", "").Contains('\\'))
+					{
+						filesInRenamedDirectory.Add(file);
+					}
+				}
+
+				foreach(string file in filesInRenamedDirectory)
+				{
+					filesLastWriteTimeDates.Add(file.Replace(e.OldFullPath, e.FullPath), DateTime.Now);
+					filesLastWriteTimeDates.Remove(file);
+				}
+			}
+			else
+			{
+				List<string> renamedFiles = new List<string>(); 
+				foreach (string file in filesLastWriteTimeDates.Keys)
+				{
+					if (file == e.OldFullPath)
+					{
+						renamedFiles.Add(file);
+					}
+				}
+
+				foreach (string file in renamedFiles)
+				{
+					filesLastWriteTimeDates.Add(e.FullPath, DateTime.Now);
+					filesLastWriteTimeDates.Remove(e.OldFullPath);
+				}
+			}
+
 
 			if (!e.FullPath.Contains(backupPath))
 			{

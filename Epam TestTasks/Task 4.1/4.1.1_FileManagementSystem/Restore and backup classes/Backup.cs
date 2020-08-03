@@ -244,7 +244,7 @@ namespace FileManagementSystem
 			}
 
 			// В полученном списке файлов на момент до удаления дирректории, удалим все файлы которые не были в удалённой дирректории:
-			removedFiles = removedFiles.Where(item => item != null && item.path.Contains($"{e.Name}\\")).ToList();
+			removedFiles = removedFiles.Where(item => item != null && item.path.StartsWith($"{e.Name}\\")).ToList();
 
 			// Сохраним список удалённых файлов в соответствующей карте изменений:
 			if (removedFiles.Count > 0)
