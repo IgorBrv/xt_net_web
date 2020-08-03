@@ -139,7 +139,7 @@ namespace FileManagementSystem
 		private static string GetTranscription(string item)
 		{   // Вспомогательный метод получения описания бэкапов для формирования списка бэкапов
 
-			int length = 22;
+			int length = 28;
 
 			if (item.EndsWith("[F]")) return "Полная копия".PadRight(length);
 			else if (item.EndsWith("[N]")) return "Создание нового файла".PadRight(length);
@@ -147,7 +147,7 @@ namespace FileManagementSystem
 			else if (item.EndsWith("[C]")) return "Изменение файла".PadRight(length);
 			else if (item.EndsWith("[R]")) return "Переименование файла".PadRight(length);
 			else if (item.EndsWith("[U]")) return "Удаление дирректории".PadRight(length);
-			else if (item.EndsWith("[I]")) return "Создание дирректории".PadRight(length);
+			else if (item.EndsWith("[I]")) return "Множественные изменения".PadRight(length);
 			else if (item.EndsWith("[M]")) return "Переименование дирректории".PadRight(length);
 
 			return default;
