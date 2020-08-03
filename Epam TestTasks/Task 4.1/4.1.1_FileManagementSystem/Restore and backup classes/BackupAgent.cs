@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FileManagementSystem
 {
@@ -16,7 +17,7 @@ namespace FileManagementSystem
 		// Было бы больше времени - в первувю очередь переписал бы этот клас ввиде более вменяемой обрабатываемой очереди запросов
 
 		private readonly int backupsBetweenFull = 30;		// Интервал с которым совершается полный бэкап
-		private readonly int creationDelay = 150;			// Интервал времени в мс, в который игнорируются повторные срабатывания для одного файла
+		private readonly int creationDelay = 300;			// Интервал времени в мс, в который игнорируются повторные срабатывания для одного файла
 		private readonly string backupPath;                 // Путь сохранения состояний
 		private readonly Action<string> draw;               // Делегат для передачи сообщений о произведённых бекапах в окно консоли
 		private DateTime lastfullBackupTime;				// Время последнего полного бэкапа. Используется для синхронизации создания полных юэкапов через интервал времени
@@ -25,6 +26,13 @@ namespace FileManagementSystem
 		private int backupsCount = 0;                       // Счётчик бэкапов. Необходим для переодического совершения полного бэкапа
 		private bool exit = false;
 
+		// Поля относящиеся к демонам группировки создаваемых и удаляемых файлов
+		private bool creationDaemonRunning = false;
+		private bool removingDaemonRunning = false;
+		private readonly int fileCreationNRemovingDelay = 10;
+		private readonly List<FileSystemEventArgs> createdFilesList = new List<FileSystemEventArgs>();
+		private readonly List<FileSystemEventArgs>  removedFilesList = new List<FileSystemEventArgs>();
+		private readonly static object locker = new object();
 
 		private readonly Dictionary<string, DateTime>  filesLastWriteTimeDates;			// Список файлов со штампом времени последнего изменения
 		private readonly Dictionary<string, DateTime> directoriesCreationTimeDates;     // Список папок со штампом времени даты создания
@@ -108,18 +116,12 @@ namespace FileManagementSystem
 								});
 								break;
 							case (WatcherChangeTypes.Created):
-								await Task.Run(() => {
-									backup.FileCreated(e);
-									draw($" [{DateTime.Now:HH:mm:ss}] File: {e.FullPath} {e.ChangeType}");
-									lastBackupTime = DateTime.Now;
-									backupsCount++;
-								});
+								FileCreationListAccesGate(e);
+								FileCreationDaemon();
 								break;
 							case (WatcherChangeTypes.Deleted):
-								backup.FileRemoved(e);
-								draw($" [{DateTime.Now:HH:mm:ss}] File: {e.FullPath} {e.ChangeType}");
-								lastBackupTime = DateTime.Now;
-								backupsCount++;
+								FileRemovingListAccesGate(e);
+								FileRemovingDaemon();
 								break;
 						}
 					}
@@ -237,7 +239,7 @@ namespace FileManagementSystem
 				}
 			}
 			else
-			{
+			{	// Этот кусок кода не работает. Исправлю позже. 
 				List<string> renamedFiles = new List<string>(); 
 				foreach (string file in filesLastWriteTimeDates.Keys)
 				{
@@ -253,7 +255,6 @@ namespace FileManagementSystem
 					filesLastWriteTimeDates.Remove(e.OldFullPath);
 				}
 			}
-
 
 			if (!e.FullPath.Contains(backupPath))
 			{
@@ -307,6 +308,144 @@ namespace FileManagementSystem
 					Task.Delay(100).Wait();
 				}
 			});
+		}
+
+		private void FileCreationListAccesGate(FileSystemEventArgs item, bool remove = false)
+		{   // Вспомогательнный метод обеспечивающий синхронизацию работы со списком созданнных файлов:
+			lock (locker)
+			{
+				if (remove)
+				{
+					createdFilesList.Clear();
+				}
+				else
+				{
+					createdFilesList.Add(item);
+				}
+			}
+		}
+
+		private void FileRemovingListAccesGate(FileSystemEventArgs item, bool remove = false)
+		{   // Вспомогательнный метод обеспечивающий синхронизацию работы со списком созданнных файлов:
+			lock (locker)
+			{
+				if (remove)
+				{
+					removedFilesList.Clear();
+				}
+				else
+				{
+					removedFilesList.Add(item);
+				}
+			}
+		}
+
+		private async void FileRemovingDaemon()
+		{   // Инициализатор демона созданния файлов
+			if (!removingDaemonRunning)
+			{
+				removingDaemonRunning = true;
+				await Task.Run(() => FileRemovingDaemonBody());
+			}
+		}
+
+		private async void FileCreationDaemon()
+		{   // Инициализатор демона созданния файлов
+			if (!creationDaemonRunning)
+			{
+				creationDaemonRunning = true;
+				await Task.Run(() => FileCreationDaemonBody());
+			}
+		}
+
+		private async void FileCreationDaemonBody()
+		{   // Демон создания файлов. Инициализируется при создании одного любого файла, и ждёт установленный лимит времени. При создании в момент ожидания ещё файлов - ожидание продлевается.
+			// Передаёт файлы на обработку классу Backup тогда,  когда без поступления новых файлов таймер достигает нуля. Необходим, чтобы логгировать файлы группами, при груповом копировании, например.
+
+			int timer = fileCreationNRemovingDelay;
+			int count = createdFilesList.Count;
+			while (timer >= 0)
+			{   // Таймер
+				Task.Delay(1).Wait();
+				if (createdFilesList.Count > count)
+				{
+					timer += fileCreationNRemovingDelay;
+					count = createdFilesList.Count;     // Продление в случае поступления новых элементов
+				}
+				timer--;
+			}
+
+			// Таймер отыграл, если в списке один файл - файл подаётся в соответствующий метод. Если группа файлов - в соответствующий.
+			if (createdFilesList.Count > 1)
+			{
+				string path = string.Join("", createdFilesList[0].FullPath.Take(createdFilesList[0].FullPath.RFind('\\')));
+				string[] createdFiles = createdFilesList.Select(item => item.Name).ToArray();
+				FileCreationListAccesGate(null, true);
+
+				await Task.Run(() =>
+				{
+					if (backup.DirectoryCreated(null, createdFiles))
+					{
+
+						draw($" [{DateTime.Now:HH:mm:ss}] Multiple Changes in {path}");
+					}
+				});
+			}
+			else
+			{
+				await Task.Run(() =>
+				{
+					backup.FileCreated(createdFilesList[0]);
+					draw($" [{DateTime.Now:HH:mm:ss}] File: {createdFilesList[0].FullPath} {createdFilesList[0].ChangeType}");
+				});
+			}
+
+			creationDaemonRunning = false;
+			lastBackupTime = DateTime.Now;
+			backupsCount++;
+		}
+
+		private async void FileRemovingDaemonBody()
+		{   // Демон удаления файлов. Инициализируется при удалении любого файла, и ждёт установленный лимит времени. При удалении в момент ожидания ещё файлов - ожидание продлевается.
+			// Передаёт файлы на обработку классу Backup тогда, когда без поступления новых файлов таймер достигает нуля. Необходим, чтобы логгировать файлы группами, при груповом удалении, например.
+
+			int timer = fileCreationNRemovingDelay;
+			int count = removedFilesList.Count;
+			while (timer >= 0)
+			{   // Таймер
+				Task.Delay(1).Wait();
+				if (removedFilesList.Count > count)
+				{
+					timer += fileCreationNRemovingDelay;
+					count = removedFilesList.Count;         // Продление в случае поступления новых элементов
+				}
+				timer--;
+			}
+
+			// Таймер отыграл, если в списке один файл - файл подаётся в соответствующий метод. Если группа файлов - в соответствующий.
+			if (removedFilesList.Count > 1)
+			{
+				string path = string.Join("", removedFilesList[0].FullPath.Take(removedFilesList[0].FullPath.RFind('\\')));
+				List<FileObject> removedFiles = removedFilesList.Select(item => new FileObject(item.Name, null)).ToList();
+				FileRemovingListAccesGate(null, true);
+
+				await Task.Run(() =>
+				{
+					if (backup.DirectoryRemoved(null, removedFiles))
+					{
+						draw($" [{DateTime.Now:HH:mm:ss}] Multiple Changes in {path}");
+					}
+				});
+			}
+			else
+			{
+				backup.FileRemoved(removedFilesList[0]);
+				draw($" [{DateTime.Now:HH:mm:ss}] File: {removedFilesList[0].FullPath} {removedFilesList[0].ChangeType}");
+			}
+
+			removingDaemonRunning = false;
+			lastBackupTime = DateTime.Now;
+			backupsCount++;
 		}
 	}
 }

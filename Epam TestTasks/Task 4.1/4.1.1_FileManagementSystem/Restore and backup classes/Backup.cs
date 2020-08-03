@@ -138,12 +138,14 @@ namespace FileManagementSystem
 
 		}
 
-		public bool DirectoryCreated(FileSystemEventArgs e)
+		public bool DirectoryCreated(FileSystemEventArgs e, string[] files = null)
 		{	// Метод создающий отдельную резервную копию создаваемой дирректории:
 
 			// Получаем список файлов дирректории:
-			string[] files = Directory.GetFiles(e.FullPath, "*.txt", SearchOption.AllDirectories).Select(item => item.Replace($"{workDirectory}\\", "")).ToArray();
-
+			if (files == null)
+			{
+				files = Directory.GetFiles(e.FullPath, "*.txt", SearchOption.AllDirectories).Select(item => item.Replace($"{workDirectory}\\", "")).ToArray();
+			}
 
 			// Если дирректория не является пустой:
 			if (files.Length != 0)
@@ -178,15 +180,7 @@ namespace FileManagementSystem
 
 					return true;
 				}
-				catch (FileNotFoundException)
-				{   // В случае невозможности создания резервной копии дирректории (может быть в случае, еслии дирректория создана и тут же удалеа например), создаём полный бэкап, с целью не потерять возможность восстановления последующих состояний:
-
-					Directory.Delete(pathForCurrentBackup);
-					Task.Delay(500).Wait();
-					FullBackup();
-					return false;
-				}
-				catch (DirectoryNotFoundException)
+				catch (IOException)
 				{   // В случае невозможности создания резервной копии дирректории (может быть в случае, еслии дирректория создана и тут же удалеа например), создаём полный бэкап, с целью не потерять возможность восстановления последующих состояний:
 
 					Directory.Delete(pathForCurrentBackup);
@@ -198,53 +192,55 @@ namespace FileManagementSystem
 			return false;
 		}
 
-		public bool DirectoryRemoved(FileSystemEventArgs e)
+		public bool DirectoryRemoved(FileSystemEventArgs e, List<FileObject> removedFiles = null)
 		{   // Метод создающий бэкап в случае удаления папки
-
-			List<string> backupsList = new List<string>();
-			string fullBackup = default;
-
-			// Просканируем папку с бэкапами, и сохраним адреса всех бэкапов до нахождения последнего полного бэкапа, ссылку на который сохраним отдельно
-			foreach (string backup in Directory.GetDirectories(backupPath).OrderByDescending(item => item))
+			if (removedFiles == null)
 			{
-				if (backup.EndsWith("[F]"))
+				List<string> backupsList = new List<string>();
+				string fullBackup = default;
+
+				// Просканируем папку с бэкапами, и сохраним адреса всех бэкапов до нахождения последнего полного бэкапа, ссылку на который сохраним отдельно
+				foreach (string backup in Directory.GetDirectories(backupPath).OrderByDescending(item => item))
 				{
-					fullBackup = backup;
-					break;
+					if (backup.EndsWith("[F]"))
+					{
+						fullBackup = backup;
+						break;
+					}
+					else if (!backup.EndsWith("[F]") && !backup.EndsWith("[C]"))
+					{
+						backupsList.Insert(0, backup);
+					}
 				}
-				else if (!backup.EndsWith("[F]") && !backup.EndsWith("[C]"))
+
+				// Удостоверимся, что полный бэкап не является ссылкой на другой полный бэкап:
+				if (Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\flink"))
 				{
-					backupsList.Insert(0, backup);
+					while (!Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\map"))
+					{
+						fullBackup = $"{workDirectory}\\{File.ReadAllText($"{fullBackup}\\flink")}";
+					}
 				}
-			}
 
-			// Удостоверимся, что полный бэкап не является ссылкой на другой полный бэкап:
-			if (Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\flink"))
-			{
-				while (!Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\map"))
+				// Из полного бэкапа извлечём список всех сохранённых в нём файлов:
+				removedFiles = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{fullBackup}\map")).
+							Select(KeyValuePair => new FileObject(KeyValuePair.Key, null)).ToList();
+
+				// Пройдёмся по списку бэкапов, и применим все изменения касательно имён и адресов файлов, содержащиеся в нём, к списку файлов:
+				try
 				{
-					fullBackup = $"{workDirectory}\\{File.ReadAllText($"{fullBackup}\\flink")}";
+					Restore.ApplyChangesToFilesList(backupsList, removedFiles, workDirectory, true);
 				}
-			}
+				catch (FileNotFoundException)
+				{
+					Task.Delay(500).Wait();
+					FullBackup();
+					return false;
+				}
 
-			// Из полного бэкапа извлечём список всех сохранённых в нём файлов:
-			List<FileObject> removedFiles = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{fullBackup}\map")).
-						Select(KeyValuePair => new FileObject(KeyValuePair.Key, null)).ToList();
-
-			// Пройдёмся по списку бэкапов, и применим все изменения касательно имён и адресов файлов, содержащиеся в нём, к списку файлов:
-			try
-			{
-				Restore.ApplyChangesToFilesList(backupsList, removedFiles, workDirectory, true);
+				// В полученном списке файлов на момент до удаления дирректории, удалим все файлы которые не были в удалённой дирректории:
+				removedFiles = removedFiles.Where(item => item != null && item.path.StartsWith($"{e.Name}\\")).ToList();
 			}
-			catch (FileNotFoundException)
-			{
-				Task.Delay(500).Wait();
-				FullBackup();
-				return false;
-			}
-
-			// В полученном списке файлов на момент до удаления дирректории, удалим все файлы которые не были в удалённой дирректории:
-			removedFiles = removedFiles.Where(item => item != null && item.path.StartsWith($"{e.Name}\\")).ToList();
 
 			// Сохраним список удалённых файлов в соответствующей карте изменений:
 			if (removedFiles.Count > 0)
