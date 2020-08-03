@@ -89,7 +89,11 @@ namespace FileManagementSystem
 
 							if (backupList[0] != null)
 							{
-								Restore.RestoreState(workDirectory, backupList[pos]);
+								if (!Restore.RestoreState(workDirectory, backupList[pos]))
+								{
+									drawList[pos] = " ВОССТАНОВЛЕНИЕ НЕ УДАЛОСЬ ";
+									backupList[pos] = " ВОССТАНОВЛЕНИЕ НЕ УДАЛОСЬ ";
+								}
 							}
 
 							break;

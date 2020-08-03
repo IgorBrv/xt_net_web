@@ -106,23 +106,35 @@ namespace FileManagementSystem
 
 					File.WriteAllText(configpath, fbd.SelectedPath);
 
-					bool notSpecial = true;
+					bool dirAvaiable = true;
 
+					// Проверки дирректории на доступность:
 
 					if (fbd.SelectedPath == systemDisc)
-					{
-						notSpecial = false;
+					{	// Проверка, не является ли дирректория системным диском:
+						dirAvaiable = false;
 					}
 
 					foreach (Environment.SpecialFolder sp in specialFolders)
-					{
+					{   // Проверка, не находится ли дирректория в списке системных папок:
 						if (fbd.SelectedPath == Environment.GetFolderPath(sp))
 						{
-							notSpecial = false;
+							dirAvaiable = false;
 						}
 					}
 
-					if (notSpecial)
+					try
+					{	// Избыточная проверка доступности дирректории:
+
+						Directory.GetFiles(fbd.SelectedPath, "*.txt", SearchOption.AllDirectories);
+						Directory.GetDirectories(fbd.SelectedPath, "*", SearchOption.AllDirectories);
+					}
+					catch (UnauthorizedAccessException)
+					{
+						dirAvaiable = false;
+					}
+
+					if (dirAvaiable)
 					{
 						workDirectory = fbd.SelectedPath;
 						exit = true;

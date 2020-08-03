@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileManagementSystem.Accessory;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace FileManagementSystem
@@ -31,6 +31,7 @@ namespace FileManagementSystem
 			FullBackup();   // Создаём копию текущего состояния в начале работы
 		}
 
+		// Вспомогательное свойство, говорящее о том, что полный бэкап прошёл успешно
 		public int IsReady { get; private set; } = 0;
 
 		public string GetBackupPath()
@@ -45,7 +46,7 @@ namespace FileManagementSystem
 			string pathForCurrentBackup = CreateCurBackupDir('D');
 			ChangesObject changes = new ChangesObject("remove", e.Name);
 
-			File.WriteAllText($"{pathForCurrentBackup}\\changes", JsonConvert.SerializeObject(changes));
+			File.WriteAllText($"{pathForCurrentBackup}\\changes", JsonConvert.SerializeObject(changes));	// Эксепшн по записи должен всплыть ещё в блоке создания дирректори, где есть блок обработки исключения
 		}
 
 
@@ -56,7 +57,7 @@ namespace FileManagementSystem
 			string pathForCurrentBackup = CreateCurBackupDir('R');
 			ChangesObject changes = new ChangesObject("rename", e.OldName, e.Name);
 
-			File.WriteAllText($"{pathForCurrentBackup}\\changes", JsonConvert.SerializeObject(changes));
+			File.WriteAllText($"{pathForCurrentBackup}\\changes", JsonConvert.SerializeObject(changes));    // Эксепшн по записи должен всплыть ещё в блоке создания дирректори, где есть блок обработки исключения
 		}
 
 		public void FileChanged(FileSystemEventArgs e)
@@ -68,7 +69,17 @@ namespace FileManagementSystem
 
 			FileObject file1 = Restore.RestoreFile(workDirectory, e.Name, string.Join("", pathForCurrentBackup.Skip(pathForCurrentBackup.RFind('\\') + 1)));    // Восстановление файла из бекапа
 
-			BackupHandler.Backup(file1.body, File.ReadAllBytes(e.FullPath), e.Name, pathForCurrentBackup, workDirectory);                                       // Сравнение файлов и логгирование изменений
+			if (file1 == null)
+			{   // Если не удалось воссоздать файл - подразумеваем что есть какие-то ошибки в цепочке сохранённых состояний - делаем fullBackup с целью предотвратить последующую потерю данных:
+
+				Directory.Delete(pathForCurrentBackup);
+				Task.Delay(500).Wait();
+				FullBackup();
+			}
+			else
+			{
+				BackupHandler.Backup(file1.body, File.ReadAllBytes(e.FullPath), e.Name, pathForCurrentBackup, workDirectory);                                       // Сравнение файлов и логгирование изменений
+			}
 		}
 
 		public void FileCreated(FileSystemEventArgs e)
@@ -86,8 +97,19 @@ namespace FileManagementSystem
 
 			string nameForBackup = $"{pathOfBackupForLog}\\{name.Replace(".txt", ".bak")}";
 			Dictionary<string, string> map = new Dictionary<string, string> { { e.Name, nameForBackup } };
-			File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(map));
-			File.Copy(e.FullPath, $"{workDirectory}\\{nameForBackup}");
+			File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(map));    // Эксепшн по записи должен всплыть ещё в блоке создания дирректори, где есть блок обработки исключения
+
+			try
+			{
+				File.Copy(e.FullPath, $"{workDirectory}\\{nameForBackup}");
+			}
+			catch (FileNotFoundException)
+			{	// В случае невозможности создания резервной копии файла (может быть в случае, еслии файл создан и тут же удалён например), создаём полный бэкап, с целью не потерять возможность восстановления последующих состояний:
+
+				Directory.Delete(pathForCurrentBackup);
+				Task.Delay(500).Wait();
+				FullBackup();
+			}
 		}
 
 		public bool DirectoryRenamed(RenamedEventArgs e)
@@ -108,7 +130,7 @@ namespace FileManagementSystem
 					multipleChanges.Add(new ChangesObject("rename", file.Replace(e.FullPath, e.OldFullPath).Replace($"{workDirectory}\\", ""), file.Replace($"{workDirectory}\\", "")));
 				}
 
-				File.WriteAllText($"{pathForCurrentBackup}\\multipleChanges", JsonConvert.SerializeObject(multipleChanges));
+				File.WriteAllText($"{pathForCurrentBackup}\\multipleChanges", JsonConvert.SerializeObject(multipleChanges));    // Эксепшн по записи должен всплыть ещё в блоке создания дирректори, где есть блок обработки исключения
 
 				return true;
 			}
@@ -134,25 +156,44 @@ namespace FileManagementSystem
 
 				int count = 0;
 
-				foreach (string file in files)
+				try
 				{
-					string name = file;
-
-					if (name.Contains('\\'))
+					foreach (string file in files)
 					{
-						name = string.Join("", name.Skip(name.RFind('\\') + 1));
+						string name = file;
+
+						if (name.Contains('\\'))
+						{
+							name = string.Join("", name.Skip(name.RFind('\\') + 1));
+						}
+
+						string nameForBackup = $"{pathOfBackupForLog}\\[{count}].{name.Replace(".txt", ".bak")}";
+						File.Copy($"{workDirectory}\\{file}", $"{workDirectory}\\{nameForBackup}");
+						map.Add(file, nameForBackup);
+
+						count++;
 					}
 
-					string nameForBackup = $"{pathOfBackupForLog}\\[{count}].{name.Replace(".txt", ".bak")}";
-					File.Copy($"{workDirectory}\\{file}", $"{workDirectory}\\{nameForBackup}");
-					map.Add(file, nameForBackup);
+					File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(map));
 
-					count++;
+					return true;
 				}
+				catch (FileNotFoundException)
+				{   // В случае невозможности создания резервной копии дирректории (может быть в случае, еслии дирректория создана и тут же удалеа например), создаём полный бэкап, с целью не потерять возможность восстановления последующих состояний:
 
-				File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(map));
+					Directory.Delete(pathForCurrentBackup);
+					Task.Delay(500).Wait();
+					FullBackup();
+					return false;
+				}
+				catch (DirectoryNotFoundException)
+				{   // В случае невозможности создания резервной копии дирректории (может быть в случае, еслии дирректория создана и тут же удалеа например), создаём полный бэкап, с целью не потерять возможность восстановления последующих состояний:
 
-				return true;
+					Directory.Delete(pathForCurrentBackup);
+					Task.Delay(500).Wait();
+					FullBackup();
+					return false;
+				}
 			}
 			return false;
 		}
@@ -177,12 +218,30 @@ namespace FileManagementSystem
 				}
 			}
 
+			// Удостоверимся, что полный бэкап не является ссылкой на другой полный бэкап:
+			if (Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\flink"))
+			{
+				while (!Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\map"))
+				{
+					fullBackup = $"{workDirectory}\\{File.ReadAllText($"{fullBackup}\\flink")}";
+				}
+			}
+
 			// Из полного бэкапа извлечём список всех сохранённых в нём файлов:
 			List<FileObject> removedFiles = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{fullBackup}\map")).
 						Select(KeyValuePair => new FileObject(KeyValuePair.Key, null)).ToList();
 
 			// Пройдёмся по списку бэкапов, и применим все изменения касательно имён и адресов файлов, содержащиеся в нём, к списку файлов:
-			Restore.ApplyChangesToFilesList(backupsList, removedFiles, workDirectory, true);
+			try
+			{
+				Restore.ApplyChangesToFilesList(backupsList, removedFiles, workDirectory, true);
+			}
+			catch (FileNotFoundException)
+			{
+				Task.Delay(500).Wait();
+				FullBackup();
+				return false;
+			}
 
 			// В полученном списке файлов на момент до удаления дирректории, удалим все файлы которые не были в удалённой дирректории:
 			removedFiles = removedFiles.Where(item => item != null && item.path.Contains($"{e.Name}\\")).ToList();
@@ -209,16 +268,23 @@ namespace FileManagementSystem
 			try
 			{	// Избыточная проверка на валидность директории
 				IsReady = 0;
+
 				files = Directory.GetFiles(workDirectory, "*.txt", SearchOption.AllDirectories);
 
-				// Проверяем, есть ли изменения в файлах со времён последнего полного бекапа для определения необходимости полного бэкапа:
-				if (BackupNecessary(files))
-				{
-					// Создаём каталог для помещения текущей копии и карту файлов в копии:
-					string pathForCurrentBackup = CreateCurBackupDir('F');
+				// Получаем имя каталога последнего бэкапа и последннего ПОЛННОГО бэкапа:
+				string lastBackup = Directory.GetDirectories(backupPath).OrderByDescending(item => item).FirstOrDefault();
+				string lastFullBackup = Directory.GetDirectories(backupPath).Where(item => item.EndsWith("[F]")).OrderByDescending(item => item).FirstOrDefault();
 
+				// Проверяем, есть ли изменения в файлах со времён последнего полного бекапа для определения необходимости полного бэкапа:
+				bool backupNessesary = BackupNecessary(lastFullBackup, files);
+
+				if (backupNessesary)
+				{
 					int count = 0;
 					Dictionary<string, string> Map = new Dictionary<string, string>();
+
+					// Создаём каталог для помещения текущей копии и карту файлов в копии:
+					string pathForCurrentBackup = CreateCurBackupDir('F');
 
 					foreach (string file in files)
 					{   // Копируем файлы в каталог копии состояния, добавляя изначальное расположение в карту:
@@ -229,9 +295,18 @@ namespace FileManagementSystem
 						count++;
 					}
 
-					// Сериализуем карту в файл в дирректорию копии состояния:
+					// Сериализуем карту в файл в дирректорию бэкапа:
 					File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(Map));
 				}
+				else if (!lastBackup.EndsWith("[F]") && !backupNessesary)
+				{   // Если отличий в файлах от последнего ПОЛНОГО бэкапа нет, и последним бэкапом НЕ является ПОЛНЫЙ бэкап - оставим ссылку на последний полный бэкап
+
+					string pathForCurrentBackup = CreateCurBackupDir('F');
+
+					// Сериализуем ссылку в файл в дирректорию бэкапа:
+					File.WriteAllText($"{pathForCurrentBackup}\\flink", lastFullBackup.Replace($"{workDirectory}\\", ""));
+				}
+
 				IsReady = 1;
 			}
 			catch (UnauthorizedAccessException)
@@ -241,15 +316,20 @@ namespace FileManagementSystem
 			}
 		}
 
-		private bool BackupNecessary(string[] files)
+		private bool BackupNecessary(string lastFullBackup, string[] files)
 		{	// Метод проверябщий изменения со времён последнего полного бекапа с целью проверки необходимости полного бекапа
-
-			// Получаем имя каталога последнего бэкапа:
-			string lastFullBackup = Directory.GetDirectories(backupPath).Where(item => item.Contains("[F]")).OrderByDescending(item => item).FirstOrDefault();
 
 			if (lastFullBackup == null)
 			{
 				return true;
+			}
+
+			if (Directory.GetFiles(lastFullBackup).Contains($"{lastFullBackup}\\flink"))
+			{
+				while (!Directory.GetFiles(lastFullBackup).Contains($"{lastFullBackup}\\map"))
+				{
+					lastFullBackup = $"{workDirectory}\\{File.ReadAllText($"{lastFullBackup}\\flink")}";
+				}
 			}
 
 			// Получаем карту последнего бекапа десериализируя её из сопроводительного файла:
@@ -296,12 +376,21 @@ namespace FileManagementSystem
 		}
 
 		private string CreateCurBackupDir(char attr)
-		{	// Вспомогательный метод создающий каталог для сохранения текущих изменений с соответствующим атрибутом
+		{   // Вспомогательный метод создающий каталог для сохранения текущих изменений с соответствующим атрибутом
 
 			string pathForCurrentBackup = $@"{backupPath}\[{DateTime.Now:dd.MM.yyyy.HH.mm.ss.fffffff}{$"{Guid.NewGuid()}".PadLeft(4, '0')}][{attr}]";
-			Directory.CreateDirectory(pathForCurrentBackup);
+			try
+			{
+				Directory.CreateDirectory(pathForCurrentBackup);
+				return pathForCurrentBackup;
+			}
+			catch (UnauthorizedAccessException)
+			{   // Если при одновременном изменении 2х файлов сгенерируется один GUID повторим операцию:
 
-			return pathForCurrentBackup;
+				pathForCurrentBackup = $@"{backupPath}\[{DateTime.Now:dd.MM.yyyy.HH.mm.ss.fffffff}{$"{Guid.NewGuid()}".PadLeft(4, '0')}][{attr}]";
+				Directory.CreateDirectory(pathForCurrentBackup);
+				return pathForCurrentBackup;
+			}
 		}
 	}
 }

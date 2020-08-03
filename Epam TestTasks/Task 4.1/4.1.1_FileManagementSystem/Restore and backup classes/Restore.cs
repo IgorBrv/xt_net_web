@@ -1,7 +1,10 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileManagementSystem
 {
@@ -15,25 +18,76 @@ namespace FileManagementSystem
 			// Получаем полный список бэкапов:
 			List<string> listOfBackups = Directory.GetDirectories($@"{workDirectory}\_backup").OrderByDescending(item => item).ToList();
 
+			if (listOfBackups.Count <= 1)
+			{	// Простая проверка на наличие бекапов в списке
+				return null;
+			}
+
 			// Из списка бэкапов получаем последний полный бэкап содержащий необходимый файл, и список бэкапов произведённых после него:
-			listOfBackups = FindLastFullBackup(ref fileName, date, listOfBackups);
-			string FullBackup = listOfBackups[0];
+
+			try
+			{   // Исключим недоступность карт изменений из-за параллельного создания нескольких резервных копий:
+
+				listOfBackups = FindLastFullBackup(ref fileName, date, listOfBackups);
+			}
+			catch (FileNotFoundException)
+			{
+				return null;
+			}
+
+			string fullBackup = listOfBackups[0];
 			listOfBackups.RemoveAt(0);
 
+			
+			// Удостоверимся, что полный бэкап не является ссылкой на другой полный бэкап:
+			if (Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\flink"))
+			{
+				while (!Directory.GetFiles(fullBackup).Contains($"{fullBackup}\\map"))
+				{
+					fullBackup = $"{workDirectory}\\{File.ReadAllText($"{fullBackup}\\flink")}";
+				}
+			}
+
 			// Прочитаем карту последнего полного бэкапа с файлом, и считаем сохранённую копию файла:
-			Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{FullBackup}\map"));
-			FileObject file = new FileObject(fileName, File.ReadAllBytes($"{workDirectory}\\{map[fileName]}"));
+
+			FileObject file = default;
+
+			try
+			{	// Исключим недоступность карты изменений из-за параллельного создания нескольких резервных копий:
+
+				Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapOrChanges($@"{fullBackup}\map"));
+				file = new FileObject(fileName, File.ReadAllBytes($"{workDirectory}\\{map[fileName]}"));
+			}
+			catch (FileNotFoundException)
+			{
+				return null;
+			}
 
 			// Применим к считанному файлу все изменения произведённые после полного бэкапа, и вернём файл:
-			return ApplyChangesToFile(listOfBackups, workDirectory, file);
+			try
+			{
+				return ApplyChangesToFile(listOfBackups, workDirectory, file);
+			}
+			catch (FileNotFoundException)
+			{
+				return null;
+			}
 		}
 
 
-		public static void RestoreState(string workDirectory, string statePath)
+		public static bool RestoreState(string workDirectory, string statePath)
 		{   // Метод полностью восстанавливающий конкретное состояние наблюдаемой папки
 
 			// Получаем полный список бэкапов:
-			List<string> ListOfBackups = Directory.GetDirectories($@"{workDirectory}\_backup").OrderByDescending(item => item).ToList();
+			List<string> ListOfBackups = default;
+			try
+			{
+				ListOfBackups = Directory.GetDirectories($@"{workDirectory}\_backup").OrderByDescending(item => item).ToList();
+			}
+			catch (UnauthorizedAccessException)
+			{
+				return false;
+			}
 
 			List<string> neededBackups = new List<string>();
 			string lastFullBackup = default;
@@ -66,13 +120,38 @@ namespace FileManagementSystem
 			}
 
 			// Считываем карту состояния найденного ПОЛНОГО бэкапа:
-			Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{lastFullBackup}\map"));
+
+			Dictionary<string, string> map = default;
+			try
+			{	// Удостоверимся, что полный бэкап не является ссылкой на другой полный бэкап:
+				if (Directory.GetFiles(lastFullBackup).Contains($"{lastFullBackup}\\flink"))
+				{
+					while (!Directory.GetFiles(lastFullBackup).Contains($"{lastFullBackup}\\map"))
+					{
+						lastFullBackup = $"{workDirectory}\\{File.ReadAllText($"{lastFullBackup}\\flink")}";
+					}
+				}
+
+				map = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapOrChanges($@"{lastFullBackup}\map"));
+			}
+			catch (FileNotFoundException)
+			{
+				return false;
+			}
 
 			// Сформируем список объектов файлов, содержащихся в найденном полном бэкапе:
 			List<FileObject> files = map.Select(KeyValuePair => new FileObject(KeyValuePair.Key, File.ReadAllBytes($"{workDirectory}\\{KeyValuePair.Value}"))).ToList();
 
 			// Пройдёмся по списку бэкапов, применим каждый бекап к списку файлов:
-			ApplyChangesToFilesList(neededBackups, files, workDirectory);
+			try
+			{
+				ApplyChangesToFilesList(neededBackups, files, workDirectory);
+			}
+
+			catch (FileNotFoundException)
+			{
+				return false;
+			}
 
 			// Сформируем список файлов присутствующих в папке на момент начала восстановления:
 			List<string> filesInDirectory = Directory.GetFiles(workDirectory, "*.txt", SearchOption.AllDirectories).Select(item => item.Replace($"{workDirectory}\\", "")).ToList();
@@ -96,20 +175,36 @@ namespace FileManagementSystem
 				File.WriteAllBytes($@"{workDirectory}\{file.path}", file.body);
 			}
 
-			// Удалим все файлы, которые осталисьь в списке файлов, которые были в папке до начала восстаановления, т.к. эти файлы не были отражены в бекапе:
+			// Удалим все файлы, которые остались в списке файлов, которые были в папке до начала восстаановления, т.к. эти файлы не были отражены в бекапе:
 			foreach (string file in filesInDirectory)
 			{
-				File.Delete($"{workDirectory}\\{file}");
+				try
+				{
+					File.Delete($"{workDirectory}\\{file}");
+				}
+				catch
+				{
+					// Nothing (Поздно что-то менять)
+				}
 			}
 
 			// Так же удалим все пустые дирректории:
 			foreach (string folder in Directory.GetDirectories(workDirectory, "*", SearchOption.AllDirectories).Where(item => !item.Contains($"{workDirectory}\\_backup")).OrderByDescending(item => item))
 			{
-				if (Directory.GetFiles(folder).Length == 0)
+				try
 				{
-					Directory.Delete(folder);
+					if (Directory.GetFiles(folder).Length == 0)
+					{
+						Directory.Delete(folder);
+					}
+				}
+				catch
+				{
+					// Nothing (Поздно что-то менять)
 				}
 			}
+
+			return true;
 		}
 
 
@@ -120,7 +215,7 @@ namespace FileManagementSystem
 			{
 				if (Directory.GetFiles(backup).Contains($@"{backup}\changes"))
 				{
-					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(File.ReadAllText($@"{backup}\changes"));
+					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(GetMapOrChanges($@"{backup}\changes"));
 
 					for (int i = 0; i < files.Count; i++)
 					{
@@ -139,7 +234,7 @@ namespace FileManagementSystem
 				}
 				else if (Directory.GetFiles(backup).Contains($@"{backup}\multipleChanges"))
 				{
-					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(File.ReadAllText($"{backup}\\multipleChanges"));
+					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(GetMapOrChanges($"{backup}\\multipleChanges"));
 
 					foreach (ChangesObject changes in multipleChanges)
 					{
@@ -163,7 +258,7 @@ namespace FileManagementSystem
 				{
 					if (!onlyNames)
 					{
-						CMapObject changesMap = JsonConvert.DeserializeObject<CMapObject>(File.ReadAllText($@"{backup}\cmap"));
+						CMapObject changesMap = JsonConvert.DeserializeObject<CMapObject>(GetMapOrChanges($@"{backup}\cmap"));
 
 						for (int i = 0; i < files.Count; i++)
 						{
@@ -176,7 +271,7 @@ namespace FileManagementSystem
 				}
 				else if (Directory.GetFiles(backup).Contains($@"{backup}\map"))
 				{
-					Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{backup}\map"));
+					Dictionary<string, string> map = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapOrChanges($@"{backup}\map"));
 
 					if (!onlyNames)
 					{
@@ -212,7 +307,7 @@ namespace FileManagementSystem
 				}
 				else if (mark == "[R]")
 				{
-					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(File.ReadAllText($@"{backupPath}\changes"));
+					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(GetMapOrChanges($@"{backupPath}\changes"));
 					if (changes.newPath == fileName)
 					{
 						fileName = changes.path;
@@ -220,7 +315,7 @@ namespace FileManagementSystem
 				}
 				else if (mark == "[M]")
 				{
-					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(File.ReadAllText($"{backupPath}\\multipleChanges"));
+					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(GetMapOrChanges($"{backupPath}\\multipleChanges"));
 
 					foreach (ChangesObject changes in multipleChanges)
 					{
@@ -232,7 +327,7 @@ namespace FileManagementSystem
 				}
 				else if (mark == "[N]" || mark == "[I]")
 				{
-					Dictionary<string, string> newFileMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText($@"{backupPath}\map"));
+					Dictionary<string, string> newFileMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapOrChanges($@"{backupPath}\map"));
 
 					if (newFileMap.ContainsKey(fileName))
 					{
@@ -259,7 +354,7 @@ namespace FileManagementSystem
 			{
 				if (Directory.GetFiles(backup).Contains($@"{backup}\changes"))
 				{
-					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(File.ReadAllText($@"{backup}\changes"));
+					ChangesObject changes = JsonConvert.DeserializeObject<ChangesObject>(GetMapOrChanges($@"{backup}\changes"));
 
 					if (changes.path == file.path)
 					{
@@ -275,7 +370,7 @@ namespace FileManagementSystem
 				}
 				else if (Directory.GetFiles(backup).Contains($@"{backup}\multipleChanges"))
 				{
-					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(File.ReadAllText($"{backup}\\multipleChanges"));
+					List<ChangesObject> multipleChanges = JsonConvert.DeserializeObject<List<ChangesObject>>(GetMapOrChanges($"{backup}\\multipleChanges"));
 
 					foreach (ChangesObject changes in multipleChanges)
 					{
@@ -294,7 +389,7 @@ namespace FileManagementSystem
 				}
 				else if (Directory.GetFiles(backup).Contains($@"{backup}\cmap"))
 				{
-					CMapObject changesMap = JsonConvert.DeserializeObject<CMapObject>(File.ReadAllText($@"{backup}\cmap"));
+					CMapObject changesMap = JsonConvert.DeserializeObject<CMapObject>(GetMapOrChanges($@"{backup}\cmap"));
 
 					if (changesMap.path == file.path)
 					{
@@ -303,6 +398,21 @@ namespace FileManagementSystem
 				}
 			}
 			return file;
+		}
+
+		private static string GetMapOrChanges(string path)
+		{   // Вспомогательный метод реализующий ожидание создания карты изменений в случае её недоступности (может произойти при внесении изменений в несколько файлов параллельно)
+			int count = 0;
+			while (!File.Exists(path))
+			{
+				if (count >= 50)
+				{
+					throw new FileNotFoundException("Map file is not founded");
+				}
+				Task.Delay(100).Wait();
+				count++;
+			}
+			return File.ReadAllText(path);
 		}
 	}
 }

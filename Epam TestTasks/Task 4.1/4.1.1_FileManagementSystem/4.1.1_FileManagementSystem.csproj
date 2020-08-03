@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessory\StaticRandom.cs" />
     <Compile Include="Restore and backup classes\BackupAgent.cs" />
     <Compile Include="Objects\ChangesObject.cs" />
     <Compile Include="Objects\FileObject.cs" />
