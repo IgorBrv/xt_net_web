@@ -124,7 +124,7 @@ namespace FileManagementSystem
 
 					for (int i = 0; i < files.Count; i++)
 					{
-						if (files[i].path == changes.path)
+						if (files[i] != null && files[i].path == changes.path)
 						{
 							if (changes.action == "remove")
 							{

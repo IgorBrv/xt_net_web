@@ -13,6 +13,7 @@ namespace FileManagementSystem
         private readonly string workDirectory;                                      // Путь рабочей дирректории
         private readonly string programName;                                        // Имя программы в заголовке
         private readonly List<string> changesList = new List<string>();             // Список последних изменений
+        private readonly static object locker = new object();
 
         private int directive = 0;                   // Дирректива дальнейших действий возвращаемая функцию main
         private bool exit = false;                   // Флаг завершения работы цикла
@@ -95,14 +96,17 @@ namespace FileManagementSystem
         private void AddChangedItemToDrawList(string item)
         {   // Менеджер списка последних изменений
 
-            changesList.Add(item);
-
-            if (changesList.Count > 16)
+            lock (locker)
             {
-                changesList.RemoveAt(0);
-            }
+                changesList.Add(item);
 
-            refreshNeeded = true;
+                if (changesList.Count > 16)
+                {
+                    changesList.RemoveAt(0);
+                }
+
+                refreshNeeded = true;
+            }
         }
 
         private void DrawScreen()
