@@ -1,7 +1,7 @@
 ﻿
 namespace FileManagementSystem
 {
-	public class FileObject
+	class FileObject
 	{	// Класс-контейнер для файла. Содержит в себе тело и адрес файла
 
 		public byte[] body;

@@ -25,7 +25,7 @@ namespace FileManagementSystem
 
             this.programName = name;
             this.workDirectory = workDirectory;
-            this.backupAgent = new BackupAgent(workDirectory, AddChangedItemToDrawList);
+            this.backupAgent = new BackupAgent(workDirectory, AddChangedItemToDrawList, WrongDirectoryDelegate);
 
         }
 
@@ -124,9 +124,8 @@ namespace FileManagementSystem
         {   // Фоновый метод обработки ввода с клавиатуры:
 
             ConsoleKeyInfo key;
-            bool inputStop = false;
 
-            while (!inputStop)
+            while (!exit)
             {
                 key = Console.ReadKey();
 
@@ -135,19 +134,19 @@ namespace FileManagementSystem
                     case (ConsoleKey.D0):
                         Console.CursorVisible = true;
                         directive = 0;
-                        inputStop = true;
+                        backupAgent.ClosureTime();
                         exit = true;
                         break;
                     case (ConsoleKey.D1):
                         Console.CursorVisible = true;
                         directive = 1;
-                        inputStop = true;
+                        backupAgent.ClosureTime();
                         exit = true;
                         break;
                     case (ConsoleKey.D2):
                         Console.CursorVisible = true;
                         directive = 2;
-                        inputStop = true;
+                        backupAgent.ClosureTime();
                         exit = true;
                         break;
                     default:
@@ -157,6 +156,15 @@ namespace FileManagementSystem
 
                 Thread.Sleep(50);
             }
+        }
+
+        private void WrongDirectoryDelegate()
+        {   // Если при попытке совершить первый бэкап программа натыкается на невозможность доступа - будет предложено выбрать другую дирректорию:
+
+            Console.CursorVisible = true;
+            directive = 2;
+            backupAgent?.ClosureTime();
+            exit = true;
         }
     }
 }

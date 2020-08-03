@@ -1,7 +1,7 @@
 ﻿
 namespace FileManagementSystem
 {
-	public class ChangesObject
+	class ChangesObject
 	{	// Класс-контейнер, содержащий в себе сведения о изменении файла (удаление, переименование)
 
 		public string action;

@@ -1,7 +1,7 @@
 ﻿
 namespace FileManagementSystem
 {
-	public static class StringExtension
+	static class StringExtension
 	{	// Вспомогательные методы расширения для работы со строками
 
 		// Вспомогательные переменные для RFind и RFindNext

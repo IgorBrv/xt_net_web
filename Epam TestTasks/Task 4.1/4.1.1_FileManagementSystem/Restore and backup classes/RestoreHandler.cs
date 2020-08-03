@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FileManagementSystem
 {
-	public static class RestoreHandler
+	static class RestoreHandler
 	{	// Метод восстанавливающий состояние файла из бекапа сформированного BackupHandler
 
 		public static byte[] Restore(byte[] file1, string workDirectory, CMapObject differences)

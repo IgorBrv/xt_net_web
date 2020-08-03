@@ -2,7 +2,7 @@
 
 namespace FileManagementSystem.Accessory
 {
-	static class StaticRandom
+	class StaticRandom
 	{	// Вспомогательный класс генерирующий случайные числа
 
 		private static readonly Random rand = new Random();

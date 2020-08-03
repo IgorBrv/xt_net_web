@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace FileManagementSystem
 {
-	public static class MD5Calc
+	static class MD5Calc
 	{	// Вспомогательный класс для вычисления MD5-хеша файлов
 		public static string GetMd5(byte[] b)
 		{	// Вспомогательный метод рассчёта MD5-хеша

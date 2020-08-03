@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FileManagementSystem
 {
-	public static class Restore
+	static class Restore
 	{   // Класс содержащий в себе методы восстановления отдельного файла или целого состояния из сохранённых копий.
 
 

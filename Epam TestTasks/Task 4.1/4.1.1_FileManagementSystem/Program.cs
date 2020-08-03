@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using Outputlib;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FileManagementSystem
 {
@@ -14,6 +16,14 @@ namespace FileManagementSystem
 		// -при удалении/переименовывании файла сохраняется информация о соответствующем действии
 		// -при изменении файла - сохраняется изменённый кусок и его адресс или адресс удалённого куска файла
 		// -при восстановлении - программа берёт полный бэкап, и проходит по списку последующих бэкапов применяя изменения до удовлетворения нужному состоянию
+		//
+		// Карта программы:
+		// IntendanceUI содержит в себе наблюдатель SystemFileWatcher
+		// IntendanceUI обращается в backup через прослойку ввиде backupAgent (для синхронизации обращений) для создания бэкапов
+		// Класс backup логгирует изменения или обращается в класс restore для восстановления состояния файла для последующего вычисления изменений в backupHandler
+		// IntendanceUI обращается в RestoreUI для отображения меню восстановления бэкапов
+		// RestoreUI обращается в Restore для восстановления из выбранного бэкапа
+		// Restore обращается в RestoreHandler если бэкап отражает изменения файла. 
 
 
 		private static readonly string path = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
@@ -30,17 +40,27 @@ namespace FileManagementSystem
 			// Проверка наличия config.cfg:
 			if (File.Exists(configpath))
 			{	// В случае наличия конфига - из него считывается рабочий каталог:
-				workDirectory = File.ReadAllText(configpath);
+				try
+				{
+					workDirectory = File.ReadAllText(configpath);
+
+					if (!Directory.Exists(workDirectory))
+					{   // Если записанная в конфиге дирректория не существует - создаётся новый config.cfg:
+						CreateConfig();
+					}
+
+				}
+				catch
+				{   // Исключений много - решение одно (потому catch обобщённый):
+					CreateConfig();
+				}
+
 			}
 			else
 			{   // В случае отсутствия конфига - создаётся новый config.cfg:
 				CreateConfig();
 			}
 
-			if (!Directory.Exists(workDirectory))
-			{	// Если записанная в конфиге дирректория не существует - создаётся новый config.cfg:
-				CreateConfig();
-			}
 
 			// Создание объекта рабочего процесса с учётом рабочей дирректории:
 			Runtime runtime = new Runtime(name, workDirectory);
@@ -75,6 +95,9 @@ namespace FileManagementSystem
 				Description = "Выберите папку для обработки:",
 			};
 
+			Environment.SpecialFolder[] specialFolders = { Environment.SpecialFolder.Windows, Environment.SpecialFolder.ApplicationData, Environment.SpecialFolder.ProgramFiles, Environment.SpecialFolder.ProgramFilesX86, Environment.SpecialFolder.System };
+			string systemDisc = string.Join("", Environment.GetFolderPath(specialFolders[0]).Take(2));
+
 			while (!exit)
 			{	// Процесс выбора папки
 
@@ -82,8 +105,29 @@ namespace FileManagementSystem
 				{	// Отображение диалога выбора папки
 
 					File.WriteAllText(configpath, fbd.SelectedPath);
-					workDirectory = fbd.SelectedPath;
-					exit = true;
+
+					bool notSpecial = true;
+
+
+					if (fbd.SelectedPath == systemDisc)
+					{
+						notSpecial = false;
+					}
+
+					foreach (Environment.SpecialFolder sp in specialFolders)
+					{
+						if (fbd.SelectedPath == Environment.GetFolderPath(sp))
+						{
+							notSpecial = false;
+						}
+					}
+
+					if (notSpecial)
+					{
+						workDirectory = fbd.SelectedPath;
+						exit = true;
+					}
+
 				}
 				else
 				{   // Меню выбора папки, выводится на экран в случае нажатия пользователем кнопки "Отмена" в диалоге выбора папки

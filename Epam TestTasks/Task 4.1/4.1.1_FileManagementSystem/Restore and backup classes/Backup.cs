@@ -12,12 +12,14 @@ namespace FileManagementSystem
 		// -При запуске программы сохраняется общий слепок состояния
 		// -Последующие изменения в файлах сохраняются в виде описания изменения и/или карты файла с приложеным изменённым куском файла (если файл изменён, а не переименован и не удалён)
 
-		private readonly string workDirectory;				// Рабочий каталог
-		private readonly string backupPath;					// Путь сохранения состояний
+		private readonly string workDirectory;              // Рабочий каталог
+		private readonly string backupPath;                 // Путь сохранения состояний
+		private readonly Action wrongDirectory;
 
-		public Backup(string workDirectory)
+		public Backup(string workDirectory, Action wrongDirectory)
 		{   // Конструктор класса backup.
 
+			this.wrongDirectory = wrongDirectory;
 			this.workDirectory = workDirectory;
 			this.backupPath = workDirectory + @"\_backup";
 
@@ -28,6 +30,8 @@ namespace FileManagementSystem
 
 			FullBackup();   // Создаём копию текущего состояния в начале работы
 		}
+
+		public int IsReady { get; private set; } = 0;
 
 		public string GetBackupPath()
 		{	// Вспомогательный метод, возвращающий адресс папки с бэкапом
@@ -197,32 +201,43 @@ namespace FileManagementSystem
 		}
 
 
-		private void FullBackup()
+		public void FullBackup()
 		{   // Метод осуществляющий полный бэкап заданной дирректории
 
 			// Получаем список файлов дирректории
-			string[] files = Directory.GetFiles(workDirectory, "*.txt", SearchOption.AllDirectories);
+			string[] files = default;
+			try
+			{	// Избыточная проверка на валидность директории
+				IsReady = 0;
+				files = Directory.GetFiles(workDirectory, "*.txt", SearchOption.AllDirectories);
 
-			// Проверяем, есть ли изменения в файлах со времён последнего полного бекапа для определения необходимости полного бэкапа:
-			if (BackupNecessary(files))
-			{
-				// Создаём каталог для помещения текущей копии и карту файлов в копии:
-				string pathForCurrentBackup = CreateCurBackupDir('F');
+				// Проверяем, есть ли изменения в файлах со времён последнего полного бекапа для определения необходимости полного бэкапа:
+				if (BackupNecessary(files))
+				{
+					// Создаём каталог для помещения текущей копии и карту файлов в копии:
+					string pathForCurrentBackup = CreateCurBackupDir('F');
 
-				int count = 0;
-				Dictionary<string, string> Map = new Dictionary<string, string>();
+					int count = 0;
+					Dictionary<string, string> Map = new Dictionary<string, string>();
 
-				foreach (string file in files)
-				{	// Копируем файлы в каталог копии состояния, добавляя изначальное расположение в карту:
+					foreach (string file in files)
+					{   // Копируем файлы в каталог копии состояния, добавляя изначальное расположение в карту:
 
-					string newname = $@"{pathForCurrentBackup}\{count}.{string.Join("", file.Skip(file.RFind('\\') + 1)).Replace(".txt", ".bak")}";
-					File.Copy(file, newname);
-					Map.Add(file.Replace($"{workDirectory}\\", ""), newname.Replace($"{workDirectory}\\", ""));
-					count++;
+						string newname = $@"{pathForCurrentBackup}\{count}.{string.Join("", file.Skip(file.RFind('\\') + 1)).Replace(".txt", ".bak")}";
+						File.Copy(file, newname);
+						Map.Add(file.Replace($"{workDirectory}\\", ""), newname.Replace($"{workDirectory}\\", ""));
+						count++;
+					}
+
+					// Сериализуем карту в файл в дирректорию копии состояния:
+					File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(Map));
 				}
-
-				// Сериализуем карту в файл в дирректорию копии состояния:
-				File.WriteAllText($"{pathForCurrentBackup}\\map", JsonConvert.SerializeObject(Map));
+				IsReady = 1;
+			}
+			catch (UnauthorizedAccessException)
+			{
+				wrongDirectory();
+				IsReady = -1;
 			}
 		}
 
@@ -283,7 +298,7 @@ namespace FileManagementSystem
 		private string CreateCurBackupDir(char attr)
 		{	// Вспомогательный метод создающий каталог для сохранения текущих изменений с соответствующим атрибутом
 
-			string pathForCurrentBackup = $@"{backupPath}\[{DateTime.Now:dd.MM.yyyy.HH.mm.ss.fffffff}{$"{StaticRandom.Get(1000)}".PadLeft(4, '0')}][{attr}]";
+			string pathForCurrentBackup = $@"{backupPath}\[{DateTime.Now:dd.MM.yyyy.HH.mm.ss.fffffff}{$"{Guid.NewGuid()}".PadLeft(4, '0')}][{attr}]";
 			Directory.CreateDirectory(pathForCurrentBackup);
 
 			return pathForCurrentBackup;

@@ -1,7 +1,7 @@
 ﻿
 namespace FileManagementSystem
 {
-	public class CMapObject
+	class CMapObject
 	{   // Класс-контейнер, содержащий в себе сведения о изменении файла (внутренние изменения)
 
 		public string path;
