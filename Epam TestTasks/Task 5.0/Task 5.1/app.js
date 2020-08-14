@@ -14,19 +14,19 @@ function Program(string) {
     }
 
     // Приведём строку к нижнему индексу и удалим все знаки пунктуации:
-    var temp = PrepareString(string, ' ', true);
+    var temp = PrepareString(string, ' ').toLowerCase();
     var lettersToRemove = new Array;
 
     // Разобьём временную строку в массив слов:
     temp = temp.split(' ')
 
-    for (var word in temp) {
+    for (let i in temp) {
 
-        word = temp[word];
+        var word = temp[i];
 
-        for (var char in word) {    // Пройдёмся по символам в каждом из слов, , и если индекс первого вхождения НЕ равен индексу
+        for (let x in word) {    // Пройдёмся по символам в каждом из слов, , и если индекс первого вхождения НЕ равен индексу
             // последнего вхождения сделаем вывод, что буква повторяется. Добавим её в список на удаление
-            char = word[char];
+             var char = word[x];
 
             if (!lettersToRemove.includes(char) && word.indexOf(char) != word.lastIndexOf(char)) {
 
@@ -40,10 +40,10 @@ function Program(string) {
     var result = new Array;
 
     // Заменим все буквы из списка на удаление пустыми символами при помощи replace и регулярного выражения:
-    for (var letter in string) {
+    for (let i in string) {
 
-        if (!lettersToRemove.includes(string[letter].toLowerCase())) {
-            result.push(string[letter])
+        if (!lettersToRemove.includes(string[i].toLowerCase())) {
+            result.push(string[i])
         }
     }
 
@@ -56,12 +56,12 @@ function Program(string) {
         });
 }
 
-function PrepareString(string, spacer, toLowercase = false) {
+function PrepareString(string, spacer) {
     // Вспомогательная функция подменяющая все знаки препинания в заданой строке на заданые символы и опционально приводящая строку к нижнему регистру:
 
     var symbolsToRemove = new Array;
 
-    for (var i in string) {
+    for (let i in string) {
 
         if (string.charCodeAt(i) != 32 && !IsALetter(string[i]) && !symbolsToRemove.includes(string[i])) {
 
@@ -81,11 +81,6 @@ function PrepareString(string, spacer, toLowercase = false) {
                 temp.push(spacer)
                 lastChar = spacer;
             }
-        }
-        else if (toLowercase) {
-
-            temp.push(string[i].toLowerCase())
-            lastChar = string[i];
         }
         else {
 

@@ -7,6 +7,8 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Task 5.1", "Task 5.1\Task 5
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Task 5.2", "Task 5.2\Task 5.2.njsproj", "{30984203-4A1B-45B7-B2F2-E8B3B712A22C}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Task 5.3", "Task 5.3\Task 5.3.njsproj", "{2050C079-EAD1-4D6C-8955-D360A721C436}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{30984203-4A1B-45B7-B2F2-E8B3B712A22C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30984203-4A1B-45B7-B2F2-E8B3B712A22C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30984203-4A1B-45B7-B2F2-E8B3B712A22C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2050C079-EAD1-4D6C-8955-D360A721C436}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2050C079-EAD1-4D6C-8955-D360A721C436}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2050C079-EAD1-4D6C-8955-D360A721C436}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2050C079-EAD1-4D6C-8955-D360A721C436}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
