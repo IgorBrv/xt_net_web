@@ -95,9 +95,9 @@ class Service {
                     inputObjectKeys.push(key);
                 }
 
-                for (let i in inputObjectKeys) {
+                for (let obj of inputObjectKeys) {
 
-                    if (!innerObjectKeys.includes(inputObjectKeys[i])) {
+                    if (!innerObjectKeys.includes(obj)) {
 
                         hasAllKeys = false;
                         break;

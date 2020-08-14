@@ -20,13 +20,10 @@ function Program(string) {
     // Разобьём временную строку в массив слов:
     temp = temp.split(' ')
 
-    for (let i in temp) {
+    for (let word of temp) {
 
-        var word = temp[i];
-
-        for (let x in word) {    // Пройдёмся по символам в каждом из слов, , и если индекс первого вхождения НЕ равен индексу
+        for (let char of word) {    // Пройдёмся по символам в каждом из слов, , и если индекс первого вхождения НЕ равен индексу
             // последнего вхождения сделаем вывод, что буква повторяется. Добавим её в список на удаление
-             var char = word[x];
 
             if (!lettersToRemove.includes(char) && word.indexOf(char) != word.lastIndexOf(char)) {
 
@@ -40,10 +37,10 @@ function Program(string) {
     var result = new Array;
 
     // Заменим все буквы из списка на удаление пустыми символами при помощи replace и регулярного выражения:
-    for (let i in string) {
+    for (let letter of string) {
 
-        if (!lettersToRemove.includes(string[i].toLowerCase())) {
-            result.push(string[i])
+        if (!lettersToRemove.includes(letter.toLowerCase())) {
+            result.push(letter)
         }
     }
 

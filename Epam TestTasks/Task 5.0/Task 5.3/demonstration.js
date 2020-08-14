@@ -44,8 +44,6 @@ storage.add("Vasya");
 console.log('\nПопробуем получить значение элемента с ID не в базе:\n');
 console.log(`-${storage.getById("10")}!`);
 
-storage.deleteById();
-
 require('readline')
     .createInterface(process.stdin, process.stdout)
     .question("\n Нажмите [Enter] для выхода...", function () {

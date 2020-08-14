@@ -135,9 +135,9 @@ function IsAnAction(char) {
 function CheckString(string) {
     // Вспомогательная функция подменяющая все знаки препинания в заданой строке на заданые символы и опционально приводящая строку к нижнему регистру:
 
-    for (let i in string) {
+    for (let char of string) {
 
-        if (!IsANum(string[i]) && !IsAnAction(string[i]) && string[i].charCodeAt(0) != 32) {
+        if (!IsANum(char) && !IsAnAction(char) && char.charCodeAt(0) != 32) {
 
             return false;
         }
