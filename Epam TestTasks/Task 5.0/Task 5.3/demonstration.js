@@ -24,7 +24,7 @@ console.log(storage.getAll());
 
 // Обновим значение элемена с ID = 4:
 console.log('\nОбновим значение элемена с ID = 4:\n')
-storage.updateById(4, { "4": "Afony" });
+storage.updateById(4, { "4": "Afony", "5": "Tanya" });
 console.log(storage.getAll()); 
 
 // Заменим значение элемена с ID = 4:

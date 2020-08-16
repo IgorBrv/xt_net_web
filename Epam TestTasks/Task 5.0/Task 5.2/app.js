@@ -2,7 +2,7 @@
 
 
 // Запросим ввод строки с клавиатуры и передадим его в Program:
-var string = require('readline')
+let string = require('readline')
     .createInterface(process.stdin, process.stdout)
     .question("\n Введите выражение для обработки или нажмите ENTER для использования стандартного выражения: ", Program);
 
@@ -14,11 +14,11 @@ function Program(string) {
         string = '3.5 +4 * 10 - 5.3 / 5 =';
     }
 
-    var result;
-    var action;
-    var exit = false;
-    var num = new Array();
-    var endOfTheString = false
+    let result;
+    let action;
+    let exit = false;
+    let num = new Array();
+    let endOfTheString = false
 
     // Обработаем выражение посимволно
     for (let i in string) {
@@ -113,7 +113,7 @@ function Program(string) {
 function IsANum(char) {
     // Вспомогательная функция, определяющая является ли символ цифрой:
 
-    if (char.charCodeAt(0) >= 48 && char.charCodeAt(0) <= 57 || char.charCodeAt(0) == 46) {
+    if (char.match(/\d/) || char == '.') {
 
         return true;
     }
@@ -124,7 +124,9 @@ function IsANum(char) {
 function IsAnAction(char) {
     // Вспомогательная функция, определяющая является ли символ знаком допустимой операции:
 
-    if (char.charCodeAt(0) == 42 || char.charCodeAt(0) == 43 || char.charCodeAt(0) == 45 || char.charCodeAt(0) == 47 || char.charCodeAt(0) == 61) {
+    let chars = ['+', '-', '*', '/', '=']
+
+    if (chars.includes(char)) {
 
         return true;
     }

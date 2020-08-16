@@ -44,13 +44,14 @@ class Service {
     getAll() {
         // Метод возвращающий все элементы библиотеки. Подшивает всё в удобовваримую строку для отображения в демонстрации:
 
-        var temp = new Array();
+        let temp = new Array();
 
         this.map.forEach(function (value1, value2) {
 
             let text = new Array();
 
             for (let key in value1) {
+
                 text.push(`'${key}': '${value1[key]}'`)
             }
 
@@ -81,38 +82,9 @@ class Service {
 
             if (typeof (object) == 'object') {
 
-                var hasAllKeys = true;
-                var inputObjectKeys = new Array();
-                var innerObjectKeys = new Array();
-
-                for (let key in this.map.get(`${id}`)) {
-
-                    innerObjectKeys.push(key);
-                }
-
                 for (let key in object) {
 
-                    inputObjectKeys.push(key);
-                }
-
-                for (let obj of inputObjectKeys) {
-
-                    if (!innerObjectKeys.includes(obj)) {
-
-                        hasAllKeys = false;
-                        break;
-                    }
-                }
-
-                if (hasAllKeys) {
-
-                    for (let key in object) {
-
-                        this.map.get(`${id}`)[key] = object[key];
-                    }
-                }
-                else {
-                    this.map.set(`${id}`, object);
+                    this.map.get(`${id}`)[key] = object[key];
                 }
             }
             else {
@@ -144,4 +116,3 @@ class Service {
 }
 
 module.exports = Service;
-

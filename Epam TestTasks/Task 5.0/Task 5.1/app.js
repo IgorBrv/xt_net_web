@@ -1,7 +1,7 @@
 'use strict';
 
 // Запросим ввод строки с клавиатуры и передадим его в Program:
-var string = require('readline')
+let string = require('readline')
     .createInterface(process.stdin, process.stdout)
     .question("\n Введите строку для обработки или нажмите ENTER для использования стандартной строки: ", Program);
 
@@ -14,8 +14,8 @@ function Program(string) {
     }
 
     // Приведём строку к нижнему индексу и удалим все знаки пунктуации:
-    var temp = PrepareString(string, ' ').toLowerCase();
-    var lettersToRemove = new Array;
+    let temp = PrepareString(string, ' ').toLowerCase();
+    let lettersToRemove = new Array;
 
     // Разобьём временную строку в массив слов:
     temp = temp.split(' ')
@@ -34,7 +34,7 @@ function Program(string) {
 
     console.log(`\n Фраза на входе: ${string}`);
 
-    var result = new Array;
+    let result = new Array;
 
     // Заменим все буквы из списка на удаление пустыми символами при помощи replace и регулярного выражения:
     for (let letter of string) {
@@ -56,7 +56,7 @@ function Program(string) {
 function PrepareString(string, spacer) {
     // Вспомогательная функция подменяющая все знаки препинания в заданой строке на заданые символы и опционально приводящая строку к нижнему регистру:
 
-    var symbolsToRemove = new Array;
+    let symbolsToRemove = new Array;
 
     for (let i in string) {
 
@@ -66,8 +66,8 @@ function PrepareString(string, spacer) {
         }
     }
 
-    var temp = []
-    var lastChar;
+    let temp = []
+    let lastChar;
 
     for (let i in string) {
 
