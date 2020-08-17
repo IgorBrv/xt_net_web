@@ -36,6 +36,7 @@ function Program(string) {
 
         // Если был обработан знак =, устанавливается метка выхода
         if (exit) {
+
             break;
         }
         // Если символ строки цифра - добавляем её к числу
@@ -55,6 +56,7 @@ function Program(string) {
                     num = new Array();
                 }
                 else {
+
                     switch (action) {
                         case "*":
                             result *= parseFloat(num.join(''));
@@ -71,9 +73,11 @@ function Program(string) {
                     }
 
                     if (string[i] == '=') {
+
                         exit = true;
                     }
                     else {
+
                         action = string[i];
                         num = new Array(0);
                     }
@@ -81,15 +85,18 @@ function Program(string) {
                 }
             }
             else if (parseInt(i) + 1 < string.length && IsANum(string[parseInt(i) + 1])) {
+
                 num.push(string[i]);
             }
             else {
+
                 console.log("\n Обнаружен неверный синтаксис!")
                 result = undefined;
                 break;
             }
         }
         else if (string[i].charCodeAt(0) != 32) {
+
             console.log(`\n  Обнаружен недопустимый символ! '${string[i]}', код: ${string[i].charCodeAt(0)}`)
             result = undefined;
             break;
@@ -98,6 +105,7 @@ function Program(string) {
 
     // Выведем результат если он доступен:
     if (result != undefined) {
+
         console.log(`\n Выражение: ${string}`);
         console.log(`\n Результат вычислений: ${result.toFixed(2)}`);
     }
@@ -109,11 +117,10 @@ function Program(string) {
         });
 }
 
-
 function IsANum(char) {
     // Вспомогательная функция, определяющая является ли символ цифрой:
 
-    if (char.match(/\d/) || char == '.') {
+    if (char.match(/[\d\.]/)) {
 
         return true;
     }
@@ -124,9 +131,7 @@ function IsANum(char) {
 function IsAnAction(char) {
     // Вспомогательная функция, определяющая является ли символ знаком допустимой операции:
 
-    let chars = ['+', '-', '*', '/', '=']
-
-    if (chars.includes(char)) {
+    if (char.match(/[\+\-\*\/]/)) {
 
         return true;
     }
@@ -135,7 +140,7 @@ function IsAnAction(char) {
 }
 
 function CheckString(string) {
-    // Вспомогательная функция подменяющая все знаки препинания в заданой строке на заданые символы и опционально приводящая строку к нижнему регистру:
+    // Вспомогательная функция проверяющая введённую строку на наличие недопустимых символов:
 
     for (let char of string) {
 

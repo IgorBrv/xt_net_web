@@ -1,4 +1,6 @@
-﻿const Service = require('./class');
+﻿'use strict';
+
+const Service = require('./class');
 
 var storage = new Service();
 
@@ -42,7 +44,7 @@ storage.add("Vasya");
 
 // Попробуем получить значение элемента с ID не в базе:
 console.log('\nПопробуем получить значение элемента с ID не в базе:\n');
-console.log(`-${storage.getById("10")}!`);
+console.log(`-результат: ${storage.getById("10")}`);
 
 require('readline')
     .createInterface(process.stdin, process.stdout)

@@ -15,17 +15,24 @@ class Service {
 
         if (typeof (object) == 'object') {
 
+            let id;
+
             if (this.freeIDs.length > 0) {
 
-                this.map.set(`${this.freeIDs[0]}`, object);
-                this.freeIDs.splice(0, 1);
+                id = this.freeIDs.shift()
+                this.map.set(id, object);
             }
             else {
-                this.map.set(`${this.map.size + 1}`, object);
+                id = `${this.map.size + 1}`
+                this.map.set(id, object);
             }
+
+            return id;    // Вернём присвоенный объекту ID для предоставления возможности поиска объекта в библиотеке по присвоенному ID 
         }
         else {
             console.log('-Аргумент пуст, или не является объектом (Библиотека принимает только ОБЪЕКТЫ!)');
+
+            return null;
         }
     }
 
@@ -42,23 +49,23 @@ class Service {
     }
 
     getAll() {
-        // Метод возвращающий все элементы библиотеки. Подшивает всё в удобовваримую строку для отображения в демонстрации:
+        // Метод возвращающий все элементы библиотеки. Подшивает всё в массив из удобоваримых строк отсортарованных по ID для отображения в демонстрации:
 
         let temp = new Array();
 
-        this.map.forEach(function (value1, value2) {
+        this.map.forEach(function (value, key) {
 
             let text = new Array();
 
-            for (let key in value1) {
+            for (let item in value) {
 
-                text.push(`'${key}': '${value1[key]}'`)
+                text.push(`'${item}': '${value[item]}'`)
             }
 
-            temp.push(` ${value2}: { ${text.join(', ')} } `);
+            temp.push(` ${key}: { ${text.join(', ')} } `);
         });
-
-        return temp;
+        
+        return temp.sort(function (a, b) { return a.match(/\d+/g)[0] - b.match(/\d+/g)[0] });
     }
 
     deleteById(id) {
@@ -66,8 +73,8 @@ class Service {
 
         if (this.map.has(`${id}`)) {
 
-            this.map.delete(id);
-            this.freeIDs.push(id);
+            this.map.delete(`${id}`);
+            this.freeIDs.push(`${id}`);
         }
         else {
             console.log('-Элемент с таким ID отсутствует в библиотеке или ID задан неверно!');
