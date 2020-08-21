@@ -89,7 +89,6 @@ function Program(string) {
                 num.push(string[i]);
             }
             else {
-
                 console.log("\n Обнаружен неверный синтаксис!")
                 result = undefined;
                 break;

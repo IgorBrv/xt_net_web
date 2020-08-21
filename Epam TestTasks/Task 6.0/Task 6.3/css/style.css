@@ -1,0 +1,55 @@
+body {
+    background: #323332;
+}
+
+/* Указатель: */
+.pointer {
+    position: absolute;
+    top: 4em;
+    width: 35em;
+    height: 5em;
+    font-size: 1vw;
+    color: #ffffff;
+    background-color: #88b7d5;
+    border: 0.5em solid #c2e1f5;
+}
+
+/* Подложка стрелки указателя: */
+.pointer:before {
+    width: 0;
+    height: 0;
+    left: 13.8em;
+    bottom: 100%;
+    content: '';
+    font-size: 1.1vw;
+    position: absolute;
+    border: 3.2em solid transparent;
+    border-bottom-color: #c2e1f5;
+}
+
+/* Стрелка указателя: */
+.pointer:after {
+    width: 0;
+    height: 0;
+    left: 15.7em;
+    bottom: 98%;
+    content: '';
+    font-size: 1vw;
+    position: absolute;
+    border: 3em solid transparent;
+    border-bottom-color: #88b7d5;
+}
+
+/* Лэйбл указателя: */
+.pointer-text {
+    margin: 0;
+    top: 1.1em;
+    left: 5.5em; 
+    position: absolute;
+    font-size: 1.4vw;
+    font-weight: bold;
+    font-family: serif;
+}
+   
+
+ 
