@@ -1,0 +1,128 @@
+/* Общие элементы: */
+body {
+    font-family: sans-serif;
+}
+
+img {
+    width: 100%;
+}
+
+/* Общий контейнер для форм: */
+.container {
+    display: flex;
+    flex-flow: column;
+}
+
+/* Заголовок пузырей с формами: */
+.title {
+    margin-top: 1%;
+    margin-left: 5%;
+    margin-bottom: 3%;
+    text-shadow: 2px 2px 5px #000000;
+}
+
+/* Внутренние параграфы: */
+.inner-p {
+    margin: 0;
+    color: #000000;
+}
+
+/* Внешняя обёртка (для "margin" через padding):*/
+.wrap-outter {
+    padding: 10px;
+}
+
+/* Внутренняя обёртка:*/
+.wrap-inner {
+    width: 500px;
+    height: 200px;
+    padding: 10px;
+    color: #ffffff;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #4e6379;
+    box-shadow: 10px 10px 10px black;
+}
+
+/* Форма рекламки: */
+.form {
+    margin: auto;
+    width: 450px;
+    height: 115px;;
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #8d9aa8;
+    box-shadow: 0px 10px 25px #000000;
+}
+
+/* Левая и правая колонки формы: */
+.box-1, .box-3 {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    flex-flow: column;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* Средняя колонка формы, имеет border слева и справа: */
+.box-2 {
+    padding-left: 5px;
+    padding-right: 5px;
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+    overflow: hidden;
+
+}
+
+/* Элементы  колонки формы:*/
+.img {
+    width: 30%;
+    margin: auto;
+    flex: 1;
+}
+
+.text1 {
+    flex: 1.5;
+    margin: auto;
+    font-size: 11px;
+    padding-top: 10px;
+    color: #f56332;
+    font-weight: bold;
+}
+
+.text2 {
+    flex: 1;
+    margin: auto;
+    font-size: 10px;
+}
+
+.button {
+    flex: 1;
+    margin: auto;
+}
+
+button {
+    height: 18px;
+    border: none;
+    font-size: 10px;
+    color: #ffffff;
+    border-radius: 2px;
+    background: #f56332;
+}
+
+button:hover {
+    background: #eb430c;
+}
+
+button:active {
+    background: #b83509;
+}
+
+
