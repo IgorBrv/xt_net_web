@@ -1,0 +1,1 @@
+#[Просмотреть страничку (htmlpreview.github.io)](http://htmlpreview.github.io/?https://github.com/IgorBrv/xt_net_web/blob/master/Epam%20TestTasks/Task%206.0/Task%206.5/index.html "Просмотреть страничку")
