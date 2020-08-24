@@ -24,14 +24,14 @@ input::placeholder {
     background: #26b7ed;
     top: calc(100% - 60px);
     left: calc(100% - 60px);
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .add-button-text {
-    margin: 0;
-    top: 7.5px;
-    left: 16.5px;
     font-size: 30px;
-    position: relative;
     user-select: none;  /* Запрещаем выделение текста в кнопке */
     -ms-user-select: none;
     -moz-user-select: none;
@@ -74,17 +74,22 @@ input::placeholder {
 }
 
 .search-image {
-    width: 15%;
-    height: 95%;
+    width: 10%;
+    height: 1em;
+    min-width: 1em;
     fill: #828282;
+    padding-left: 1%;
+    padding-right: 4%;
+    margin-top:auto;
+    margin-bottom: auto;
 }
 
 .search-input {
     border: 0;
-    width: 83%;
-    height: 100%;
+    width: 85%;
     color: #828282;
-    margin-left: 1px;
+    margin-top:auto;
+    margin-bottom: auto;
     font-weight: bolder;
     background: #f0f0f0;
 }
@@ -126,17 +131,19 @@ input::placeholder {
 
 .body-remove-button-img {
     width: 8px;
-    left: 6.2px;
-    bottom: 0.4px;
+    height: 8px;
+    margin: auto;
     fill: #ffffff;
-    position: relative;
 }
 
 .body-remove-button {
     width: 20px;
     height: 20px;
+    display: flex;
     border-radius: 50%;
     background: #828282;
+    align-items: center;
+    justify-content: center;
     margin-left: calc(100% - 10px);
 }
 

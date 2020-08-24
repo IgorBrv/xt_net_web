@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="background">
+        <style>
+            /* Fixed Background for IOS browser */
+            .background {
+                z-index: -1;
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                background-image: url(./images/background.png);
+            }
+        </style>
+    </div>
     <div class="wrapper">
         <div class="header-container">
             <div class="search-container"> 
@@ -36,10 +48,5 @@
         <p class="add-button-text">+</p>
     </div>
 </body>
-<style>
-    body {
-        background-attachment: fixed;
-        background-image: url(./images/background.png);
-    }
-</style>
+
 </html>
