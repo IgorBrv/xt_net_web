@@ -30,15 +30,6 @@ input::placeholder {
     justify-content: center;
 }
 
-.add-button-text {
-    font-size: 30px;
-    user-select: none;  /* Запрещаем выделение текста в кнопке */
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-}
-
 .add-button:hover {
     background: #119ccf;
 }
@@ -47,6 +38,11 @@ input::placeholder {
     color: #ffffff;
     background: #0d79a1;
     box-shadow: 1px 1px 10px #26b7ed;
+}
+
+.add-button-image {
+    height: 30%;
+    width: 30%;
 }
 
 
