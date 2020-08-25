@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Записная книжка</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./scripts/storage.js"></script>
 </head>
 <body>
     <div class="background">
@@ -19,6 +20,27 @@
             }
         </style>
     </div>
+    
+    <div id="editor" class="editor-window-container">
+        <div class="editor-window">
+            <div class="editor-window-form">
+                <div class="editor-window-header">
+                    <input type="text" placeholder="Введите заголовок" class="editor-window-header-text">
+                    <a href="#close" title="Закрыть" class="editor-window-header-close-button">
+                        <svg viewBox="0 0 365.696 365.696" class="body-remove-button-img">
+                            <path d="m243.1875 182.859375 113.132812-113.132813c12.5-12.5 12.5-32.765624 0-45.246093l-15.082031-15.082031c-12.503906-12.503907-32.769531-12.503907-45.25 0l-113.128906 113.128906-113.132813-113.152344c-12.5-12.5-32.765624-12.5-45.246093 0l-15.105469 15.082031c-12.5 12.503907-12.5 32.769531 0 45.25l113.152344 113.152344-113.128906 113.128906c-12.503907 12.503907-12.503907 32.769531 0 45.25l15.082031 15.082031c12.5 12.5 32.765625 12.5 45.246093 0l113.132813-113.132812 113.128906 113.132812c12.503907 12.5 32.769531 12.5 45.25 0l15.082031-15.082031c12.5-12.503906 12.5-32.769531 0-45.25zm0 0"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <textarea name="" placeholder="Введите текст заметки" class="editor-window-textarea"></textarea>
+                <div class="editor-window-footer">
+                    <button class="editor-window-savebutton">Создать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper">
         <div class="header-container">
             <div class="search-container"> 
@@ -44,11 +66,14 @@
             </div>
         </div>
     </div>
-    <div class="add-button">
+
+    <div class="add-button" id="add-button">
+        <a href="#editor" class="addButton-a"></a>
         <svg viewBox="0 0 42 42" class="add-button-image">
             <polygon points="42,19 23,19 23,0 19,0 19,19 0,19 0,23 19,23 19,42 23,42 23,23 42,23 "/>
         </svg>
     </div>
+    <script src="./scripts/index.js"></script>
 </body>
 
 </html>
