@@ -26,16 +26,14 @@
             <div class="editor-window-form">
                 <div class="editor-window-header">
                     <input type="text" placeholder="Введите заголовок" class="editor-window-header-text">
-                    <a href="#close" title="Закрыть" class="editor-window-header-close-button">
-                        <svg viewBox="0 0 365.696 365.696" class="body-remove-button-img">
-                            <path d="m243.1875 182.859375 113.132812-113.132813c12.5-12.5 12.5-32.765624 0-45.246093l-15.082031-15.082031c-12.503906-12.503907-32.769531-12.503907-45.25 0l-113.128906 113.128906-113.132813-113.152344c-12.5-12.5-32.765624-12.5-45.246093 0l-15.105469 15.082031c-12.5 12.503907-12.5 32.769531 0 45.25l113.152344 113.152344-113.128906 113.128906c-12.503907 12.503907-12.503907 32.769531 0 45.25l15.082031 15.082031c12.5 12.5 32.765625 12.5 45.246093 0l113.132813-113.132812 113.128906 113.132812c12.503907 12.5 32.769531 12.5 45.25 0l15.082031-15.082031c12.5-12.503906 12.5-32.769531 0-45.25zm0 0"/>
-                        </svg>
-                    </a>
+                    <div class="editor-window-header-close-button" onclick="EditorCloseButtonClick()">
+                        <img src="./images/close.svg" alt="editor window closure icon" class="body-remove-button-img"> 
+                    </div>
                 </div>
 
                 <textarea name="" placeholder="Введите текст заметки" class="editor-window-textarea"></textarea>
                 <div class="editor-window-footer">
-                    <button class="editor-window-savebutton">Создать</button>
+                    <button class="editor-window-savebutton" onclick="EditorSaveClick()"></button>
                 </div>
             </div>
         </div>
@@ -44,34 +42,17 @@
     <div class="wrapper">
         <div class="header-container">
             <div class="search-container"> 
-                <svg viewBox="0 0 512 512" class="search-image">
-                    <path d="M356.475,304.386c20.888-31.028,33.092-68.363,33.092-108.497c0-107.404-87.38-194.784-194.784-194.784
-                    S0,88.485,0,195.888s87.38,194.784,194.784,194.784c40.926,0,78.935-12.698,110.319-34.345l155.242,154.568L512,459.24
-                    L356.475,304.386z M194.784,335.963c-77.067,0-139.768-62.7-139.768-139.768c0-77.067,62.7-139.767,139.768-139.767
-                    s139.768,62.7,139.768,139.768S271.851,335.963,194.784,335.963z"/>
-                </svg>
-                <input type="text" placeholder="Поиск" class="search-input">
+                <img src="./images/search.svg" alt="Search field" class="search-image">
+                <input type="text" placeholder="Поиск" class="search-input" oninput="SearchInput(this.value)">
             </div>
         </div>
         <div class="body-container">
-            <div class="body-element">
-                <p class="body-element-header">Привет!</p>
-                <p class="body-element-text">Я - твоя записная книжка! Ты можешь добавить в меня заметку, или найти свои заметки при помощи поиска! :)
-                </p>
-                <div class="body-remove-button">
-                    <svg viewBox="0 0 365.696 365.696" class="body-remove-button-img">
-                        <path d="m243.1875 182.859375 113.132812-113.132813c12.5-12.5 12.5-32.765624 0-45.246093l-15.082031-15.082031c-12.503906-12.503907-32.769531-12.503907-45.25 0l-113.128906 113.128906-113.132813-113.152344c-12.5-12.5-32.765624-12.5-45.246093 0l-15.105469 15.082031c-12.5 12.503907-12.5 32.769531 0 45.25l113.152344 113.152344-113.128906 113.128906c-12.503907 12.503907-12.503907 32.769531 0 45.25l15.082031 15.082031c12.5 12.5 32.765625 12.5 45.246093 0l113.132813-113.132812 113.128906 113.132812c12.503907 12.5 32.769531 12.5 45.25 0l15.082031-15.082031c12.5-12.503906 12.5-32.769531 0-45.25zm0 0"/>
-                    </svg>
-                </div>
-            </div>
+            <!-- Сюда JS помещает заметки -->
         </div>
     </div>
 
-    <div class="add-button" id="add-button">
-        <a href="#editor" class="addButton-a"></a>
-        <svg viewBox="0 0 42 42" class="add-button-image">
-            <polygon points="42,19 23,19 23,0 19,0 19,19 0,19 0,23 19,23 19,42 23,42 23,23 42,23 "/>
-        </svg>
+    <div class="add-button" onclick="AddButtonClick()">
+        <img src="./images/add.svg" alt="add button image" class="add-button-image">
     </div>
     <script src="./scripts/index.js"></script>
 </body>

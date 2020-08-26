@@ -8,27 +8,27 @@
 
     }
 
-    add(object) {
-        // Метод добавляющий элементы в библиотеку. Принимает на вход объекты, и проводит проверку, является ли аргумент объектом
+    add(arr) {
+        // Метод добавляющий элементы в библиотеку. Принимает на вход массивы, и проводит проверку, является ли аргумент массивом
 
-        if (typeof (object) == 'object') {
+        if (arr instanceof Array) {
 
             let id;
 
             if (this.freeIDs.length > 0) {
 
                 id = this.freeIDs.shift()
-                this.map.set(id, object);
+                this.map.set(id, arr);
             }
             else {
                 id = `${this.map.size + 1}`
-                this.map.set(id, object);
+                this.map.set(id, arr);
             }
 
             return id;    // Вернём присвоенный объекту ID для предоставления возможности поиска объекта в библиотеке по присвоенному ID 
         }
         else {
-            console.log('-Аргумент пуст, или не является объектом (Библиотека принимает только ОБЪЕКТЫ!)');
+            console.log('-Аргумент пуст, или не является массивом (Библиотека принимает только МАССИВЫ!)');
 
             return null;
         }
@@ -53,14 +53,18 @@
     }
 
     getByData(data) {
-        
+        // Метод производящий поиск элементов с заданой фразой в библиотеке:
+
         let temp = new Map();
+        data = data.toLowerCase()
 
         for (let key of this.map.keys()) {
 
-            for (let objKey of Object.keys(this.map.get(key))) {
+            for (let item of this.map.get(key)) {
 
-                if (objKey.includes(data) || this.map.get(key)[objKey].includes(data)) {
+                item = item.toLowerCase();
+
+                if (item.includes(data)) {
 
                     temp.set(key, this.map.get(key));
                 }
@@ -82,21 +86,24 @@
         }
     }
 
-    updateById(id, object) {
-        // Метод производящий обновление полей объекта с указанным ID. Проверяет наличие указанного ID в базе,
-        // и в случае если имеющийся объект имеет все поля входящего объекта обновляет эти поля. Иначе заменяет объект:
+    updateById(id, arr) {
+        // Метод производящий обновление полей записи с указанным ID. Проверяет наличие указанного ID в базе,
+        // сверяет поля найденного массива с предложеным, и в случае различия подменяет их:
 
         if (this.map.has(`${id}`)) {
 
-            if (typeof (object) == 'object') {
+            if (arr instanceof Array) {
 
-                for (let key in object) {
+                for (let key in arr) {
 
-                    this.map.get(`${id}`)[key] = object[key];
+                    if (this.map.get(`${id}`)[key] != arr[key]) {
+
+                        this.map.get(`${id}`)[key] = arr[key];
+                    }
                 }
             }
             else {
-                console.log('-Библиотека принимает только ОБЪЕКТЫ!');
+                console.log('-Библиотека принимает только МАССИВЫ!');
             }
         }
         else {
@@ -104,17 +111,17 @@
         }
     }
 
-    replaceById(id, object) {
-        // Метод производящий замену объекта с указанным ID. Проверяет наличие указанного ID в базе.
+    replaceById(id, arr) {
+        // Метод производящий замену записи с указанным ID. Проверяет наличие указанного ID в базе.
 
         if (this.map.has(`${id}`)) {
 
-            if (typeof (object) == 'object') {
+            if (arr instanceof Array) {
 
-                this.map.set(`${id}`, object);
+                this.map.set(`${id}`, arr);
             }
             else {
-                console.log('-Библиотека принимает только ОБЪЕКТЫ!');
+                console.log('-Библиотека принимает только МАССИВЫ!');
             }
         }
         else {
