@@ -1,4 +1,3 @@
-
 // Глобальные переменные:
 let storage = new Storage();
 let editor = document.querySelector('.editor-window-container');
@@ -21,8 +20,6 @@ storage.add(['К сведению', 'Мои\nполя\nподдерживваю�
 storage.add(['И ещё', 'Я добавлю пару заметок-филлеров чтобы было проще протестировать. s ;)'])
 storage.add(['', '**ещё заметка-филлер** g :)'])
 storage.add(['', '**ещё заметка-филлер** s :)'])
-
-
 
 InjectAllNotesToPage();
 
@@ -87,7 +84,7 @@ function EditorSaveClick() {
         let curNoteText = document.getElementById(`${curEditеdNote}-text`);
 
         curNoteTitle.textContent = editorTitleField.value;
-        curNoteText.innerHTML = editorTextField.value.replaceAll('\n', '<br>');
+        curNoteText.innerHTML = editorTextField.value.replace(/\n/g, '<br>');
 
         curEditеdNote = null;
 
@@ -204,7 +201,7 @@ function AddNote(id, title, text, opacity = false, highterIndex = null) {
     let bodyElementText = document.createElement('p');
     bodyElementText.className = 'body-element-text';
     bodyElementText.id = `${id}-text`;
-    bodyElementText.innerHTML = text.replaceAll('\n', '<br>');
+    bodyElementText.innerHTML = text.replace(/\n/g, '<br>');
 
 
     // Кнопка удаления заметки:
