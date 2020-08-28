@@ -1,42 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+}
 
 body {
     background: #fae696;
 }
 
-.wrap {
+.container {
     float: left;
-    margin: 1%;
     width: 220px;
-    height: 215px;
-	padding-bottom: 0.3%;
+    margin: 20px;
+    margin-right: 0px;
+    border-radius: 8px;
+	padding-bottom: 6px;
     background: #ffffff;
-    border-radius: 7px;
     border: 1px solid black;
     box-shadow: 2px 2px 0px #870000;
 }
 
-p {
-    margin-left: 3%;
+.container-title {
+    margin: 15px;
+    margin-left: 6px;
     font-family: sans-serif;
 }
 
 .img-container {
-    margin: 3%;
+    margin: 6px;
 }
 
 .menu {
-    margin: 3%;
-    padding: 0%;
-}
-
-.menu-elem {
-    color: #870000;
-    margin-bottom: 4.5%;
+    margin: 6.5px;
 }
 
 .menu-container {
-    margin: 3%;
     width: 200px;
+    margin: 6px;
+    margin-bottom: 15px;
     font-size: 15px;
     font-family: serif;
     border-radius: 10px;
@@ -45,12 +45,14 @@ p {
     box-shadow: 5px 5px 0px #870000;
 }
 
-.menu-button-zone:hover {
+.menu-elem {
+    color: #870000;
+    line-height: 20px;
+    margin-top: 5px;
+}
+
+.menu-elem:hover {
     cursor: pointer;
-    color: #000000;
-    background: #ffffff;
-    margin-top: -1px;
-    margin-bottom: -1px;
     border-radius: 5px;
-    border: 1px solid #000000;
+    background: #fcf1c5;
 }
