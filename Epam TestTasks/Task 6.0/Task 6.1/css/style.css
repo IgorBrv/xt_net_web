@@ -4,16 +4,15 @@
 }
 
 body {
+    display: flex;
     background: #fae696;
 }
 
 .container {
-    float: left;
     width: 220px;
-    margin: 20px;
+    margin: 25px;
     margin-right: 0px;
     border-radius: 8px;
-	padding-bottom: 6px;
     background: #ffffff;
     border: 1px solid black;
     box-shadow: 2px 2px 0px #870000;
@@ -43,6 +42,7 @@ body {
     border: 1px solid black;
     background-color: #fae696;
     box-shadow: 5px 5px 0px #870000;
+    transition: 1s linear;
 }
 
 .menu-elem {
