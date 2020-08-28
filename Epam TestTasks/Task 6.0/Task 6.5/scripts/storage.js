@@ -4,8 +4,6 @@
     constructor() {
 
         this.map = new Map();
-        this.freeIDs = new Array();
-
     }
 
     add(arr) {
@@ -13,17 +11,16 @@
 
         if (arr instanceof Array) {
 
-            let id;
+            let id = 0;
 
-            if (this.freeIDs.length > 0) {
+            for (let key of this.map.keys()) {
+                if (parseInt(key) > id) {
+                    id = parseInt(key);
+                }
+            }
 
-                id = this.freeIDs.shift()
-                this.map.set(id, arr);
-            }
-            else {
-                id = `${this.map.size + 1}`
-                this.map.set(id, arr);
-            }
+            id += 1;
+            this.map.set(`${id}`, arr);
 
             return id;    // Вернём присвоенный объекту ID для предоставления возможности поиска объекта в библиотеке по присвоенному ID 
         }
@@ -79,7 +76,6 @@
         if (this.map.has(`${id}`)) {
 
             this.map.delete(`${id}`);
-            this.freeIDs.push(`${id}`);
         }
         else {
             console.log('-Элемент с таким ID отсутствует в библиотеке или ID задан неверно!');
