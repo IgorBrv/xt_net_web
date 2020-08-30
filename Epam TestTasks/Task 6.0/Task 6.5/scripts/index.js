@@ -12,6 +12,8 @@ const switcher = document.querySelector('.switcher');
 let curEditеdNote = null;
 let desktop;
 
+
+// Отключение всех визуальных эффектов для мобильных устройст:
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
     let head = document.querySelector('.header-container');
@@ -32,6 +34,7 @@ storage.add(['К сведению', 'Мои\nполя\nподдерживваю�
 storage.add(['И ещё', 'Я добавлю пару заметок-филлеров чтобы было проще протестировать. s ;)q'])
 storage.add(['', '**ещё заметка-филлер** g :)q'])
 storage.add(['', '**ещё заметка-филлер** s :)q'])
+storage.add(['Ах да...', 'По многим предсохранённым заметкам разбросаны латинские буквы. Это сделано, опять же, для удобства тестирования. Попробуй ввести в строку поиска букув "g"!']);
 
 
 InjectAllNotesToPage();
@@ -51,11 +54,11 @@ function InjectAllNotesToPage() {
 
 // Функции обработки взаимодействий с элементами формы:
 
-function NoteClick(id) {
+function NoteClick(note) {
     // Функция обработки клика по заметке
 
-    curEditеdNote = id
-    let selectedNote = storage.getById(id);
+    curEditеdNote = note
+    let selectedNote = storage.getById(note.id);
     editorTextField.value = selectedNote[1];
     editorTitleField.value = selectedNote[0];
     saveButton.textContent = 'Сохранить';
@@ -94,10 +97,10 @@ function EditorSaveClick() {
 
     if (curEditеdNote != null){
 
-        storage.updateById(curEditеdNote, [editorTitleField.value, editorTextField.value])
+        storage.updateById(curEditеdNote.id, [editorTitleField.value, editorTextField.value])
 
-        let curNoteTitle = document.getElementById(`${curEditеdNote}-title`);
-        let curNoteText = document.getElementById(`${curEditеdNote}-text`);
+        let curNoteTitle = curEditеdNote.querySelector('.body-element-header');
+        let curNoteText = curEditеdNote.querySelector('.body-element-text');
 
         curNoteTitle.textContent = editorTitleField.value;
         curNoteText.innerHTML = editorTextField.value.replace(/\n/g, '<br>');
@@ -122,6 +125,7 @@ function EditorCloseButtonClick() {
     ChangeOpacity(editor, 0, 20, function() {editor.classList.remove('editor-window-container-to-top')} );
     curEditеdNote = null;
 }
+
 
 function SwitchHighlightsClick() {
     if (hightLights) {
@@ -151,7 +155,7 @@ function AddNote(id, title, text, opacity = false) {
     bodyElement.className = 'body-element';
     bodyElement.id = id;
     bodyElement.style.opacity = 1;
-    bodyElement.setAttribute('onclick', 'NoteClick(this.id)');
+    bodyElement.setAttribute('onclick', 'NoteClick(this)');
     if (opacity) {
         bodyElement.style.opacity = 0;
         bodyElement.style.position = 'fixed';

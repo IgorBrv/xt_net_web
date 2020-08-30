@@ -205,29 +205,29 @@ function ContentManager(step) {
                         processingList.set(note, 1);
                     }
                     else {
+
+                        itemPlaced = false;
+    
+                        for (let item of notesOnPage) {
+
+                            if (parseInt(item.id) >= parseInt(id)) {    // Размещение восстаналиваемого элемента на форме с учётом порядка (по времени добавления)
+    
+                                mainPageBody.insertBefore(note, item);
+                                itemPlaced = true;
+                                break;
+                            }
+                        }
+                        if (!itemPlaced) {
+
+                            mainPageBody.appendChild(note);
+                        }
+
                         if (desktop) {
 
-                            itemPlaced = false;
-    
-                            for (let item of notesOnPage) {
-    
-                                if (parseInt(item.id) >= parseInt(id)) {    // Размещение восстаналиваемого элемента на форме с учётом порядка (по времени добавления)
-        
-                                    mainPageBody.insertBefore(note, item);
-                                    itemPlaced = true;
-                                    break;
-                                }
-                            }
-                            if (!itemPlaced) {
-    
-                                mainPageBody.appendChild(note);
-                            }
-    
                             ChangeOpacity(note, 1);    // Передача в функцию изменения прозрачности восстановленного элемента
                         }
                         else {
                             note.style.opacity = '1';
-                            mainPageBody.appendChild(note);
                         }
                     }
                 }
@@ -236,7 +236,7 @@ function ContentManager(step) {
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             if (desktop) {
-                
+
                 MoveItems();    // Запуск функции перераспределяющей элементы по форме
 
                 if (hightLights) {   // Запуск функции подсвечивающей результаты поиска
@@ -473,7 +473,7 @@ function HightlightSearch(shutingDown = false) {
                     }
 
                     temp.push(raw[0].substring(curIndex, title.length));
-                    let curNote = document.getElementById(`${note.id}-title`);
+                    let curNote = note.querySelector('.body-element-header');
                     curNote.innerHTML = temp.join('').replace(/\n/g, '<br>');
                 }
                 else {
