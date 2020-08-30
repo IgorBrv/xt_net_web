@@ -171,6 +171,7 @@ textarea::placeholder, input::placeholder {
     width: 20px;
     height: 20px;
     display: flex;
+    margin-top: 5px;
     border-radius: 50%;
     position: relative;
     background: #828282;
@@ -350,12 +351,12 @@ textarea::placeholder, input::placeholder {
 
     .search-container {
         width: 60%;
-        /* transition: 0.3s linear; */
+        transition: 0.3s linear;
     }
 
-    /* .search-container:hover {
+    .search-container:hover {
         width: 90%;
-    } */
+    }
 
     .body-element {
         width: 55%;
