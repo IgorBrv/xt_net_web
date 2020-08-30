@@ -10,6 +10,20 @@ const editorTextField = document.querySelector('.editor-window-textarea');
 const switcherBox = document.querySelector('.hightlights-switcher');
 const switcher = document.querySelector('.switcher');
 let curEditеdNote = null;
+let desktop;
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+
+    let head = document.querySelector('.header-container');
+    head.removeChild(head.querySelector('.hightlights-switcher'));
+    head.removeChild(head.querySelector('.filler'));
+    head.style.justifyContent = 'center';
+    head.style
+    desktop = false;
+
+  } else {
+    desktop = true;
+}
 
 // Добавление стандартных записей в библиотеку и на страницу:
 storage.add(['Привет!', 'Я - твоя записная книжка! Ты можешь добавить a в меня заметку, или найти свои заметки при помощи поиска! :)'])

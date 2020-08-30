@@ -22,7 +22,7 @@ function SearchInput(input) {
     lastInput = input.toLowerCase();
     filteredNotes = storage.getByData(input);    // Функцию поиска осуществляет библиотека
 
-    for (let key of allNotes.keys()){
+    for (let key of allNotes.keys()) {
         // Ищем элементы которые не были выделены библиотекой в результатах поиска:
 
         if (!filteredNotes.has(key)) {
@@ -58,11 +58,18 @@ function ContentManager(step) {
         for (let note of temp) {    // Для дальнейшей обработки элементам прописываются фиксированые координаты и position = 'fixed'
     
             notesOnPage.push(note);    // Элементы перемещаются в отдельный список, т.к. temp не поддерживает splice
-            note.style.left = `${(note.getBoundingClientRect()['x'])}px`;
-            note.style.top = `${note.getBoundingClientRect()['y']-10}px`;
+
+            if (desktop) {
+                note.style.left = `${(note.getBoundingClientRect()['x'])}px`;
+                note.style.top = `${note.getBoundingClientRect()['y']-10}px`;
+            }
         }
-        for (let note of temp) {
-            note.style.position = 'fixed';
+        if (desktop) {
+
+            for (let note of temp) {
+
+                note.style.position = 'fixed';
+            }
         }
     
         while (queue.length > 0) {    // Цикл обработки очереди
@@ -86,8 +93,16 @@ function ContentManager(step) {
 
                     if (storage.getByData(lastInput).has(item.id)) {    // Размещаем элемент в фформу если в данный момент не включен поиск под который элемент не прохоодит
 
+                        if (desktop) {
+
+                            ChangeOpacity(item, 1);
+                        }
+                        else {
+                            item.style.opacity = '1';
+                        }
+
                         mainPageBody.appendChild(item);
-                        ChangeOpacity(item, 1);
+
                     }
                     else {
                         hiddenNotes.push(item);
@@ -105,22 +120,28 @@ function ContentManager(step) {
                     let item = document.getElementById(id);
                     notesOnPage.splice(notesOnPage.indexOf(item), 1);
 
-                    let commonHeight = 0;
+                    if (desktop) {
 
-                    for (let elem of notesOnPage) { // Для того, чтобы скролл-бар не начинал появляться и исчезать при удалении сбивая разметку и позиционировавние
+                        let commonHeight = 0;
 
-                        commonHeight += elem.getBoundingClientRect()['height'] + 10;
-                        
-                        if (commonHeight >= window.innerHeight - 65) {
-
-                            body.style.overflowY = 'scroll';
-                            break;
+                        for (let elem of notesOnPage) { // Для того, чтобы скролл-бар не начинал появляться и исчезать при удалении сбивая разметку и позиционировавние
+    
+                            commonHeight += elem.getBoundingClientRect()['height'] + 10;
+                            
+                            if (commonHeight >= window.innerHeight - 65) {
+    
+                                body.style.overflowY = 'scroll';
+                                break;
+                            }
                         }
+    
+                        removedNotes.push(item);
+    
+                        ChangeOpacity(item, 0);
                     }
-
-                    removedNotes.push(item);
-
-                    ChangeOpacity(item, 0);
+                    else {
+                        mainPageBody.removeChild(item);
+                    }
                 }
             }
 
@@ -129,23 +150,29 @@ function ContentManager(step) {
             for (let id of curStep.keys()) {    
 
                 if (curStep.get(id) == 'hd' && document.getElementById(id)) {
-    
-                    let commonHeight = 0;
-
-                    for (let elem of notesOnPage) { // Для того, чтобы скролл-бар не начинал появляться и исчезать при поиске сбивая разметку и позиционировавние
-
-                        commonHeight += elem.getBoundingClientRect()['height'] + 10;
-                        
-                        if (commonHeight >= window.innerHeight - 65) {
-
-                            body.style.overflowY = 'scroll';
-                            break;
-                        }
-                    }
-
+                    
                     let item = document.getElementById(id);
+
+                    if (desktop) {
+
+                        let commonHeight = 0;
+
+                        for (let elem of notesOnPage) { // Для того, чтобы скролл-бар не начинал появляться и исчезать при поиске сбивая разметку и позиционировавние
     
-                    ChangeOpacity(item, 0);    // Передача события в функцию изменения прозрачности
+                            commonHeight += elem.getBoundingClientRect()['height'] + 10;
+                            
+                            if (commonHeight >= window.innerHeight - 65) {
+    
+                                body.style.overflowY = 'scroll';
+                                break;
+                            }
+                        }
+
+                        ChangeOpacity(item, 0);    // Передача события в функцию изменения прозрачности
+                    }
+                    else {
+                        mainPageBody.removeChild(item);
+                    }
     
                     if (!hiddenNotes.includes(item)) {    // Добавление сокрытого элемента в список сокрытых элементов
 
@@ -178,35 +205,44 @@ function ContentManager(step) {
                         processingList.set(note, 1);
                     }
                     else {
-                        
-                        itemPlaced = false;
-    
-                        for (let item of notesOnPage) {
+                        if (desktop) {
 
-                            if (parseInt(item.id) >= parseInt(id)) {    // Размещение восстаналиваемого элемента на форме с учётом порядка (по времени добавления)
+                            itemPlaced = false;
     
-                                mainPageBody.insertBefore(note, item);
-                                itemPlaced = true;
-                                break;
+                            for (let item of notesOnPage) {
+    
+                                if (parseInt(item.id) >= parseInt(id)) {    // Размещение восстаналиваемого элемента на форме с учётом порядка (по времени добавления)
+        
+                                    mainPageBody.insertBefore(note, item);
+                                    itemPlaced = true;
+                                    break;
+                                }
                             }
+                            if (!itemPlaced) {
+    
+                                mainPageBody.appendChild(note);
+                            }
+    
+                            ChangeOpacity(note, 1);    // Передача в функцию изменения прозрачности восстановленного элемента
                         }
-                        if (!itemPlaced) {
-
+                        else {
+                            note.style.opacity = '1';
                             mainPageBody.appendChild(note);
                         }
-
-                        ChangeOpacity(note, 1);    // Передача в функцию изменения прозрачности восстановленного элемента
                     }
                 }
             }
 
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            MoveItems();    // Запуск функции перераспределяющей элементы по форме
+            if (desktop) {
+                
+                MoveItems();    // Запуск функции перераспределяющей элементы по форме
 
-            if (hightLights) {   // Запуск функции подсвечивающей результаты поиска
-
-                HightlightSearch();
+                if (hightLights) {   // Запуск функции подсвечивающей результаты поиска
+    
+                    HightlightSearch();
+                }
             }
         }
         сontentManagerDown = true;
@@ -443,7 +479,7 @@ function HightlightSearch(shutingDown = false) {
                 else {
                     if (hightLightedNotes.includes(note)) {
 
-                        let curNoteTitle = document.getElementById(`${note.id}-title`);            
+                        let curNoteTitle = note.querySelector('.body-element-header');      
                         curNoteTitle.textContent = raw[0];
 
                     }
@@ -470,7 +506,7 @@ function HightlightSearch(shutingDown = false) {
                     }
     
                     temp.push(raw[1].substring(curIndex, text.length));
-                    let curNote = document.getElementById(`${note.id}-text`);
+                    let curNote = note.querySelector('.body-element-text');
                     curNote.innerHTML = temp.join('').replace(/\n/g, '<br>');
 
                 }
@@ -478,7 +514,7 @@ function HightlightSearch(shutingDown = false) {
 
                     if (hightLightedNotes.includes(note)) {
 
-                        let curNoteText = document.getElementById(`${note.id}-text`);
+                        let curNoteText = note.querySelector('.body-element-text');
                         curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
                     }
                 }
@@ -498,10 +534,13 @@ function HightlightSearch(shutingDown = false) {
             for (let note of hightLightedNotes) {    // Отключение подвестки при пустой строке поиска или при сигнале отключения подсветки
                 
                 let raw = storage.getById(note.id);
-                let curNoteTitle = document.getElementById(`${note.id}-title`);
-                let curNoteText = document.getElementById(`${note.id}-text`);
-                curNoteTitle.textContent = `${raw[0]}`;
-                curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
+
+                if (raw) {
+                    let curNoteTitle = note.querySelector('.body-element-header');
+                    let curNoteText = note.querySelector('.body-element-text');
+                    curNoteTitle.textContent = `${raw[0]}`;
+                    curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
+                }
             }
 
             hightLightedNotes = [];
