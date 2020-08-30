@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <script src="./scripts/storage.js"></script>
 </head>
-<body>
+<body class="body">
     <div class="background">
         <style>
             /* Fixed Background for IOS browser */
@@ -25,7 +25,7 @@
         <div class="editor-window">
             <div class="editor-window-form">
                 <div class="editor-window-header">
-                    <input type="text" placeholder="Введите заголовок" class="editor-window-header-text">
+                    <input type="text" placeholder="Введите заголовок" class="editor-window-title">
                     <div class="editor-window-header-close-button" onclick="EditorCloseButtonClick()">
                         <img src="./images/close.svg" alt="editor window closure icon" class="body-remove-button-img"> 
                     </div>
@@ -41,9 +41,15 @@
 
     <div class="wrapper">
         <div class="header-container">
+            <div class="filler"></div>
             <div class="search-container"> 
                 <img src="./images/search.svg" alt="Search field" class="search-image">
                 <input type="text" placeholder="Поиск" class="search-input" oninput="SearchInput(this.value)">
+            </div>
+            <div class="hightlights-switcher" onclick="SwitchHighlightsClick()">
+                <div class="switcher">
+                    <img class="switcher-logo" src="./images/hightlight.svg" alt="search hightlights switcher">
+                </div>
             </div>
         </div>
         <div class="body-container">
@@ -55,6 +61,7 @@
         <img src="./images/add.svg" alt="add button image" class="add-button-image">
     </div>
     <script src="./scripts/index.js"></script>
+    <script src="./scripts/contentManager.js"></script>
 </body>
 
 </html>

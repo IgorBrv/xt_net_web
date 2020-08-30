@@ -1,25 +1,24 @@
-// Глобальные переменные:
-let storage = new Storage();
-let editor = document.querySelector('.editor-window-container');
-let mainPageBody = document.querySelector('.body-container');
-let saveButton = document.querySelector('.editor-window-savebutton');
-let addButton = document.querySelector('.add-button');
-let editorTitleField = document.querySelector('.editor-window-header-text');
-let editorTextField = document.querySelector('.editor-window-textarea');
+// Глобальные переменные и константы:
+const storage = new Storage();
+const body = document.querySelector('.body');
+const editor = document.querySelector('.editor-window-container');
+const mainPageBody = document.querySelector('.body-container');
+const saveButton = document.querySelector('.editor-window-savebutton');
+const addButton = document.querySelector('.add-button');
+const editorTitleField = document.querySelector('.editor-window-title');
+const editorTextField = document.querySelector('.editor-window-textarea');
+const switcherBox = document.querySelector('.hightlights-switcher');
+const switcher = document.querySelector('.switcher');
 let curEditеdNote = null;
 
-// Вспомогательные переменные для функции поиска:
-let hiddenNotes = [];
-let removeInWork = [];
-let restoreInWork = [];
-
 // Добавление стандартных записей в библиотеку и на страницу:
-storage.add(['Привет!', 'Я - твоя записная книжка! Ты можешь добавить в меня заметку, или найти свои заметки при помощи поиска! :)'])
-storage.add(['Кстати...', 'Ты можешь удалять ненужные заметки нажав на крестик в углу заметки или редактировать старые заметки кликнув на них ;)'])
-storage.add(['К сведению', 'Мои\nполя\nподдерживвают\nпереносы\nстрок\n!!!'])
-storage.add(['И ещё', 'Я добавлю пару заметок-филлеров чтобы было проще протестировать. s ;)'])
-storage.add(['', '**ещё заметка-филлер** g :)'])
-storage.add(['', '**ещё заметка-филлер** s :)'])
+storage.add(['Привет!', 'Я - твоя записная книжка! Ты можешь добавить a в меня заметку, или найти свои заметки при помощи поиска! :)'])
+storage.add(['Кстати...', 'Ты можешь удалять ненужные заметки нажав на крестик в углу заметки или редактировать старые заметки кликнув на них ;)q'])
+storage.add(['К сведению', 'Мои\nполя\nподдерживвают\nпереносы\nстрок\n!!!q'])
+storage.add(['И ещё', 'Я добавлю пару заметок-филлеров чтобы было проще протестировать. s ;)q'])
+storage.add(['', '**ещё заметка-филлер** g :)q'])
+storage.add(['', '**ещё заметка-филлер** s :)q'])
+
 
 InjectAllNotesToPage();
 
@@ -39,7 +38,7 @@ function InjectAllNotesToPage() {
 // Функции обработки взаимодействий с элементами формы:
 
 function NoteClick(id) {
-    // Функция обработки клика по записке
+    // Функция обработки клика по заметке
 
     curEditеdNote = id
     let selectedNote = storage.getById(id);
@@ -47,6 +46,7 @@ function NoteClick(id) {
     editorTitleField.value = selectedNote[0];
     saveButton.textContent = 'Сохранить';
     editor.classList.add('editor-window-container-to-top');
+    ChangeOpacity(editor, 1, 20);
 }
 
 
@@ -57,6 +57,7 @@ function AddButtonClick() {
     editorTitleField.value = '';
     editor.classList.add('editor-window-container-to-top');
     saveButton.textContent = 'Создать';
+    ChangeOpacity(editor, 1, 20);
 }
 
 
@@ -67,8 +68,9 @@ function RemoveClick(event) {
 
     if (confirm('Вы действительно хотите удалить заметку?')) {
 
-        storage.deleteById(event.target.id);
-        SmoothRemove(document.getElementById(event.target.id));
+        let toRemove = new Map();
+        toRemove.set(event.target.id, 'rm');
+        ContentManager(toRemove);
     }
 }
 
@@ -91,9 +93,9 @@ function EditorSaveClick() {
     } else {
 
         let id = storage.add([editorTitleField.value, editorTextField.value]);
-        let createdItem = AddNote(id, editorTitleField.value, editorTextField.value, true);
-
-        SmoothRestore(createdItem, false);
+        let createdItem = new Map();
+        createdItem.set(AddNote(id, editorTitleField.value, editorTextField.value, true), 'cr');
+        ContentManager(createdItem);
     }
 
     EditorCloseButtonClick();
@@ -102,76 +104,24 @@ function EditorSaveClick() {
 
 function EditorCloseButtonClick() {
     // Функция обработки клика по кнопке закрытия редактора
-
-    editor.classList.remove('editor-window-container-to-top');
+    
+    ChangeOpacity(editor, 0, 20, function() {editor.classList.remove('editor-window-container-to-top')} );
+    curEditеdNote = null;
 }
 
+function SwitchHighlightsClick() {
+    if (hightLights) {
 
-function SearchInput(input) {
-    // Функция обрабатывающая ввод в строку поиска:
-    
-    let allNotes = storage.getAll();
-    let filteredNotes = storage.getByData(input);
-    let toRemove = [];
-    let toRestore = [];
-
-    for (let key of allNotes.keys()){
-        if (!filteredNotes.has(key)) {
-            toRemove.push(key);
-        }
-        else {
-            
-            if (hiddenNotes.includes(key)) {
-
-                toRestore.push(key);
-            }
-        }
+        hightLights = false;
+        HightlightSearch(true);
+        switcher.classList.add('switcher-disabled');
+        switcherBox.classList.add('hightlights-switcher-disabled');
     }
-
-    for (let id of toRemove) {
-        // Цикл отвечающий за сокрытие элементовв не отвечающих критериям поиска:
-
-        if (document.getElementById(id) && !removeInWork.includes(id))
-        {
-            removeInWork.push(id);
-            hiddenNotes.push(id);
-            let itemToRemove = document.getElementById(id)
-
-            // плавное удаление элемента:
-            SmoothRemove(itemToRemove);
-        }
-    }
-
-    for (let id of toRestore) {
-        // Цикл отвечающий восстаноление сокрытых элементов:
-
-        if ((!document.getElementById(id)  || removeInWork.includes(id)) && !restoreInWork.includes(id))
-        {
-            restoreInWork.push(id);
-
-            let highterItem;
-            let itemToRestore;
-
-            for (let item of document.getElementsByClassName('body-element')) {
-                if (item.id >= id) {
-
-                    highterItem = item;
-                    break;
-                }
-            }
-
-            // Восстановление производится с сортировкой по индексу:
-            if (highterItem) {
-                
-                itemToRestore = AddNote(id, allNotes.get(id)[0], allNotes.get(id)[1], true, highterItem);
-            }
-            else {
-                itemToRestore = AddNote(id, allNotes.get(id)[0], allNotes.get(id)[1], true);
-            }
-
-            // Плавное появление восстановленого элемента:
-            SmoothRestore(itemToRestore)
-        }
+    else {
+        hightLights = true;
+        HightlightSearch();
+        switcher.classList.remove('switcher-disabled');
+        switcherBox.classList.remove('hightlights-switcher-disabled');
     }
 }
 
@@ -179,23 +129,25 @@ function SearchInput(input) {
 // Остальная логика:
 
 
-function AddNote(id, title, text, opacity = false, highterIndex = null) {
+function AddNote(id, title, text, opacity = false) {
     // Функция добавляющая запись на страницу и в библиотеку
 
     // Форма заметки:
     let bodyElement = document.createElement('div');
     bodyElement.className = 'body-element';
     bodyElement.id = id;
+    bodyElement.style.opacity = 1;
     bodyElement.setAttribute('onclick', 'NoteClick(this.id)');
     if (opacity) {
         bodyElement.style.opacity = 0;
+        bodyElement.style.position = 'fixed';
     }
 
     // Заголовок заметки:
     let bodyElementHeader = document.createElement('p');
     bodyElementHeader.className = 'body-element-header';
     bodyElementHeader.id = `${id}-title`;
-    bodyElementHeader.appendChild(document.createTextNode(title));
+    bodyElementHeader.appendChild(document.createTextNode(`${title}`));
 
     // Текст заметки:
     let bodyElementText = document.createElement('p');
@@ -224,62 +176,12 @@ function AddNote(id, title, text, opacity = false, highterIndex = null) {
     bodyElement.appendChild(bodyElementText);
     bodyElement.appendChild(bodyRemoveButton);
 
-    if (highterIndex == null){
+    if (opacity) {
+
+        return bodyElement;
+    }
+    else {
 
         mainPageBody.appendChild(bodyElement);
-    } else {
-
-        mainPageBody.insertBefore(bodyElement, highterIndex);
     }
-
-    return bodyElement;
-}
-
-
-function SmoothRemove(itemToRemove) {
-    // Вспомогательная функция производящая затухание удаляемой заметки:
-    
-    let opacity = 1;
-
-    let opacityDecreasing = setInterval(function() {
-        if (opacity <= 0) {
-
-            clearInterval(opacityDecreasing)
-            mainPageBody.removeChild(itemToRemove);
-            removeInWork.splice(removeInWork.indexOf(itemToRemove.id), 1);
-
-            return;
-        }
-
-        itemToRemove.style.opacity = opacity;
-        opacity -= 0.1;
-
-    }, 35);
-}
-
-
-function SmoothRestore (itemToRestore, notNew = true) {
-    // Вспомогательная функция производящая плавное восстановление/создание заметки:
-
-    let opacity = 0;
-
-    let opacityIncreasing = setInterval(function() {
-
-        if (opacity >= 1) {
-
-            clearInterval(opacityIncreasing)
-
-            if (notNew) {
-
-                restoreInWork.splice(restoreInWork.indexOf(itemToRestore.id), 1);
-                hiddenNotes.splice(hiddenNotes.indexOf(itemToRestore.id), 1);
-            }
-
-            return;
-        }
-
-        itemToRestore.style.opacity = opacity;
-        opacity += 0.1;
-
-    }, 35);
 }
