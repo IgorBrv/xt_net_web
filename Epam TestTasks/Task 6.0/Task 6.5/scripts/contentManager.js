@@ -464,9 +464,6 @@ function HightlightSearch(shutingDown = false) {
                 }
 
                 if (count) {
-                    if (note.id == '3') {
-                        console.log('!');
-                    }
 
                     if (!hightLightedNotes.includes(note)) {
                         hightLightedNotes.push(note);
@@ -474,13 +471,13 @@ function HightlightSearch(shutingDown = false) {
 
                     temp.push(raw[0].substring(curIndex, title.length));
                     let curNote = note.querySelector('.body-element-header');
-                    curNote.innerHTML = temp.join('').replace(/\n/g, '<br>');
+                    curNote.innerHTML = temp.join('');
                 }
                 else {
                     if (hightLightedNotes.includes(note)) {
 
                         let curNoteTitle = note.querySelector('.body-element-header');      
-                        curNoteTitle.textContent = raw[0];
+                        curNoteTitle.innerHTML = raw[0];
 
                     }
                 }
@@ -507,7 +504,7 @@ function HightlightSearch(shutingDown = false) {
     
                     temp.push(raw[1].substring(curIndex, text.length));
                     let curNote = note.querySelector('.body-element-text');
-                    curNote.innerHTML = temp.join('').replace(/\n/g, '<br>');
+                    curNote.innerHTML = temp.join('');
 
                 }
                 else {
@@ -515,7 +512,7 @@ function HightlightSearch(shutingDown = false) {
                     if (hightLightedNotes.includes(note)) {
 
                         let curNoteText = note.querySelector('.body-element-text');
-                        curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
+                        curNoteText.innerHTML = raw[1];
                     }
                 }
             }
@@ -525,7 +522,7 @@ function HightlightSearch(shutingDown = false) {
                 let curNoteTitle = note.querySelector('.body-element-header');
                 let curNoteText = note.querySelector('.body-element-text');
                 curNoteTitle.textContent = `${raw[0]}`;
-                curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
+                curNoteText.innerHTML = raw[1];
                 hightLightedNotes.splice(hightLightedNotes.indexOf(note), 1);
             }
         }
@@ -539,7 +536,7 @@ function HightlightSearch(shutingDown = false) {
                     let curNoteTitle = note.querySelector('.body-element-header');
                     let curNoteText = note.querySelector('.body-element-text');
                     curNoteTitle.textContent = `${raw[0]}`;
-                    curNoteText.innerHTML = raw[1].replace(/\n/g, '<br>');
+                    curNoteText.innerHTML = raw[1];
                 }
             }
 

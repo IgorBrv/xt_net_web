@@ -7,8 +7,11 @@ const saveButton = document.querySelector('.editor-window-savebutton');
 const addButton = document.querySelector('.add-button');
 const editorTitleField = document.querySelector('.editor-window-title');
 const editorTextField = document.querySelector('.editor-window-textarea');
-const switcherBox = document.querySelector('.hightlights-switcher');
-const switcher = document.querySelector('.switcher');
+const effectsSwitcherBox = document.getElementById('switcher-body-1');
+const effectsSwitcher = document.getElementById('switcher-1');
+const hightlightSwitcherBox = document.getElementById('switcher-body-2');
+const hightlightSwitcher = document.getElementById('switcher-2');
+let hightLightsLastStatus;
 let curEditеdNote = null;
 let desktop;
 
@@ -17,7 +20,7 @@ let desktop;
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
     let head = document.querySelector('.header-container');
-    head.removeChild(head.querySelector('.hightlights-switcher'));
+    head.removeChild(head.querySelector('.switchers-container'));
     head.removeChild(head.querySelector('.filler'));
     head.style.justifyContent = 'center';
     head.style
@@ -35,7 +38,6 @@ storage.add(['И ещё', 'Я добавлю пару заметок-филле�
 storage.add(['', '**ещё заметка-филлер** g :)q'])
 storage.add(['', '**ещё заметка-филлер** s :)q'])
 storage.add(['Ах да...', 'По многим предсохранённым заметкам разбросаны латинские буквы. Это сделано, опять же, для удобства тестирования. Попробуй ввести в строку поиска букув "g"!']);
-
 
 InjectAllNotesToPage();
 
@@ -103,7 +105,7 @@ function EditorSaveClick() {
         let curNoteText = curEditеdNote.querySelector('.body-element-text');
 
         curNoteTitle.textContent = editorTitleField.value;
-        curNoteText.innerHTML = editorTextField.value.replace(/\n/g, '<br>');
+        curNoteText.textContent = editorTextField.value;
 
         curEditеdNote = null;
 
@@ -127,19 +129,65 @@ function EditorCloseButtonClick() {
 }
 
 
+function SwitchEffectsClick() {
+    // Функция обработки клика по переключателю эффектоов
+
+    if (desktop) {  // В данный момент использует флаг "desktop" 
+
+        SearchInput('');
+        document.querySelector('.search-input').value = '';
+        effectsSwitcher.classList.add('switcher-disabled');
+        effectsSwitcherBox.classList.add('hightlights-switcher-disabled');
+
+        if (hightLights) {
+
+            SwitchHighlightsClick()
+            hightlightSwitcherBox.classList.remove('hightlights-switcher-disabled');
+            hightLightsLastStatus = true;
+
+        }
+        else{
+            hightLightsLastStatus = false;
+        }
+
+        desktop = false;
+        hightlightSwitcher.classList.add('switcher-blocked');
+        hightlightSwitcherBox.classList.add('hightlights-switcher-blocked');
+    }
+    else {
+
+        SearchInput('');
+        document.querySelector('.search-input').value = '';
+        effectsSwitcher.classList.remove('switcher-disabled');
+        effectsSwitcherBox.classList.remove('hightlights-switcher-disabled');
+        
+        if (hightLightsLastStatus) {
+
+            SwitchHighlightsClick()
+        }
+
+        desktop = true;
+        hightlightSwitcher.classList.remove('switcher-blocked');
+        hightlightSwitcherBox.classList.remove('hightlights-switcher-blocked');
+    }
+}
+
+
 function SwitchHighlightsClick() {
+    // Функция обработки кликов по переключателю подсветки поиска
+
     if (hightLights) {
 
         hightLights = false;
         HightlightSearch(true);
-        switcher.classList.add('switcher-disabled');
-        switcherBox.classList.add('hightlights-switcher-disabled');
+        hightlightSwitcher.classList.add('switcher-disabled');
+        hightlightSwitcherBox.classList.add('hightlights-switcher-disabled');
     }
     else {
         hightLights = true;
         HightlightSearch();
-        switcher.classList.remove('switcher-disabled');
-        switcherBox.classList.remove('hightlights-switcher-disabled');
+        hightlightSwitcher.classList.remove('switcher-disabled');
+        hightlightSwitcherBox.classList.remove('hightlights-switcher-disabled');
     }
 }
 
@@ -171,7 +219,7 @@ function AddNote(id, title, text, opacity = false) {
     let bodyElementText = document.createElement('p');
     bodyElementText.className = 'body-element-text';
     bodyElementText.id = `${id}-text`;
-    bodyElementText.innerHTML = text.replace(/\n/g, '<br>');
+    bodyElementText.appendChild(document.createTextNode(`${text}`));
 
 
     // Кнопка удаления заметки:

@@ -46,8 +46,12 @@
                 <img src="./images/search.svg" alt="Search field" class="search-image">
                 <input type="text" placeholder="Поиск" class="search-input" oninput="SearchInput(this.value)">
             </div>
-            <div class="hightlights-switcher" title="Переключатель подсветки поиска" onclick="SwitchHighlightsClick()">
-                <div class="switcher">
+            <div class="switchers-container">
+                <div class="switcher-body"  id ="switcher-body-1" title="Переключатель отрисовки эффектов" onclick="SwitchEffectsClick()">
+                    <div id ="switcher-1" class="switcher"></div>
+                </div>
+                <div class="switcher-body"  id ="switcher-body-2" title="Переключатель подсветки поиска" onclick="SwitchHighlightsClick()">
+                    <div id ="switcher-2" class="switcher"></div>
                 </div>
             </div>
         </div>
