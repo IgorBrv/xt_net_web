@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #323332;
+}
+
+.wrap {
+    width: 40%;
+    height: 135px;
+    display: flex;
+    overflow: hidden;
+    flex-flow: column;
+    align-items: center;
+    justify-content: flex-end;
+
+}
+
+.pointer-body {
+    width: 90%;
+    height: 70px;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    background: #88b7d5;
+    justify-content: center;
+    border: 5px solid #c2e1f5;
+}
+
+.pointer-arrow {
+    top: 29px;
+    z-index: 0;
+    width: 50px;
+    height: 50px;
+    position: relative;
+    background: #88b7d5;
+    transform: rotate(45deg);
+    border-top: 4px solid #c2e1f5;
+    border-left: 4px solid #c2e1f5;
+
+}
+
+.text {
+    z-index: 1;
+    font-size: 1.8vw;
+    color: #ffffff;
+    font-weight: bold;
+}
