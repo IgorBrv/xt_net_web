@@ -1,0 +1,31 @@
+/* Кнопка "Добавить": */
+.add-button {
+    border: 0;
+    width: 70px;
+    height: 70px;
+    position: fixed;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #26b7ed;
+    top: calc(100% - 90px);
+    left: calc(100% - 90px);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button:hover {
+    background: #119ccf;
+}
+
+.add-button:active {
+    color: #ffffff;
+    background: #0d79a1;
+    box-shadow: 1px 1px 10px #26b7ed;
+}
+
+.add-button-image {
+    width: 30%;
+    height: 30%;
+}

@@ -1,0 +1,13 @@
+/* Общие элементы: */
+*{
+    margin: 0%;
+    font-family: sans-serif;
+}
+
+textarea:focus, input:focus, button:focus {
+    outline: none;
+}
+
+textarea::placeholder, input::placeholder {
+    color: #d6d6d6;
+}

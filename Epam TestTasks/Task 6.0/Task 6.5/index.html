@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>Записная книжка</title>
-    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/body.css">
+    <link rel="stylesheet" href="./css/editor.css">
+    <link rel="stylesheet" href="./css/add-button.css">
+    <link rel="stylesheet" href="./css/media.css">
+
     <script src="./scripts/storage.js"></script>
 </head>
 <body class="body">
@@ -22,8 +29,8 @@
     </div>
     
     <div id="editor" class="editor-window-container">
-        <div class="editor-window">
-            <div class="editor-window-form">
+        <div class="editor-window" onclick="EditorCloseButtonClick()">
+            <div class="editor-window-form" onclick="EditorFormClick()">
                 <div class="editor-window-header">
                     <input type="text" placeholder="Введите заголовок" class="editor-window-title">
                     <div class="editor-window-header-close-button" onclick="EditorCloseButtonClick()">
@@ -38,7 +45,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="wrapper">
         <div class="header-container">
             <div class="filler"></div>

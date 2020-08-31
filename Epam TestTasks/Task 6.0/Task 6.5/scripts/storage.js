@@ -64,6 +64,7 @@
                 if (item.includes(data)) {
 
                     temp.set(key, this.map.get(key));
+                    break;
                 }
             }
         }

@@ -128,6 +128,11 @@ function EditorCloseButtonClick() {
     curEditеdNote = null;
 }
 
+function EditorFormClick() {
+    // Заглушка для предотвращения сквозного щелчка по форме до задника
+    
+    event.stopImmediatePropagation();
+}
 
 function SwitchEffectsClick() {
     // Функция обработки клика по переключателю эффектоов

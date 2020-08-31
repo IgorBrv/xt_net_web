@@ -1,0 +1,55 @@
+/* Медиа-уточнения ------------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+    .switchers-container {
+        width: 4%;
+    }
+
+    .filler {
+        width: 4%;
+    }
+}
+
+
+@media (max-width: 1000px) {
+
+    .switchers-container {
+        width: 5%;
+    }
+
+    .search-container {
+        width: 50%;
+    }
+
+    .body-element {
+        width: 60%;
+    }
+
+    .filler {
+        width: 5%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .search-container {
+        width: 60%;
+        transition: 0.3s linear;
+    }
+
+    .search-container:hover {
+        width: 85%;
+    }
+
+    .body-element {
+        width: 55%;
+    }
+
+    .add-button {
+        width: 40px;
+        height: 40px;
+        top: calc(100% - 50px);
+        left: calc(100% - 50px);
+    }
+}
