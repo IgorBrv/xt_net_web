@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UAA.DAL.Connector
+namespace UAA.Entities
 {
-	public static class DALConnector
+	class UAAEntities
 	{
+
 	}
 }

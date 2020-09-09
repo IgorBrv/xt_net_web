@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UAA.DAL.JSON;
+using UAA.DAL.Interface;
 
-namespace UAA.BLL.Interface
+namespace UAA.DAL.Connector
 {
-	public interface IBll
+	public static class DALConnector
 	{
 	}
 }
