@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D322CE7-05D6-4E5C-B507-A4D6AD31FDF6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>UAA.PLInterface</RootNamespace>
-    <AssemblyName>UAA.PLInterface</AssemblyName>
+    <ProjectGuid>{AAADE26A-980F-4A98-B361-4D58FF4B6BC9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UAA.DALCore</RootNamespace>
+    <AssemblyName>UAA.DALCore</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,7 +32,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,11 +49,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ipl.cs" />
+    <Compile Include="DALAwardsAssotiationsJSON.cs" />
+    <Compile Include="DALJsonGetter.cs" />
+    <Compile Include="DALAwardsJSON.cs" />
+    <Compile Include="DALJson.cs" />
+    <Compile Include="DALUsersJSON.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Entities\UAA.Entities\Entities.csproj">
+      <Project>{0830bd18-a294-49cb-a2dd-2d535b34dcdb}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UAA.DAL.Interface\DAL.Interface.csproj">
+      <Project>{3807289a-a2f7-4921-b22f-25c6d50d84c0}</Project>
+      <Name>DAL.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

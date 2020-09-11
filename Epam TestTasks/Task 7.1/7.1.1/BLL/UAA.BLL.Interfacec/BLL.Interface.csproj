@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{698B5181-7F6D-4275-B3AF-E90560C7A18C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>UAA.BLL.Connector</RootNamespace>
-    <AssemblyName>UAA.BLL.Connector</AssemblyName>
+    <ProjectGuid>{BB54C252-0A86-433D-A600-04E14E8AA58F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UAA.BLL.Interfacec</RootNamespace>
+    <AssemblyName>UAA.BLL.Interfacec</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,11 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ibll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Entities\UAA.Entities\Entities.csproj">
+      <Project>{0830bd18-a294-49cb-a2dd-2d535b34dcdb}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PL\UAA.PL.Interface\PL.Interface.csproj">
+      <Project>{6d322ce7-05d6-4e5c-b507-a4d6ad31fdf6}</Project>
+      <Name>PL.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

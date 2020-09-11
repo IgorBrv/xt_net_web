@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7D66EB7D-6DD0-4B90-B49D-53BCE9D6F371}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>UAA.DAL.Connector</RootNamespace>
-    <AssemblyName>UAA.DAL.Connector</AssemblyName>
+    <ProjectGuid>{B8CF37A6-8D6E-4BCE-9BF2-E6CE489A5B7D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UAA.BLL.Core</RootNamespace>
+    <AssemblyName>UAA.BLL.Core</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -43,11 +46,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BLLMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DAL\UAA.DAL.Connector\DAL.Connector.csproj">
+      <Project>{7d66eb7d-6dd0-4b90-b49d-53bce9d6f371}</Project>
+      <Name>DAL.Connector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DAL\UAA.DAL.Interface\DAL.Interface.csproj">
+      <Project>{3807289a-a2f7-4921-b22f-25c6d50d84c0}</Project>
+      <Name>DAL.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Entities\UAA.Entities\Entities.csproj">
+      <Project>{0830bd18-a294-49cb-a2dd-2d535b34dcdb}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PL\UAA.PL.Interface\PL.Interface.csproj">
+      <Project>{6d322ce7-05d6-4e5c-b507-a4d6ad31fdf6}</Project>
+      <Name>PL.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UAA.BLL.Interfacec\BLL.Interface.csproj">
+      <Project>{bb54c252-0a86-433d-a600-04e14e8aa58f}</Project>
+      <Name>BLL.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
