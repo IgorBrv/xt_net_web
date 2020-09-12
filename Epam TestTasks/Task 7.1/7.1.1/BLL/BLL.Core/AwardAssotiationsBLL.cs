@@ -20,6 +20,8 @@ namespace CoreBLL
 
 		public bool RemoveAwardFromUser(User user, Award award) => daoAwardsAssotiations.RemoveAwardFromUser(user, award);
 
+		public bool RemoveAwardFromAllUsers(Award award) => daoAwardsAssotiations.RemoveUserAwardFromAssotiations(award.id, false);
+
 		public Dictionary<User, List<Award>> GetAllUsersWAwards() => daoAwardsAssotiations.GetAllUsersWAwards();
 
 		public Dictionary<Award, List<User>> GetAllAwardsWUsers() => daoAwardsAssotiations.GetAllAwardsWUsers();

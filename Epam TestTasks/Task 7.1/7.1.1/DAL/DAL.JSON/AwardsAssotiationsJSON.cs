@@ -23,6 +23,7 @@ namespace JsonDAL
 
 		public List<User> GetAllUsersWithAward(Award award) => GetAllAwardsWUsers()[award];
 
+
 		public Dictionary<User, List<Award>> GetAllUsersWAwards()
 		{
 			Dictionary<User, List<Award>> temp = new Dictionary<User, List<Award>>();
@@ -113,7 +114,7 @@ namespace JsonDAL
 
 		public bool RemoveUserAwardFromAssotiations(Guid id, bool user = true)
 		{
-			List<Guid[]> temp = new List<Guid[]>(dalJson.awardedList);
+			List<Guid[]> temp;
 
 			Data data = dalJson.LoadAll();
 
@@ -121,21 +122,20 @@ namespace JsonDAL
 			{
 				if (user)
 				{
-					dalJson.awardedList = dalJson.awardedList.Where(item => item[0] != id).ToList();
+					temp = dalJson.awardedList.Where(item => item[0] != id).ToList();
 				}
 				else
 				{
-					dalJson.awardedList = dalJson.awardedList.Where(item => item[1] != id).ToList();
+					temp = dalJson.awardedList.Where(item => item[1] != id).ToList();
 				}
 
-				data.awardedUsers = dalJson.awardedList;
+				data.awardedUsers = temp;
 
 				if (dalJson.SaveAll(data))
 				{
+					dalJson.awardedList = temp;
 					return true;
 				}
-
-				dalJson.awardedList = temp;
 			}
 
 			return false;

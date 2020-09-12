@@ -8,6 +8,7 @@ namespace InterfacesBLL
 	{
 		bool AddAwardToUser(User user, Award award);
 		bool RemoveAwardFromUser(User user, Award award);
+		bool RemoveAwardFromAllUsers(Award award);
 		List<Award> GetAllAwardsOfUser(User user);
 		List<User> GetAllUsersWithAward(Award award);
 		Dictionary<User, List<Award>> GetAllUsersWAwards();
