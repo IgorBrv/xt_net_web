@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B8CF37A6-8D6E-4BCE-9BF2-E6CE489A5B7D}</ProjectGuid>
+    <ProjectGuid>{7F8E8B26-602A-4FF3-8B6B-3B03891E7D6F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CoreBLL</RootNamespace>
-    <AssemblyName>BLL.Core</AssemblyName>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Outputlib</RootNamespace>
+    <AssemblyName>output_lib_1.2</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,16 +23,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,25 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="core.cs" />
+    <Compile Include="MessageScreen.cs" />
+    <Compile Include="NavigationMenu.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="Draw.cs" />
+    <Compile Include="Print.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DAL\DAL.Interface\DAL.Interface.csproj">
-      <Project>{3807289a-a2f7-4921-b22f-25c6d50d84c0}</Project>
-      <Name>DAL.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Entities\Entities\Entities.csproj">
-      <Project>{0830bd18-a294-49cb-a2dd-2d535b34dcdb}</Project>
-      <Name>Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BLL.Interface\BLL.Interfaces.csproj">
-      <Project>{bb54c252-0a86-433d-a600-04e14e8aa58f}</Project>
-      <Name>BLL.Interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

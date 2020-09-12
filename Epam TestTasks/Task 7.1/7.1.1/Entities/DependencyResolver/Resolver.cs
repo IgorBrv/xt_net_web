@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InterfaceBLL;
+﻿using InterfacesBLL;
 using InterfaceDAL;
 using CoreBLL;
 using JsonDAL;
@@ -12,18 +7,19 @@ using JsonDAL;
 namespace Dependencies
 {
     public static class Resolver
-    {
+    {   // Разрешитель зависимостей
+
 		private static readonly IBll bll;
-        private static readonly IUsersDAL dalUsers;
-        private static readonly IAwardsDAL dalAwards;
-        private static readonly IAwardsAssotiatonsDAL dalAwardsAssotiations;
+        private static readonly IUsersDAO daoUsers;
+        private static readonly IAwardsDAO daoAwards;
+        private static readonly IAwardsAssotiatonsDAO daoAwardsAssotiations;
 
         static Resolver()
         {
-            dalUsers = new DALUsersJSON();
-            dalAwards = new DALAwardsJSON();
-            dalAwardsAssotiations = new DALAwardsAssotiationsJSON();
-            bll = new BLLMain(dalUsers, dalAwards, dalAwardsAssotiations);
+            daoAwardsAssotiations = new DALAwardsAssotiationsJSON();
+            daoUsers = new DALUsersJSON(daoAwardsAssotiations);
+            daoAwards = new DALAwardsJSON(daoAwardsAssotiations);
+            bll = new BLLMain(daoUsers, daoAwards, daoAwardsAssotiations);
         }
 
         public static IBll GetBLL => bll;

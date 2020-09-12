@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entities
-{
+{	// Общие классы
 
 	public class Award
-	{
+	{	// Класс объекта награды
+
 		public Guid id;
 		public string title;
 

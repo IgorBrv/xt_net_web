@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Entities;
 
-namespace InterfaceBLL
-{
+namespace InterfacesBLL
+{	// Интерфейс BLL слоя (в данном случае я постарался реализовать все возможные метооды, т.к. неизвестно, какие могут потребоваться при переезде на другой UI или DAL)
 	public interface IBll
 	{
 		bool AddUser(string name, int age, DateTime birth);
@@ -16,7 +13,9 @@ namespace InterfaceBLL
 
 		bool UpdateUser(Guid id, string name, int age, DateTime birth);
 		bool UpdateAward(Guid id, string title);
-		
+
+		bool IsUserInStorage(Guid id);
+		bool IsAwardInStorage(Guid id);
 
 		bool AddAwardToUser(User user, Award award);
 		bool RemoveAwardFromUser(User user, Award award);
@@ -26,6 +25,9 @@ namespace InterfaceBLL
 
 		List<User> GetAllUsers();
 		List<Award> GetAllAwards();
+
+		List<Award> GetAllAwardsOfUser(User user);
+		List<User> GetAllUsersWithAward(Award award);
 		Dictionary<User, List<Award>> GetAllUsersWAwards();
 		Dictionary<Award, List<User>> GetAllAwardsWUsers();
 	}

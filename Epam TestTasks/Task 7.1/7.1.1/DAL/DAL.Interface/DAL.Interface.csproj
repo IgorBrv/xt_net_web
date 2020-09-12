@@ -46,9 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAwardsAssotiatonsDAL.cs" />
-    <Compile Include="IAwardsDAL.cs" />
-    <Compile Include="IUsersDAL.cs" />
+    <Compile Include="IAwardsAssotiatonsDAO.cs" />
+    <Compile Include="IAwardsDAO.cs" />
+    <Compile Include="IUsersDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

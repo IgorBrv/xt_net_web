@@ -1,34 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InterfaceDAL;
 using Entities;
-using Newtonsoft.Json;
 
 namespace JsonDAL
-{
-	public class DALUsersJSON : IUsersDAL
-	{
-		private readonly DALJson dalJson;
+{	// Объекты DAL слоя
+	public class DALUsersJSON : IUsersDAO
+	{	// Объект DAO отвечающий за работу с сущностью пользователей
 
-		public DALUsersJSON()
+		private readonly DALJson dalJson;
+		private readonly IAwardsAssotiatonsDAO awardsAssotiatons;
+
+		public DALUsersJSON(IAwardsAssotiatonsDAO awardsAssotiatons)
 		{
 			dalJson = JsonDAL.Get();
+			this.awardsAssotiatons = awardsAssotiatons;
 		}
 
 		public List<User> GetAllUsers() => dalJson.userList.Select(KeyValuePair => KeyValuePair.Value).ToList();
 
+		public bool IsUserInStorage(Guid id) => dalJson.userList.ContainsKey(id);
 
 		public bool AddUser(User user)
 		{
 			Data data = dalJson.LoadAll();
 
-			if (data != null && !dalJson.userList.ContainsKey(user.id))
+			if (data != null && dalJson.userList.Where(item => item.Value.name == user.name && item.Value.age == user.age && item.Value.birth == user.birth).Count() == 0)
 			{
 
 				data.userList.Add(user);
@@ -54,8 +52,11 @@ namespace JsonDAL
 
 				if (dalJson.SaveAll(data))
 				{
-					dalJson.userList.Remove(user.id);
-					return true;
+					if (awardsAssotiatons.RemoveUserAwardFromAssotiations(user.id, true))
+					{
+						dalJson.userList.Remove(user.id);
+						return true;
+					}
 				}
 			}
 

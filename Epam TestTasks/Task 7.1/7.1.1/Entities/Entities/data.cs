@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entities
-{
+{	// Общие классы
 	public class Data
-	{
+	{	// Класс объекта данных (включает список пользователей, список наград, список завсимостей
+
 		public List<User> userList;
 		public List<Award> awardList;
 		public List<Guid[]> awardedUsers;

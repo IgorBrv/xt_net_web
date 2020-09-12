@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entities
-{
+{	// Общие классы
+
 	public class User
-	{
+	{	// Класс объекта пользователя
+
 		public Guid id;
 		public int age;
 		public string name;

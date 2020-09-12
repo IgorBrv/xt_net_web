@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InterfaceDAL;
 using Entities;
 using Newtonsoft.Json;
 
 namespace JsonDAL
 {
 	public class DALJson
-	{
-		public readonly string path = "data.sav";
+	{	// Единый класс загрузки/записи файла на диск
+
+		private readonly string path = "data.sav";
 		public readonly Dictionary<Guid, User> userList;
 		public readonly Dictionary<Guid, Award> awardList;
-		public readonly List<Guid[]> awardedList;
+		public List<Guid[]> awardedList;
 
 
 		public DALJson()

@@ -1,38 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InterfaceDAL;
 using Entities;
-using Newtonsoft.Json;
 
 namespace JsonDAL
-{
-	public class DALAwardsJSON : IAwardsDAL
-	{
+{   // Объекты DAL слоя
+
+	public class DALAwardsJSON : IAwardsDAO
+	{	// Объект DAO отвечающий за работу с сущностью наград
+
 		private readonly DALJson dalJson;
+		private readonly IAwardsAssotiatonsDAO awardsAssotiatons;
 
-
-		public DALAwardsJSON()
+		public DALAwardsJSON(IAwardsAssotiatonsDAO awardsAssotiatons)
 		{
 			dalJson = JsonDAL.Get();
+			this.awardsAssotiatons = awardsAssotiatons;
 		}
-
 
 		public List<Award> GetAllAwards() => dalJson.awardList.Select(KeyValuePair => KeyValuePair.Value).ToList();
 
+		public bool IsAwardInStorage(Guid id) => dalJson.awardList.ContainsKey(id);
 
 		public bool AddAward(Award award)
 		{
 			Data data = dalJson.LoadAll();
 
-			if (data != null && !dalJson.awardList.ContainsKey(award.id))
+			if (data != null && dalJson.awardList.Where(item => item.Value.title == award.title).Count() == 0)
 			{
-
 				data.awardList.Add(award);
 
 				if (dalJson.SaveAll(data))
@@ -56,8 +52,11 @@ namespace JsonDAL
 
 				if (dalJson.SaveAll(data))
 				{
-					dalJson.awardList.Remove(award.id);
-					return true;
+					if (awardsAssotiatons.RemoveUserAwardFromAssotiations(award.id, false))
+					{
+						dalJson.awardList.Remove(award.id);
+						return true;
+					}
 				}
 			}
 

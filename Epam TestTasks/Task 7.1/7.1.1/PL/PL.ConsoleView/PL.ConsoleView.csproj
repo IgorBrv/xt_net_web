@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BLL\BLL.Interface\BLL.Interface.csproj">
+    <ProjectReference Include="..\..\BLL\BLL.Interface\BLL.Interfaces.csproj">
       <Project>{bb54c252-0a86-433d-a600-04e14e8aa58f}</Project>
-      <Name>BLL.Interface</Name>
+      <Name>BLL.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Entities\DependencyResolver\DependencyResolver.csproj">
       <Project>{8c603715-4915-4bca-90bd-a0eea12eb8ba}</Project>
@@ -61,6 +61,10 @@
     <ProjectReference Include="..\..\Entities\Entities\Entities.csproj">
       <Project>{0830bd18-a294-49cb-a2dd-2d535b34dcdb}</Project>
       <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniversalOutput\output_lib_1.2.csproj">
+      <Project>{7f8e8b26-602a-4ff3-8b6b-3b03891e7d6f}</Project>
+      <Name>output_lib_1.2</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Dynamic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InterfaceDAL;
 using Entities;
-using Newtonsoft.Json;
 
 namespace JsonDAL
-{
-	public class DALAwardsAssotiationsJSON : IAwardsAssotiatonsDAL
-	{
-		private readonly DALJson dalJson;
+{   // Объекты DAL слоя
 
+	public class DALAwardsAssotiationsJSON : IAwardsAssotiatonsDAO
+	{   // Объект DAO отвечающий за работу с сущностью связей многие ко многим (награды : пользователи)
+
+		private readonly DALJson dalJson;
 
 		public DALAwardsAssotiationsJSON()
 		{
 			dalJson = JsonDAL.Get();
 		}
 
-
 		public List<Guid[]> GetListOfAwarded() => dalJson.awardedList;
 
+		public List<Award> GetAllAwardsOfUser(User user) => GetAllUsersWAwards()[user];
+
+		public List<User> GetAllUsersWithAward(Award award) => GetAllAwardsWUsers()[award];
 
 		public Dictionary<User, List<Award>> GetAllUsersWAwards()
 		{
@@ -65,21 +62,22 @@ namespace JsonDAL
 
 			Data data = dalJson.LoadAll();
 
-			Guid[] pair = new Guid[] { user.id, award.id };
-
-			data.awardedUsers.Add(pair);
-			dalJson.awardedList.Add(pair);
-
-			if (dalJson.SaveAll(data))
+			if (data != null)
 			{
-				return true;
-			}
-			else
-			{
+				Guid[] pair = new Guid[] { user.id, award.id };
+
+				data.awardedUsers.Add(pair);
+				dalJson.awardedList.Add(pair);
+
+				if (dalJson.SaveAll(data))
+				{
+					return true;
+				}
+
 				dalJson.awardedList.Remove(pair);
-				return false;
 			}
-
+			
+			return false;
 		}
 
 
@@ -91,10 +89,11 @@ namespace JsonDAL
 			{
 				return false;
 			}
-			else
-			{
-				Data data = dalJson.LoadAll();
 
+			Data data = dalJson.LoadAll();
+
+			if (data != null)
+			{
 				Guid[] temp = dalJson.awardedList[pos];
 
 				dalJson.awardedList.RemoveAt(pos);
@@ -106,6 +105,37 @@ namespace JsonDAL
 				}
 
 				dalJson.awardedList.Add(temp);
+			}
+
+			return false;
+		}
+
+
+		public bool RemoveUserAwardFromAssotiations(Guid id, bool user = true)
+		{
+			List<Guid[]> temp = new List<Guid[]>(dalJson.awardedList);
+
+			Data data = dalJson.LoadAll();
+
+			if (data != null)
+			{
+				if (user)
+				{
+					dalJson.awardedList = dalJson.awardedList.Where(item => item[0] != id).ToList();
+				}
+				else
+				{
+					dalJson.awardedList = dalJson.awardedList.Where(item => item[1] != id).ToList();
+				}
+
+				data.awardedUsers = dalJson.awardedList;
+
+				if (dalJson.SaveAll(data))
+				{
+					return true;
+				}
+
+				dalJson.awardedList = temp;
 			}
 
 			return false;
