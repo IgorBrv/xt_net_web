@@ -6,6 +6,7 @@ using Entities;
 
 namespace JsonDAL
 {	// Объекты DAL слоя
+
 	public class DALUsersJSON : IUsersDAO
 	{	// Объект DAO отвечающий за работу с сущностью пользователей
 

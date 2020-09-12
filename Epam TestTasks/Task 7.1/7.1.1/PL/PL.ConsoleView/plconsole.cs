@@ -12,7 +12,9 @@ namespace ConsoleViewPL
 	public class PLConsole
 	{	// Консольный PL для задачи 7.1.1
 
-		private readonly IBll bll;
+		private readonly IUsersBLO bllUsers;
+		private readonly IAwardsBLO bllAwards;
+		private readonly IAwardsAssotiationsBLO bllAwardsAssotiations;
 		private static readonly string name = " USERS AND AWARDS";
 		private readonly Draw draw = new Draw(name);
 
@@ -23,15 +25,17 @@ namespace ConsoleViewPL
 
 		public PLConsole()
 		{
-			bll = Resolver.GetBLL;
+			bllUsers = Resolver.GetBLLUsers;
+			bllAwards = Resolver.GetBLLAwards;
+			bllAwardsAssotiations = Resolver.GetBLLAwardsAssotiations;
 
 			// Эта секция добавлена для теста:
 			if (!File.Exists("notfirstrun"))
 			{
-				bll.AddUser("Вася", 38, new DateTime(1999, 12, 2));
-				bll.AddUser("Коля", 28, new DateTime(1989, 50, 30));
-				bll.AddAward("Награда за выслугу лет");
-				bll.AddAward("Награда за ответственность");
+				bllUsers.AddUser("Вася", 38, new DateTime(1999, 12, 2));
+				bllUsers.AddUser("Коля", 28, new DateTime(1989, 5, 30));
+				bllAwards.AddAward("Награда за выслугу лет");
+				bllAwards.AddAward("Награда за ответственность");
 				File.Create("notfirstrun");
 			}
 
@@ -45,7 +49,7 @@ namespace ConsoleViewPL
 		private void ShowUserList()
 		{	// Меню отображения списка пользователей
 
-			List<User> users = bll.GetAllUsers();
+			List<User> users = bllUsers.GetAllUsers();
 			List<string> defaultItems = new List<string>() { "[   Создать пользователя   ]", "[ Посмотреть список наград ]", "" };
 			List<string> menuItems = defaultItems.Concat(users.Select(item => item.name)).ToList();
 
@@ -65,7 +69,7 @@ namespace ConsoleViewPL
 
 					case 0:
 						
-						if (bll.RemoveUser(users[feedback[1]-3]))
+						if (bllUsers.RemoveUser(users[feedback[1]-3]))
 						{
 							MessageScreen.CreateMessage(" Пользователь удалён успешно! ", $"Имя: {menuItems[feedback[1]]}", errorMsg: false);
 						}
@@ -83,11 +87,13 @@ namespace ConsoleViewPL
 
 						if (feedback[1] == 0)
 						{
-							if (CreateUser())
+							User user = CreateUser();
+
+							if (user != null)
 							{
 								int curLength = menuItems.Count;
-								users = bll.GetAllUsers();
-								menuItems = defaultItems.Concat(users.Select(item => item.name)).ToList();
+								users.Add(user);
+								menuItems.Add(user.name);
 								MessageScreen.CreateMessage(" Пользователь создан успешно! ", $"Имя: {menuItems[curLength]}", errorMsg: false);
 							}
 							else
@@ -105,7 +111,7 @@ namespace ConsoleViewPL
 						else
 						{
 							ShowUser(users[feedback[1]-3]);
-							users = bll.GetAllUsers();
+							users = bllUsers.GetAllUsers();
 							menuItems = defaultItems.Concat(users.Select(item => item.name)).ToList();
 							curposition = feedback[1];
 						}
@@ -126,7 +132,7 @@ namespace ConsoleViewPL
 			bool exit = false;
 			int curposition = 0;
 			List<string> menuItems;
-			List<Award> items = bll.GetAllAwards();
+			List<Award> items = bllAwards.GetAllAwards();
 
 
 			if (!selection)
@@ -169,7 +175,7 @@ namespace ConsoleViewPL
 
 						if (!selection)
 						{
-							if (bll.RemoveAward(items[feedback[1] - 2]))
+							if (bllAwards.RemoveAward(items[feedback[1] - 2]))
 							{
 								MessageScreen.CreateMessage(" Награда удалена успешно! ", $"Имя: {menuItems[feedback[1]]}", errorMsg: false);
 							}
@@ -196,11 +202,12 @@ namespace ConsoleViewPL
 						if (feedback[1] == 0)
 						{
 							string awardName = draw.Form(new int[] { 2, 10 }, new string[] { "Введите назание награды (максимум 10 слов): ", "К вводу допускаютя только слова состоящие из букв!" });
+							Award award = bllAwards.AddAward(awardName);
 
-							if (bll.AddAward(awardName))
+							if (award != null)
 							{
-								items = bll.GetAllAwards();
-								menuItems = new List<string>() { "[ Добавить награду ]", "" }.Concat(items.Select(item => item.title)).ToList();
+								items.Add(award);
+								menuItems.Add(award.title);
 								MessageScreen.CreateMessage(" Награда создана успешно! ", $"Награда: '{awardName}'", errorMsg: false);
 							}
 							else
@@ -232,7 +239,7 @@ namespace ConsoleViewPL
 			bool exit = false;
 			int curposition = 0;
 			List<string> items = new List<string>() { $"Имя: {user.name}", $"Возраст: {user.age}", $"Дата рождения: {user.birth:D}", "", " [ Наградить пользователя ]", "", "НАГРАДЫ ПОЛЬЗОВАТЕЛЯ:", "" };
-			List<Award> usersAwards = bll.GetAllAwardsOfUser(user);
+			List<Award> usersAwards = bllAwardsAssotiations.GetAllAwardsOfUser(user);
 			List<string> itemsWawards = items.Concat(usersAwards.Select(item => $"-{item.title}")).ToList();
 
 			while (!exit)
@@ -248,7 +255,7 @@ namespace ConsoleViewPL
 
 					case 0:
 
-						if (bll.RemoveAwardFromUser(user, usersAwards[feedback[1] - 8]))
+						if (bllAwardsAssotiations.RemoveAwardFromUser(user, usersAwards[feedback[1] - 8]))
 						{
 							MessageScreen.CreateMessage($" У пользователя {user.name} успешно отняли награду! ", errorMsg: false);
 							itemsWawards.RemoveAt(feedback[1]);
@@ -279,7 +286,7 @@ namespace ConsoleViewPL
 
 								string userName = draw.Form(new int[] { 2, 3 }, new string[] { "Введите имя пользователя: ", "К вводу допускаютя только имена!" });
 
-								if (bll.UpdateUser(user.id, userName, user.age, user.birth))
+								if (bllUsers.UpdateUser(user.id, userName, user.age, user.birth))
 								{
 									MessageScreen.CreateMessage($" Имя пользователя {oldName} изменено успешно! ", $"Новое имя: {userName}", errorMsg: false);
 								}
@@ -293,7 +300,7 @@ namespace ConsoleViewPL
 								int oldAge = user.age;
 								string userAge = draw.Form(new int[] { 0, 1, 150 }, new string[] { "Введите возраст пользователя: ", "К вводу допускаютя только целые числа больше 0 и меньше 150!" });
 
-								if (bll.UpdateUser(user.id, user.name, Int32.Parse(userAge), user.birth))
+								if (bllUsers.UpdateUser(user.id, user.name, Int32.Parse(userAge), user.birth))
 								{
 									MessageScreen.CreateMessage($" Возраст пользователя {oldName} изменён успешно! ", $"Новый возраст: {userAge}", errorMsg: false);
 								}
@@ -316,7 +323,7 @@ namespace ConsoleViewPL
 									{
 										DateTime birthDate = new DateTime(Int32.Parse(dateParts[2]), Int32.Parse(dateParts[1]), Int32.Parse(dateParts[0]));
 
-										if (bll.UpdateUser(user.id, user.name, user.age, birthDate))
+										if (bllUsers.UpdateUser(user.id, user.name, user.age, birthDate))
 										{
 											MessageScreen.CreateMessage($" Дата рождения пользователя {user.name} изменена успешно! ", $"Новая дата: {birthDate:D}", errorMsg: false);
 										}
@@ -333,9 +340,9 @@ namespace ConsoleViewPL
 								}
 							}
 
-							user = bll.GetUserByID(user.id);
+							user = bllUsers.GetUserByID(user.id);
 							items = new List<string>() { $"Имя: {user.name}", $"Возраст: {user.age}", $" Дата рождения: {user.birth:D}", "", "[ Наградить пользователя ]", "", " НАГРАДЫ ПОЛЬЗОВАТЕЛЯ:", "" };
-							itemsWawards = items.Concat(bll.GetAllAwardsOfUser(user).Select(item => $"-{item.title}")).ToList();
+							itemsWawards = items.Concat(bllAwardsAssotiations.GetAllAwardsOfUser(user).Select(item => $"-{item.title}")).ToList();
 						}
 						else if (feedback[1] == 4)
 						{
@@ -343,10 +350,10 @@ namespace ConsoleViewPL
 
 							if (award != null)
 							{
-								if (bll.AddAwardToUser(user, award))
+								if (bllAwardsAssotiations.AddAwardToUser(user, award))
 								{
 									MessageScreen.CreateMessage($" Пользователю {user.name} успешно добавлена награда! ", errorMsg: false);
-									itemsWawards = items.Concat(bll.GetAllAwardsOfUser(user).Select(item => $"-{item.title}")).ToList();
+									itemsWawards = items.Concat(bllAwardsAssotiations.GetAllAwardsOfUser(user).Select(item => $"-{item.title}")).ToList();
 								}
 								else
 								{
@@ -371,7 +378,7 @@ namespace ConsoleViewPL
 			bool exit = false;
 			int curposition = 0;
 			List<string> items = new List<string>() { $"Название награды: {award.title}", "", "НАГРАЖДЁННЫЕ ПОЛЬЗОВАТЕЛИ:", "" };
-			List<User> awardsUsers = bll.GetAllUsersWithAward(award);
+			List<User> awardsUsers = bllAwardsAssotiations.GetAllUsersWithAward(award);
 			List<string> itemsWawards = items.Concat(awardsUsers.Select(item => $"-{item.name}")).ToList();
 
 			while (!exit)
@@ -393,12 +400,11 @@ namespace ConsoleViewPL
 							string oldTitle = award.title;
 							string awardName = draw.Form(new int[] { 2, 10 }, new string[] { "Введите новое название награды: ", "К вводу допускаютя только слова без символов!" });
 
-							if (bll.UpdateAward(award.id, awardName))
+							if (bllAwards.UpdateAward(award.id, awardName))
 							{
 								MessageScreen.CreateMessage($" Название награды '{oldTitle}' изменено успешно! ", $"Новое название: {awardName}", errorMsg: false);
 								items = new List<string>() { $"Название награды: {award.title}", "", "НАГРАЖДЁННЫЕ ПОЛЬЗОВАТЕЛИ:", "" };
 								itemsWawards = items.Concat(awardsUsers.Select(item => $"-{item.name}")).ToList();
-
 							}
 							else
 							{
@@ -417,7 +423,7 @@ namespace ConsoleViewPL
 			}
 		}
 
-		private bool CreateUser()
+		private User CreateUser()
 		{	// Метод реализующий создание пользователя через меню
 
 			string userName = draw.Form(new int[] { 2, 3 }, new string[] { "Введите имя пользователя: ", "К вводу допускаютя только имена!" });
@@ -433,15 +439,7 @@ namespace ConsoleViewPL
 				try
 				{
 					DateTime birthDate = new DateTime(Int32.Parse(dateParts[2]), Int32.Parse(dateParts[1]), Int32.Parse(dateParts[0]));
-
-					if (bll.AddUser(userName, Int32.Parse(userAge), birthDate))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return bllUsers.AddUser(userName, Int32.Parse(userAge), birthDate);
 				}
 				catch (ArgumentOutOfRangeException)
 				{

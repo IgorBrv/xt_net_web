@@ -9,9 +9,11 @@ namespace Dependencies
     public static class Resolver
     {   // Разрешитель зависимостей
 
-		private static readonly IBll bll;
+        private static readonly IUsersBLO bllUsers;
         private static readonly IUsersDAO daoUsers;
+        private static readonly IAwardsBLO bllAwards;
         private static readonly IAwardsDAO daoAwards;
+        private static readonly IAwardsAssotiationsBLO bllAwardsAssotiations;
         private static readonly IAwardsAssotiatonsDAO daoAwardsAssotiations;
 
         static Resolver()
@@ -19,9 +21,13 @@ namespace Dependencies
             daoAwardsAssotiations = new DALAwardsAssotiationsJSON();
             daoUsers = new DALUsersJSON(daoAwardsAssotiations);
             daoAwards = new DALAwardsJSON(daoAwardsAssotiations);
-            bll = new BLLMain(daoUsers, daoAwards, daoAwardsAssotiations);
+            bllUsers = new BLOUsers(daoUsers);
+            bllAwards = new BLOAwards(daoAwards);
+            bllAwardsAssotiations = new BLOAwardsAssotiations(daoAwardsAssotiations);
         }
 
-        public static IBll GetBLL => bll;
+        public static IUsersBLO GetBLLUsers => bllUsers;
+        public static IAwardsBLO GetBLLAwards => bllAwards;
+        public static IAwardsAssotiationsBLO GetBLLAwardsAssotiations => bllAwardsAssotiations;
     }
 }

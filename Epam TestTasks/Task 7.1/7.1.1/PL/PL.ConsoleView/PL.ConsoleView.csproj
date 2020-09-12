@@ -7,7 +7,7 @@
     <ProjectGuid>{7842EF84-4ED0-4D09-A1F9-0D448B2EC48F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ConsoleViewPL</RootNamespace>
-    <AssemblyName>PL.ConsoleView</AssemblyName>
+    <AssemblyName>users and awards</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

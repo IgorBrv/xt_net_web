@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ibll.cs" />
+    <Compile Include="IAwardsAssotiationsBLL.cs" />
+    <Compile Include="IAwardsBLL.cs" />
+    <Compile Include="IUsersBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
