@@ -1,0 +1,132 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <title>@Page.Title</title>
+        <link rel="stylesheet" href="./css/common.css">
+        <link rel="stylesheet" href="./css/header.css">
+        <link rel="stylesheet" href="./css/body.css">
+        <link rel="stylesheet" href="./css/editor.css">
+        <link rel="stylesheet" href="./css/add-button.css">
+        <link rel="stylesheet" href="./css/media.css">
+    </head>
+    <body class="body">
+        <div class="background">
+            <style>
+                /* Fixed Background for IOS browser */
+                .background {
+                    z-index: -2;
+                    width: 100%;
+                    height: 100%;
+                    position: fixed;
+                    background-image: url(./images/background.png);
+                }
+            </style>
+        </div>
+        @if (Page.User)
+        {
+            <div id="editorAwards" class="editor-window-container editorAwards"  style="opacity: 0;">
+                <div class="editor-window" onclick="EditorCloseButtonClick()">
+                    <div class="editor-window-form" onclick="EditorFormClick()">
+                        <div class="editor-window-form-content">
+                            <div class="awards-editor-avatar">
+                                <img src="./images/user.svg" alt="аватар" class="awards-editor-avatar-image">
+                            </div>
+                            <div class="editor-content">
+                                <div class="editor-window-header">
+                                    <p class="editor-window-title">Награды пользователя</p>
+                                    <button type="button" class="editor-window-header-close-button" onclick="EditorAwardsCloseButtonClick()">
+                                        <img src="./images/close.svg" alt="editor window closure icon" class="body-remove-button-img">
+                                    </button>
+                                </div>
+                                <hr class="editor-hr">
+                                @foreach (Entities.Award award in Page.AwardsList)
+                                {
+                                    <div class="editor-selector-box-checkboxes _middle">
+                                        <input type="checkbox" name="" class="awardCheckbox" id="@award.id">
+                                        <label for="@award.id">@award.title</label>
+                                    </div>
+                                }
+                            </div>
+                            <div class="editor-window-footer">
+                                <button type="button" class="editor-window-button" id="b3" onclick="AwardsEditorSaveClick()">Сохранить</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="editor" class="editor-window-container" style="opacity: 0;">
+            <div class="editor-window" onclick="EditorCloseButtonClick()">
+                <div class="editor-window-form" onclick="EditorFormClick()">
+                    <div class="editor-window-form-content">
+                        <div class="editor-avatar"  onclick="RemoveEmblem()">
+                            <img src="@Page.EditorImage" alt="аватар" class="editor-avatar-image">
+                        </div>
+                        <div class="editor-content">
+                            <div class="editor-window-header">
+                                <input type="text" placeholder="Введите имя пользователя" class="editor-window-title" id="editorTindowTitle">
+                                <button type="button" class="editor-window-header-close-button" onclick="EditorCloseButtonClick()">
+                                    <img src="./images/close.svg" alt="editor window closure icon" class="body-remove-button-img">
+                                </button>
+                            </div>
+                            <hr class="editor-hr">
+                            @if (Page.User)
+                            {
+                                <p class="editor-info">Дата рождения:</p>
+                                <input type="date" class="editor-date-field" name="" id="">
+                            }
+                        </div>
+                    </div>
+                    <div class="editor-window-footer">
+                        <input type="file" id="fileSelector" accept="image/png, image/jpeg" onchange="FileUpload(this)" hidden />
+                        <div type="button" class="editor-window-button" id="b0"><label for="fileSelector" class="editor-window-button-label">Эмблема</label></div>
+                        @if (Page.User)
+                        {
+                            <button type="button" class="editor-window-button" id="b1" onclick="AwardsEditorButtonClick()">Награды</button>
+                        }
+                        <button type="button" class="editor-window-button" id="b2" onclick="EditorSaveClick(this)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="header-container">
+                <form action="@Page.RedirectLink" method="post" class="head-element">
+                    <button class="usersOrAwardsButton">
+                        <img src="@Page.UsersAwardsButtonImg" alt="кнопка переключения наград и пользователей" title="кнопка переключения наград и пользователей" class="usersOrAwardsButtonImg">
+                    </button>
+                </form>
+                <div class="search-container" title="Строка поиска">
+                    <img src="./images/search.svg" alt="Search field" class="search-image">
+                    <input type="text" placeholder="Поиск" class="search-input" oninput="SearchInput(this.value)">
+                </div>
+                <div class="head-element head-element-right">
+                    <div class="switchers-container">
+                        <div class="switcher-body" id="switcher-body-1" title="Переключатель отрисовки эффектов" onclick="SwitchEffectsClick()">
+                            <div id="switcher-1" class="switcher"></div>
+                        </div>
+                        <div class="switcher-body" id="switcher-body-2" title="Переключатель подсветки поиска" onclick="SwitchHighlightsClick()">
+                            <div id="switcher-2" class="switcher"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="body-container">
+                @RenderBody()
+            </div>
+        </div>
+        <div class="add-button" onclick="AddButtonClick()">
+            <img src="./images/add.svg" alt="add button image" class="add-button-image">
+        </div>
+        <script src="./scripts/storage.js"></script>
+        <script src="./scripts/contentManager.js"></script>
+        <script src="./scripts/index.js"></script>
+    </body>
+</html>

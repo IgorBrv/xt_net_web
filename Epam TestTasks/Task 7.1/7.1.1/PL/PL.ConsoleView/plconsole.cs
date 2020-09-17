@@ -25,9 +25,10 @@ namespace ConsoleViewPL
 
 		public PLConsole()
 		{
-			bllUsers = Resolver.GetBLLUsers;
-			bllAwards = Resolver.GetBLLAwards;
-			bllAwardsAssotiations = Resolver.GetBLLAwardsAssotiations;
+			Resolver resolver = new Resolver("");
+			bllUsers = resolver.GetBLLUsers;
+			bllAwards = resolver.GetBLLAwards;
+			bllAwardsAssotiations = resolver.GetBLLAwardsAssotiations;
 
 			// Эта секция добавлена для теста:
 			if (!File.Exists("notfirstrun"))

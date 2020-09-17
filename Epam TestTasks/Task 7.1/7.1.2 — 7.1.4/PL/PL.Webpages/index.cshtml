@@ -1,0 +1,79 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using InterfacesBLL;
+@using Entities;
+@using Dependencies;
+@using System.IO;
+@using PL.Webpages.models;
+
+@{
+    string path = Server.MapPath("");
+    Resolver resolver = StaticResolver.Get(path);
+    IUsersBLO bllUsers = resolver.GetBLLUsers;
+    IAwardsBLO bllAwards = resolver.GetBLLAwards;
+    IEmblemsBLO bllEmblems = resolver.GetBLLEmblems;
+    IAwardsAssotiationsBLO bllAwardsAssotiations = resolver.GetBLLAwardsAssotiations;
+
+    if (!File.Exists($"{StaticResolver.Path}/AppData/notfirstrun"))
+    {
+        bllUsers.AddUser("Василий Петрович", 38, new DateTime(1981, 12, 2));
+        bllUsers.AddUser("Николай Павлович", 28, new DateTime(1992, 5, 30));
+        bllUsers.AddUser("Аркадий Черемыхин", 28, new DateTime(1992, 5, 30));
+        bllUsers.AddUser("Константин Аркадьевич", 28, new DateTime(1992, 5, 30));
+        bllAwards.AddAward("Награда за активность");
+        bllAwards.AddAward("Награда за выслугу лет");
+        bllAwards.AddAward("Награда за ответственность");
+
+        BinaryReader br = new BinaryReader(new FileStream($"{path}\\images\\example.png", FileMode.Open));
+        bllEmblems.CreateEmblem(bllUsers.GetAllUsers()[1], "png", br);
+        bllAwardsAssotiations.AddAwardToUser(bllUsers.GetAllUsers()[2], bllAwards.GetAllAwards()[2]);
+        File.Create($"{StaticResolver.Path}/AppData/notfirstrun");
+    }
+
+    int count = 1;
+    List<User> usersList = bllUsers.GetAllUsers();
+
+    foreach (User user in usersList)
+    {
+        Page.id = count;
+        Page.User = true;
+        Page.Age = user.age;
+        Page.Name = user.name;
+        Page.itemId = user.id;
+        Page.aditional = null;
+        Page.aditionalContent = null;
+        Page.Date = user.birth.ToString("D");
+        Page.AvatarLink = string.Empty;
+        Page.DefaultAvatarVisibility = string.Empty;
+
+        if (bllEmblems.ElementHasEmblem(user))
+        {
+            Page.DefaultAvatarVisibility = "hidden";
+            Page.AvatarLink = $"style=background-image:url({bllEmblems.GetEmblemPath(user)})";
+        }
+
+        List<string> userAwards = bllAwardsAssotiations.GetAllAwardsOfUser(user).Select(item => item.title).ToList();
+
+        if (userAwards.Count > 0)
+        {
+            Page.aditional = "\nНаграды:";
+            Page.aditionalContent = "\n" + string.Join("\n", userAwards);
+        }
+
+        Page.UserAvatar = "./images/user.svg";
+
+        @RenderPage("~/pages/_partialUserForm.cshtml");
+
+        count++;
+    }
+
+    Page.User = true;
+    Page.Title = "Пользователи";
+    Page.EditorImage = "./images/user.svg";
+    Page.UsersAwardsButtonImg = "./images/award.svg";
+    Page.RedirectLink = "./awards.cshtml";
+    Page.AwardsList = bllAwards.GetAllAwards();
+    Layout = "~/pages/_mainLayout.cshtml";
+}
+

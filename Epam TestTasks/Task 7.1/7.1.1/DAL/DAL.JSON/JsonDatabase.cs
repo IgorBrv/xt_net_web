@@ -13,17 +13,21 @@ namespace JsonDAL
 		private readonly string path = "data.sav";
 		public readonly Dictionary<Guid, User> userList;
 		public readonly Dictionary<Guid, Award> awardList;
+		public Dictionary<Guid, Emblem> emblemsList;
 		public List<Guid[]> awardedList;
 
 
-		public DALJson()
+		public DALJson(string spath)
 		{
+			path = spath + path;
+
 			if (File.Exists(path))
 			{
 				Data data = LoadAll();
 
 				userList = new Dictionary<Guid, User>();
 				awardList = new Dictionary<Guid, Award>();
+				emblemsList = new Dictionary<Guid, Emblem>();
 
 				foreach (User user in data.userList)
 				{
@@ -34,15 +38,17 @@ namespace JsonDAL
 					awardList.Add(award.id, award);
 				}
 
+				emblemsList = data.emblemsList;
 				awardedList = data.awardedUsers;
 			}
 			else
 			{
 				userList = new Dictionary<Guid, User>();
 				awardList = new Dictionary<Guid, Award>();
+				emblemsList = new Dictionary<Guid, Emblem>();
 				awardedList = new List<Guid[]>();
 
-				Data savedata = new Data(userList.Select(KeyValuePair => KeyValuePair.Value).ToList(), awardList.Select(KeyValuePair => KeyValuePair.Value).ToList(), awardedList);
+				Data savedata = new Data(new List<User>(), new List<Award>(), new Dictionary<Guid, Emblem>(), new List<Guid[]>());
 
 				SaveAll(savedata);
 			}

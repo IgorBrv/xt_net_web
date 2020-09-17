@@ -1,0 +1,216 @@
+/* Модальное окно редактора ------------------------------------------------------------------------------- */
+
+
+/* Контейнер с задним фоном */
+
+.editor-window-container {
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: none;
+    position: fixed;
+    pointer-events: none;
+    background: rgba(240, 240, 240, 0.8);
+}
+
+.editorAwards {
+    z-index: 200;
+}
+
+.editor-window-container-to-top {
+    display: block;
+    pointer-events: auto;
+}
+
+.editor-awards-container-to-top {
+    display: block;
+    background: 0;
+    pointer-events: auto;
+}
+
+
+/* Контейнер включающий в себя форму редактора */
+
+.editor-window {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Форма редактора */
+
+.editor-window-form {
+    width: 400px;
+    padding: 10px;
+    display: flex;
+    overflow: auto;
+    max-width: 85%;
+    max-height: 80%;
+    background: #fff;
+    border-radius: 10px;
+    align-items: center;
+    flex-flow: column wrap;
+    box-shadow: 0px 0px 20px #828282;
+}
+
+.editor-window-form-content {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.editor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-size: cover;
+    
+}
+
+.editor-avatar-opacity:hover {
+    opacity: 0.5;
+    transition: 0.3s linear;
+}
+
+.awards-editor-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-size: cover;
+}
+
+.editor-content {
+    width: 80%;
+}
+
+.editor-selector-box-checkboxes {
+    margin-top: 3px;
+    font-size: 14px;
+}
+
+.editor-selector-box-checkboxes input, .editor-selector-box-checkboxes label {
+    vertical-align: middle;
+}
+
+
+/* Хедер редактора (input заголовка и кнопка выхода) */
+
+.editor-window-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.editor-window-title {
+    border: 0;
+    color: #828282;
+    font-size: 22px;
+    overflow: hidden;
+    margin-left: 3px;
+    margin-bottom: 5px;
+    width: calc(100% - 40px);
+}
+
+.editor-window-header-close-button {
+    border: 0;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    margin-bottom: 5px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background: #828282;
+}
+
+.editor-window-header-close-button:hover {
+    background: #e0000f;
+    box-shadow: -1px -1px 10px #ad000c;
+}
+
+.editor-window-header-close-button:active {
+    background: #7a0008;
+    box-shadow: -1px -1px 10px #ad000c;
+}
+
+
+/* Тело редактора */
+
+.editor-hr {
+    border-top: 1px solid #d6d6d6;
+    border-bottom: 0;
+}
+
+.editor-info {
+    margin-left: 3px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #828282;
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Chrome/Safari/Opera */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently not supported by any browser */
+}
+
+.editor-date-field {
+    border: 0;
+    color: #828282;
+}
+
+
+/* Футер редактора (ключает кнопку "сохранить") */
+
+.editor-window-footer {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+}
+
+.editor-window-button {
+    border: 0;
+    height: 1.8em;
+    display: flex;
+    color: #828282;
+    margin-left: 3%;
+    font-size: 14px;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #f0f0f0;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-window-button-label {
+    font-size: 14px;
+    padding-left: 9px;
+    padding-right: 10px;
+}
+
+.editor-window-button:hover {
+    color: #000000;
+    background: #d6d6d6;
+    box-shadow: 0px 0px 10px #d6d6d6;
+}
+
+.editor-window-button:active {
+    background: #828282;
+}
+
+.highlighted-text {
+    background: #d6d6d6;
+}
