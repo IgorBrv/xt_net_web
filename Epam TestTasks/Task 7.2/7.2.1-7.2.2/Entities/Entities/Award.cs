@@ -3,10 +3,10 @@
 namespace Entities
 {	// Общие классы
 
-	public class Award : AbstractEntityWithID
+	public class Award
 	{   // Класс объекта награды
 
-		
+		public Guid id;
 		public string title;
 		public string emblempath;
 

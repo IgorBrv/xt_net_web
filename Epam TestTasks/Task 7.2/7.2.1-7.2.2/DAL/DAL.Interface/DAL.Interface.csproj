@@ -49,7 +49,6 @@
     <Compile Include="IAuthDAO.cs" />
     <Compile Include="IAwardsAssotiatonsDAO.cs" />
     <Compile Include="IAwardsDAO.cs" />
-    <Compile Include="IEmblemsDAO.cs" />
     <Compile Include="IRolesDAO.cs" />
     <Compile Include="IUsersDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

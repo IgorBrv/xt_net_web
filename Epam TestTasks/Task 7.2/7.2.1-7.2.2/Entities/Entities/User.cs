@@ -3,9 +3,10 @@
 namespace Entities
 {	// Общие классы
 
-	public class User : AbstractEntityWithID
-	{	// Класс объекта пользователя
+	public class User
+	{   // Класс объекта пользователя
 
+		public Guid id;
 		public int age;
 		public string name;
 		public DateTime birth;
