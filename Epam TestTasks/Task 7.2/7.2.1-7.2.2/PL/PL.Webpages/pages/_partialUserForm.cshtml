@@ -1,0 +1,62 @@
+﻿@* Форма элемента страницы *@
+
+@{
+    Layout = null;
+    string clickLink = "onclick = NoteClick(this)";
+
+}
+
+<div class="body-element @Page.itemId" id="@Page.id" @if (User.IsInRole("admin")) { @clickLink }>
+    <div class="body-element-main">
+        <div class="body-element-avatar" @Page.AvatarLink style='background-image: url()'>
+            <img src="@Page.UserAvatar" alt="аватар" class="emblem" @Page.DefaultAvatarVisibility>
+        </div>
+        <div class="body-element-content">
+            <p class="body-element-header" id="@Page.id-title">@Page.Name</p>
+            @if (Page.User)
+            {
+                <div class="body-element-columns">
+                    <div class="column1 c1-@Page.itemId">
+                        <p class="body-element-text">Возраст:</p>
+                        <p class="body-element-text">Дата рождения:</p>
+                        @if (Page.aditional != null)
+                        {
+                            <p class="body-element-text a-@Page.itemId" id="@Page.id-text">@Page.aditional</p>
+                        }
+                    </div>
+                    <div class="column2 c2-@Page.itemId">
+                        <p class="body-element-text body-element-age">@Page.Age лет</p>
+                        <p class="body-element-text body-element-date" id="@Page.id-date">@Page.Date</p>
+                        @if (Page.aditional != null)
+                        {
+                            <p class="body-element-text ac-@Page.itemId">@Page.aditionalContent</p>
+                        }
+                    </div>
+                </div>
+            }
+            @if (!Page.User && Page.aditional != null)
+            {
+                <div class="body-element-columns">
+                    <div class="column1">
+                        <p class="body-element-text a-@Page.itemId">@Page.aditional</p>
+                    </div>
+                    <div class="column2">
+                        <p class="body-element-text ac-@Page.itemId">@Page.aditionalContent</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="body-element-footer">
+        @if (User.IsInRole("admin"))
+        {
+            <div class="body-remove-button @Page.itemId" id="@Page.id" onclick="RemoveClick(this)">
+                <img src="./images/close.svg" alt="window closure icon" class="body-remove-button-img">
+            </div>
+        }
+        else
+        {
+            <div class="body-remove-button-filler"></div>
+        }
+    </div>
+</div>

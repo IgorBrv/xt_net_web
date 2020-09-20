@@ -1,0 +1,27 @@
+﻿@using PL.Webpages.models;
+
+@{
+    bool error = false;
+
+    if (StaticData.error)
+    {
+        StaticData.error = false;
+        error = true;
+    }
+
+    Page.Background = "../images/background.png";
+    Page.Title = "Страница регистрации";
+    Page.HeaderText = "Регистрация";
+    Page.SaveButtonName = "Сохранить";
+    Page.Action = "../models/regModel.cshtml";
+}
+
+@if (error)
+{
+    <div class="auth-error-baloon">
+        <p>Ошибка регистрации! Возможно, пользователь с таким ником уже зарегестрирован!</p>
+    </div>
+}
+
+
+@RenderPage("~/pages/authPage.cshtml");

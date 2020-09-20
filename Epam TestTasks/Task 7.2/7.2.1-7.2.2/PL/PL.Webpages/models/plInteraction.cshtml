@@ -1,0 +1,334 @@
+﻿@* Данная Razor-страница принимает post-запросы из index.js и взаимодействует с BLL *@
+
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using InterfacesBLL;
+@using Entities;
+@using Dependencies;
+@using Newtonsoft.Json;
+@using PL.Webpages.models;
+
+@{
+    Resolver resolver = StaticResolver.Get();
+    IUsersBLO bllUsers = resolver.GetBLLUsers;
+    IAwardsBLO bllAwards = resolver.GetBLLAwards;
+    IAwardsAssotiationsBLO bllAwardsAssotiations = resolver.GetBLLAwardsAssotiations;
+
+    if (IsPost)
+    {
+        // Тут можно было бы применить switch, но изначально начал с if, потому так и продолжил:
+        if (Request["type"] == "userAwardsRequest")
+        {
+            try
+            {
+                Guid requestedId = Guid.Parse(Request["id"]);
+                User user = bllUsers.GetAllUsers().Where(item => item.id == requestedId).FirstOrDefault();
+
+                if (user != null)
+                {
+                    List<Award> awardsList = bllAwardsAssotiations.GetAllAwardsOfUser(user);
+                    Response.Write(JsonConvert.SerializeObject(awardsList.Select(item => item.id)));
+                    return;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(null);
+                return;
+            }
+
+            Response.Write(null);
+            return;
+        }
+        else if (Request["type"] == "userAwardsSet")
+        {
+            try
+            {
+                List<Guid> usersAward = JsonConvert.DeserializeObject<List<Guid>>(Request["awards"]);
+                User user = bllUsers.GetUserByID(Guid.Parse(Request["user"]));
+
+                if (user != null)
+                {
+                    List<Award> awardsOfUser = bllAwardsAssotiations.GetAllAwardsOfUser(user);
+
+                    foreach (Award award in awardsOfUser)
+                    {
+                        if (!usersAward.Contains(award.id))
+                        {
+                            bllAwardsAssotiations.RemoveAwardFromUser(user, award);
+                        }
+                    }
+
+                    awardsOfUser = bllAwardsAssotiations.GetAllAwardsOfUser(user);
+
+                    foreach (Award award in bllAwards.GetAllAwards())
+                    {
+                        if (usersAward.Contains(award.id) && !awardsOfUser.Select(item => item.id).Contains(award.id))
+                        {
+                            bllAwardsAssotiations.AddAwardToUser(user, award);
+                        }
+                    }
+
+                    awardsOfUser = bllAwardsAssotiations.GetAllAwardsOfUser(user);
+
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "\n" + string.Join("\n", awardsOfUser.Select(item => item.title)) }));
+                    return;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+            return;
+        }
+        else if (Request["type"] == "awardsUsersRequest")
+        {
+            try
+            {
+                Guid requestedId = Guid.Parse(Request["id"]);
+                User user = bllUsers.GetAllUsers().Where(item => item.id == requestedId).FirstOrDefault();
+
+                if (user != null)
+                {
+                    List<Award> awardsList = bllAwardsAssotiations.GetAllAwardsOfUser(user);
+                    Response.Write("\n" + string.Join("\n", awardsList.Select(item => item.title)));
+                    return;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(false);
+                return;
+            }
+
+            Response.Write(false);
+            return;
+        }
+        else if (Request["type"] == "userUpdate")
+        {
+            try
+            {
+                Guid id = Guid.Parse(Request["id"]);
+                User user = bllUsers.GetUserByID(id);
+
+                if (user != null)
+                {
+                    string[] fields = JsonConvert.DeserializeObject<string[]>(Request["params"]);
+
+                    if (fields[1] != "")
+                    {
+                        string[] dateSplitted = fields[1].Split('-');
+                        DateTime date = new DateTime(Int32.Parse(dateSplitted[0]), Int32.Parse(dateSplitted[1]), Int32.Parse(dateSplitted[2]));
+                        int age = (DateTime.Now.Year - date.Year - 1) + (((DateTime.Now.Month > date.Month) || ((DateTime.Now.Month == date.Month) && (DateTime.Now.Day >= date.Day))) ? 1 : 0);
+
+                        if (bllUsers.UpdateUser(id, fields[0], age, date, user.emblempath))
+                        {
+                            user = bllUsers.GetUserByID(id);
+                            Response.Write(JsonConvert.SerializeObject(new string[] { user.id.ToString(), user.name, user.age.ToString(), user.birth.ToString("D") }));
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(null));
+                return;
+            }
+
+            Response.Write(JsonConvert.SerializeObject(null));
+            return;
+        }
+        else if (Request["type"] == "userCreate")
+        {
+            string[] fields = JsonConvert.DeserializeObject<string[]>(Request["params"]);
+
+            if (fields[0] != "" && fields[1] != "")
+            {
+                try
+                {
+                    string[] dateSplitted = fields[1].Split('-');
+                    DateTime date = new DateTime(Int32.Parse(dateSplitted[0]), Int32.Parse(dateSplitted[1]), Int32.Parse(dateSplitted[2]));
+
+                    // Этой логике место в bll, но когда я об этом подумал, bll уже был создан)) :
+
+                    int age = (DateTime.Now.Year - date.Year - 1) + (((DateTime.Now.Month > date.Month) || ((DateTime.Now.Month == date.Month) && (DateTime.Now.Day >= date.Day))) ? 1 : 0);
+                    User user = bllUsers.AddUser(fields[0], age, date);
+
+                    if (user != null)
+                    {
+                        Response.Write(JsonConvert.SerializeObject(new string[] { user.id.ToString(), user.name, user.age.ToString(), user.birth.ToString("D") }));
+                        return;
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine(e);
+                    Response.Write(JsonConvert.SerializeObject(null));
+                    return;
+                }
+            }
+            Response.Write(JsonConvert.SerializeObject(null));
+            return;
+        }
+        else if (Request["type"] == "userRemove")
+        {
+            try
+            {
+                Guid id = Guid.Parse(Request["id"]);
+                User user = bllUsers.GetUserByID(id);
+
+                if (user != null && bllUsers.RemoveUser(user))
+                {
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                    return;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+
+            Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+            return;
+        }
+        else if (Request["type"] == "awardUpdate")
+        {
+            try
+            {
+                Guid id = Guid.Parse(Request["id"]);
+                Award award = bllAwards.GetAwardByID(id);
+                string[] fields = JsonConvert.DeserializeObject<string[]>(Request["params"]);
+
+                if (award != null && bllAwards.UpdateAward(id, fields[0], award.emblempath))
+                {
+                    award = bllAwards.GetAwardByID(id);
+                    Response.Write(JsonConvert.SerializeObject(new string[] { award.id.ToString(), award.title }));
+                    return;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(null));
+                return;
+            }
+
+            Response.Write(JsonConvert.SerializeObject(null));
+            return;
+        }
+        else if (Request["type"] == "awardCreate")
+        {
+            string[] fields = JsonConvert.DeserializeObject<string[]>(Request["params"]);
+
+            if (fields[0] != "")
+            {
+                Award award = bllAwards.AddAward(fields[0]);
+
+                if (award != null)
+                {
+                    Response.Write(JsonConvert.SerializeObject(new string[] { award.id.ToString(), award.title }));
+                    return;
+                }
+            }
+
+            Response.Write(JsonConvert.SerializeObject(null));
+            return;
+        }
+        else if (Request["type"] == "awardRemove")
+        {
+            try
+            {
+                Guid id = Guid.Parse(Request["id"]);
+                Award award = bllAwards.GetAwardByID(id);
+
+                if (award != null)
+                {
+                    if (bllAwards.RemoveAward(award))
+                    {
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                        return;
+                    }
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+
+            Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+            return;
+        }
+        else if (Request["type"] == "filestream")
+        {
+            try
+            {
+                var uploadedFile = Request.Files[0];
+                string extention = uploadedFile.FileName.Split('.').LastOrDefault();
+
+                string pathToReturn = null;
+
+
+                switch (Request["for"])
+                {
+                    case "user":
+                        pathToReturn = $"url(\"{bllUsers.AddEmblemToUser(Guid.Parse(Request["id"]), extention, new BinaryReader(uploadedFile.InputStream))}\")";
+                        break;
+                    case "award":
+                        pathToReturn = $"url(\"{bllAwards.AddEmblemToAward(Guid.Parse(Request["id"]), extention, new BinaryReader(uploadedFile.InputStream))}\")";
+                        break;
+                }
+
+                if (pathToReturn != null)
+                {
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", pathToReturn }));
+                }
+                else
+                {
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "false", null }));
+                }
+            }
+            catch (SystemException)
+            {
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false", null }));
+                return;
+            }
+        }
+        else if (Request["type"] == "removeEmblem")
+        {
+            try
+            {
+                switch (Request["for"])
+                {
+                    case "user":
+                        if (bllUsers.RemoveEmblemFromUser(Guid.Parse(Request["id"])))
+                        {
+                            Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                            return;
+                        }
+                        break;
+                    case "award":
+                        if (bllUsers.RemoveEmblemFromUser(Guid.Parse(Request["id"])))
+                        {
+                            Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                            return;
+                        }
+                        break;
+                }
+            }
+            catch (ArgumentException)
+            {
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+
+            Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+            return;
+        }
+    }
+}
+

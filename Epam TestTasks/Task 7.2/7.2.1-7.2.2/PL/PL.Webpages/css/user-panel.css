@@ -1,0 +1,29 @@
+.user-box {
+    left: 1%;
+    bottom: 1%;
+    padding: 5px;
+    display: flex;
+    position: fixed;
+    color: #828282;
+    border-radius: 12px;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d6d6d6;
+    box-shadow: 1px 1px 10px #828282;
+}
+
+.user-logout-button {
+    border: 0;
+    margin-left: 10px;
+    border-radius: 10px;
+    background: #d6d6d6;
+}
+
+.user-logout-button:hover {
+    background: #828282;
+}
+
+.user-logout-button:active {
+    background: #d6d6d6;
+    box-shadow: 1px 1px 10px #828282;
+}

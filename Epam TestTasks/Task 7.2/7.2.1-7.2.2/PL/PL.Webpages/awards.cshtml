@@ -1,0 +1,50 @@
+﻿@using System.Collections.Generic;
+@using System.Linq;
+@using InterfacesBLL;
+@using Entities;
+@using PL.Webpages.models;
+@using Dependencies;
+
+@{
+    Resolver resolver = StaticResolver.Get();
+    IAwardsBLO bllAwards = resolver.GetBLLAwards;
+    IAwardsAssotiationsBLO bllAwardsAssotiations = resolver.GetBLLAwardsAssotiations;
+
+    int count = 1;
+    foreach (Award award in bllAwards.GetAllAwards())
+    {
+        Page.id = count;
+        Page.User = false;
+        Page.aditional = null;
+        Page.itemId = award.id;
+        Page.Name = award.title;
+        Page.aditionalContent = null;
+        Page.AvatarLink = string.Empty;
+        Page.UserAvatar = "./images/award.svg";
+        Page.DefaultAvatarVisibility = string.Empty;
+        List<string> awardsUsers = bllAwardsAssotiations.GetAllUsersWithAward(award).Select(item => item.name).ToList();
+
+        if (award.emblempath != null)
+        {
+            Page.DefaultAvatarVisibility = "hidden";
+            Page.AvatarLink = $"style=background-image:url({award.emblempath})";
+        }
+
+        if (awardsUsers.Count > 0)
+        {
+            Page.aditional = "Носители:";
+            Page.aditionalContent = string.Join("\n", awardsUsers);
+        }
+
+        @RenderPage("~/pages/_partialUserForm.cshtml");
+
+        count++;
+    }
+
+    Page.User = false;
+    Page.Title = "Награды";
+    Page.RedirectLink = "./index.cshtml";
+    Page.EditorImage = "./images/award.svg";
+    Page.UsersAwardsButtonImg = "./images/user.svg";
+    Layout = "~/pages/_mainLayout.cshtml";
+}

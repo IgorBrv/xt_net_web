@@ -1,0 +1,22 @@
+﻿@using PL.Webpages.models;
+
+@{
+    if (IsPost)
+    {
+        var login = Request["login"];
+        var password = Request["password"];
+
+        Console.WriteLine(login);
+
+        if (StaticResolver.Get().GetBLLAuth.CheckUser(login, password))
+        {
+            FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
+            Response.Redirect("~/");
+        }
+        else
+        {
+            StaticData.authError = true;
+            Response.Redirect("~/pages/authPage.cshtml");
+        }
+    }
+}

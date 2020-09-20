@@ -1,0 +1,89 @@
+/* Медиа-уточнения ------------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+
+
+    .switchers-container {
+        width: 70%;
+    }
+
+    .head-element {
+        width: 7%;
+    }
+}
+
+
+ @media (max-width: 1000px) {
+
+    .switchers-container {
+        width: 80%;
+    }
+
+    .body-element {
+        width: 350px;
+        padding-left: 10px;
+    }
+
+    .body-element-avatar {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    .body-element-text {
+        font-size: 10px
+    }
+
+    .head-element {
+        width: 8%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .head-element {
+        width: 12%;
+    }
+
+    .search-container {
+        width: 50%;
+    }
+
+    .search-container:hover {
+        width: 75%;
+    }
+
+    .body-element {
+        width: 250px;
+    }
+
+    .body-element-header {
+        font-size: 14px
+    }
+
+    .body-element-text {
+        font-size: 10px
+    }
+
+    .body-element-avatar {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    .editor-window-container {
+        font-size: 11px;
+    }
+
+    .editor-window-title {
+        font-size: 14px;
+    }
+
+    .add-button {
+        width: 40px;
+        height: 40px;
+        top: calc(100% - 50px);
+        left: calc(100% - 50px);
+    }
+}
