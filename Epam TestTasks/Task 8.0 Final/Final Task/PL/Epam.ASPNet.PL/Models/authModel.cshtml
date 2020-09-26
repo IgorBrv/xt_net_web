@@ -1,0 +1,27 @@
+﻿@using Epam.ASPNet.PL.Models
+@using Epam.DependencyResolver
+
+@{
+    if (IsPost)
+    {
+        string login = Request["login"];
+        string password = Request["password"];
+        Resolver resolver = StaticElements.GetResolver();
+
+        Console.WriteLine(login);
+
+        if (resolver.GetBloSecurityData.CheckUser(login, password))
+        {
+            FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
+
+            CommonData.currentUser = resolver.GetBloUsers.Get(login);
+
+            Response.Redirect("~/Pages/userPage.cshtml");
+        }
+        else
+        {
+            CommonData.authError = true;
+            Response.Redirect("~/Pages/authPage.cshtml");
+        }
+    }
+}

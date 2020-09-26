@@ -1,22 +1,28 @@
 ﻿@using Epam.ASPNet.PL;
 @using Epam.CommonEntities;
 @using Epam.DependencyResolver;
+@using Epam.ASPNet.PL.Models;
+@using Epam.Interfaces.BLL;
 
 @{
-    Layout = null;
     Resolver resolver = StaticElements.GetResolver();
+    IUsersBLL bloUsers = resolver.GetBloUsers;
+    bloUsers.SetPath(Server.MapPath(""));
+    ILogger logger = resolver.GetLogger;
+
+    if (User.Identity.IsAuthenticated)
+    {
+        if (CommonData.currentUser is null)
+        {
+            CommonData.currentUser = bloUsers.Get(User.Identity.Name);
+            Console.WriteLine(CommonData.currentUser);
+        }
+
+        Response.Redirect("~/Pages/userPage.cshtml");
+
+    }
+    else
+    {
+        Response.Redirect("~/Pages/authPage.cshtml");
+    }
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-        <h1>Разработка в процессе...</h1>
-    </div>
-</body>
-</html>

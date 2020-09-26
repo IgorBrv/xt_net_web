@@ -9,6 +9,7 @@ using Epam.Logic.DAL;
 using Epam.Interfaces.DAL;
 using Epam.CommonEntities;
 using System.Runtime.CompilerServices;
+using Epam.ASPNet.PL;
 
 namespace Epam.DependencyResolver
 {
@@ -20,18 +21,20 @@ namespace Epam.DependencyResolver
 		private readonly ISecurityDataDAL daoSecurityData;
 
 
-		public Resolver(ILogger logger)
+		public Resolver()
 		{
-			daoUsers = new UsersDAL(logger);
-			daoFriends = new FriendsDAL(logger);
-			daoMessages = new MessagesDAL(logger);
-			daoSecurityData = new SecurityDataDAL(logger);
-			GetBloUsers = new UsersBLL(logger, daoUsers);
-			GetBloFriends = new FriendsBLL(logger, daoFriends);
-			GetBloMessages = new MessagesBLL(logger, daoMessages);
-			GetBloSecurityData = new SecurityDataBLL(logger, daoSecurityData);
+			GetLogger = new CommonLogger();
+			daoUsers = new UsersDAL(GetLogger);
+			daoFriends = new FriendsDAL(GetLogger);
+			daoMessages = new MessagesDAL(GetLogger);
+			daoSecurityData = new SecurityDataDAL(GetLogger);
+			GetBloUsers = new UsersBLL(GetLogger, daoUsers);
+			GetBloFriends = new FriendsBLL(GetLogger, daoFriends);
+			GetBloMessages = new MessagesBLL(GetLogger, daoMessages);
+			GetBloSecurityData = new SecurityDataBLL(GetLogger, daoSecurityData);
 		}
 
+		public ILogger GetLogger { get; }
 		public IUsersBLL GetBloUsers { get; }
 		public IFriendsBLL GetBloFriends { get; }
 		public IMessagesBLL GetBloMessages { get; }

@@ -4,14 +4,12 @@ using System.Linq;
 using System.Web;
 using Epam.DependencyResolver;
 
-namespace Epam.ASPNet.PL
+namespace Epam.ASPNet.PL.Models
 {
 	public static class StaticElements
 	{
 		private static Resolver resolver;
-		private static CommonLogger logger;
 		
-		public static CommonLogger GetLogger() => logger ?? (logger = new CommonLogger());
-		public static Resolver GetResolver() => resolver ?? (resolver = new Resolver(GetLogger()));
+		public static Resolver GetResolver() => resolver ?? (resolver = new Resolver());
 	}
 }

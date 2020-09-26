@@ -94,14 +94,20 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logger\CommonLogger.cs" />
-    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Models\CommonData.cs" />
+    <Compile Include="Models\roleProvider.cs" />
     <Compile Include="Models\StaticElements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Models\authModel.cshtml" />
     <None Include="packages.config" />
     <Content Include="index.cshtml" />
+    <Content Include="Pages\authPage.cshtml" />
+    <Content Include="Pages\regestartion.cshtml" />
+    <Content Include="Pages\userPage.cshtml" />
+    <Content Include="Pages\messages.cshtml" />
+    <Content Include="Pages\regPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -110,6 +116,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BLL\Epam.Interfaces.BLL\Epam.Interfaces.BLL.csproj">
+      <Project>{ae3a7483-185b-42bd-bf80-8457eddc59ff}</Project>
+      <Name>Epam.Interfaces.BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\COMMON\dependencyResolver\Epam.DependencyResolver.csproj">
       <Project>{00ff0197-e40e-493f-87d7-29bb99e5298f}</Project>
       <Name>Epam.DependencyResolver</Name>
@@ -119,7 +129,9 @@
       <Name>Epam.CommonEntities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Pages\css\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

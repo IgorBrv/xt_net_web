@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Epam.Interfaces.DAL
+﻿namespace Epam.Interfaces.DAL
 {
 	public interface ISecurityDataDAL
 	{
+		string GetRoleOfUser(string email);
+
+		bool AddRoleToUser(string email, string role);
+
+		bool CheckUser(string email, string password);
+
+		bool ChangePassword(int id, string oldPassword, string password);
 	}
 }
