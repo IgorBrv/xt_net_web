@@ -9,9 +9,9 @@ namespace Epam.Interfaces.DAL
 	{
 		string Path { get; set; }
 
-		UserData Get(int id);
+		UserData GetById(int id);
 
-		UserData Get(string email);
+		UserData GetByEmail(string email);
 
 		void RemoveEmblem(int id);
 
@@ -23,6 +23,6 @@ namespace Epam.Interfaces.DAL
 
 		List<UserData> FindByName(int curUserId, string text);
 
-		void Create(string email, string password, UserData user);
+		bool Create(string email, string password, UserData user);
 	}
 }

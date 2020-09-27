@@ -1,5 +1,5 @@
 ﻿@using Epam.ASPNet.PL;
-@using Epam.CommonEntities;
+@using Epam.CommonLoggerInterface;
 @using Epam.DependencyResolver;
 @using Epam.ASPNet.PL.Models;
 @using Epam.Interfaces.BLL;
@@ -14,7 +14,7 @@
     {
         if (CommonData.currentUser is null)
         {
-            CommonData.currentUser = bloUsers.Get(User.Identity.Name);
+            CommonData.currentUser = bloUsers.GetByEmail(User.Identity.Name);
             Console.WriteLine(CommonData.currentUser);
         }
 

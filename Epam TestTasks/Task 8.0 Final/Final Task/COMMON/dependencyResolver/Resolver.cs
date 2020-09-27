@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Epam.Logic.BLL;
+﻿using Epam.Logic.BLL;
 using Epam.Interfaces.BLL;
 using Epam.Logic.DAL;
 using Epam.Interfaces.DAL;
-using Epam.CommonEntities;
-using System.Runtime.CompilerServices;
-using Epam.ASPNet.PL;
+using Epam.CommonLogger;
+using Epam.CommonLoggerInterface;
 
 namespace Epam.DependencyResolver
 {
@@ -23,7 +17,7 @@ namespace Epam.DependencyResolver
 
 		public Resolver()
 		{
-			GetLogger = new CommonLogger();
+			GetLogger = new ComLogger();
 			daoUsers = new UsersDAL(GetLogger);
 			daoFriends = new FriendsDAL(GetLogger);
 			daoMessages = new MessagesDAL(GetLogger);

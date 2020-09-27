@@ -1,0 +1,23 @@
+﻿* {
+    padding: 0px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+hr {
+    margin: 15px;
+    width: 70%;
+}
+
+.error-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    position: absolute;
+    flex-flow: column;
+    align-items: center;
+    background: #fd5e53;
+    justify-content: center;
+}

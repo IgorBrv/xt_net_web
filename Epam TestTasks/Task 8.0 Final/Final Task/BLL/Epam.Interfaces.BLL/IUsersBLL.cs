@@ -13,9 +13,9 @@ namespace Epam.Interfaces.BLL
 
 		string AddEmblem(int id, string ext, BinaryReader br);
 		
-		UserData Get(int id);
+		UserData GetById(int id);
 
-		UserData Get(string email);
+		UserData GetByEmail(string email);
 
 		void Update(UserData user);
 
@@ -23,6 +23,6 @@ namespace Epam.Interfaces.BLL
 
 		List<UserData> FindByName(int curUserId, string text);
 
-		void Create(string email, string password, string name, DateTime birth);
+		bool Create(string email, string password, string name, DateTime birth);
 	}
 }

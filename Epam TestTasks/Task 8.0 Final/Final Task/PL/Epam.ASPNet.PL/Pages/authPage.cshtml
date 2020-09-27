@@ -5,7 +5,7 @@
     string title = "Страница авторизации";
     string headerText = "Авторизация";
     string saveButtonName = "Вход";
-    string action = "../Models/authModel.cshtml";
+    string action = "/Models/authModel.cshtml";
 
 
     if (Page.HeaderText != null)
@@ -29,12 +29,12 @@
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>@title</title>
-    <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="~/Pages/css/auth.css">
 </head>
 <body class="body">
     <script>
-        function goBack() { window.location.replace('./authPage.cshtml') }
-        function switchForm() { window.location.replace('./regPage.cshtml') }
+        function goBack() { window.location.replace('/Pages/authPage.cshtml') }
+        function switchForm() { window.location.replace('/Pages/regPage.cshtml') }
     </script>
     <div class="background">
         <style>
@@ -44,7 +44,7 @@
                 width: 100%;
                 height: 100%;
                 position: fixed;
-                background-image: url("./images/background.png");
+                background-image: url("/Pages/images/background.jpeg");
             }
         </style>
     </div>
@@ -60,10 +60,17 @@
         <form method="post" action=@action class="authform">
             <h1 class="authheader">@headerText</h1>
             <hr class="authhr">
-            <p>Логин:</p>
-            <input type="text" id="" name="login" class="authname">
-            <p>Пароль:</p>
-            <input type="password" id="" name="password" class="authpass">
+            <p class="authlabel">Email:</p>
+            <input type="email" required id="" name="email" class="authinput">
+            <p class="authlabel">Пароль:</p>
+            <input type="password" required maxlength="50" id="" name="password" class="authinput">
+            @if (Page.HeaderText != null)
+            {
+                <p class="authlabel">Имя:</p>
+                <input type="text" required maxlength="250" id="" name="name" class="authinput">
+                <p class="authlabel">Дата рождения:</p>
+                <input type="date" required id="" name="date" class="authinput">
+            }
             <div class="authbuttons">
                 @if (Page.HeaderText == null)
                 {

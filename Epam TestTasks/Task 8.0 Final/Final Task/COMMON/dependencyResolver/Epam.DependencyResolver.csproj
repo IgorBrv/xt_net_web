@@ -75,6 +75,14 @@
       <Project>{a188b8e4-6c61-4cb2-bed1-bfa452200fde}</Project>
       <Name>Epam.CommonEntities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Epam.LoggerInterface\Epam.CommonLoggerInterface.csproj">
+      <Project>{3424039a-e4ad-4e61-897f-cd9e2db8657a}</Project>
+      <Name>Epam.CommonLoggerInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Epam.Logger\Epam.CommonLogger.csproj">
+      <Project>{32eb08ab-f8d3-454f-bc3b-36d98156fbe1}</Project>
+      <Name>Epam.CommonLogger</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

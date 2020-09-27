@@ -5,12 +5,12 @@ using System.IO;
 using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
+using Epam.CommonLoggerInterface;
 
 namespace Epam.Logic.BLL
 {
 	public class UsersBLL : IUsersBLL
 	{
-		private string path;
 		private readonly ILogger logger;
 		private readonly IUsersDAL daoUsers;
 
@@ -25,16 +25,17 @@ namespace Epam.Logic.BLL
 			daoUsers.Path = path;
 		}
 
-		public void Create(string email, string password, string name, DateTime birth)
+		public bool Create(string email, string password, string name, DateTime birth)
 		{
 			logger.Info("BLL: Process of creating user started");
 
 			try
 			{
 				UserData user = new UserData(name, birth);
-				daoUsers.Create(email, password, user);
+				bool result = daoUsers.Create(email, password, user);
 
 				logger.Info("BLL: Process of creating user done");
+				return result;
 			}
 			catch (SqlException e)
 			{
@@ -44,13 +45,13 @@ namespace Epam.Logic.BLL
 
 		}
 
-		public UserData Get(int id)
+		public UserData GetById(int id)
 		{
 			logger.Info("BLL: Process of getting user by id started");
 
 			try
 			{
-				UserData temp = daoUsers.Get(id);
+				UserData temp = daoUsers.GetById(id);
 
 				logger.Info("BLL: Process of getting user by id done");
 				return temp;
@@ -62,13 +63,13 @@ namespace Epam.Logic.BLL
 			}
 		}
 
-		public UserData Get(string email)
+		public UserData GetByEmail(string email)
 		{
 			logger.Info("BLL: Process of getting user by email started");
 
 			try
 			{
-				UserData temp = daoUsers.Get(email);
+				UserData temp = daoUsers.GetByEmail(email);
 
 				logger.Info("BLL: Process of getting user by email done");
 				return temp;

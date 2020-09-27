@@ -8,24 +8,22 @@
         {
             string login = Request["email"];
             string password = Request["password"];
+            string name = Request["name"];
+            DateTime date = DateTime.Parse(Request["date"]);
             Resolver resolver = StaticElements.GetResolver();
 
-            if (resolver.GetBloSecurityData.CheckUser(login, password))
+            if (resolver.GetBloUsers.Create(login, password, name, date))
             {
-                FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
-
-                CommonData.currentUser = resolver.GetBloUsers.GetByEmail(login);
-
-                Response.Redirect("~/Pages/userPage.cshtml");
+                Response.Redirect("~/Pages/authPage.cshtml");
             }
             else
             {
                 CommonData.authError = true;
-                Response.Redirect("~/Pages/authPage.cshtml");
+                Response.Redirect("~/Pages/regPage.cshtml");
             }
         }
         catch (Exception e)
-        {   // Перехват сгенерированой в blo ошибки авторизации
+        {   // Перехват сгенерированой в blo ошибки регистрации и ошибки которая может возникнуть при parse даты
 
             Page.Exception = e;
             @RenderPage("~/Pages/errorPage.cshtml");

@@ -4,6 +4,7 @@ using Epam.Interfaces.DAL;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using Epam.CommonLoggerInterface;
 
 namespace Epam.Logic.BLL
 {

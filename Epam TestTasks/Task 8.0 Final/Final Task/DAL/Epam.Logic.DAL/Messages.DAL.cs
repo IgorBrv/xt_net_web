@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
+using Epam.CommonLoggerInterface;
 
 namespace Epam.Logic.DAL
 {

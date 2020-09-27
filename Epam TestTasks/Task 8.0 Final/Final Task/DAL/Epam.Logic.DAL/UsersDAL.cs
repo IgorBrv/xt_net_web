@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.IO;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
+using Epam.CommonLoggerInterface;
 
 namespace Epam.Logic.DAL
 {
@@ -42,7 +43,7 @@ namespace Epam.Logic.DAL
 					File.WriteAllBytes($"{savePath}{emblemName}", file);
 				}
 
-				UserData user = Get(id);
+				UserData user = GetById(id);
 
 				if (user.emblem != null)
 				{
@@ -74,7 +75,7 @@ namespace Epam.Logic.DAL
 
 			try
 			{
-				UserData user = Get(id);
+				UserData user = GetById(id);
 
 				if (user.emblem != null)
 				{
@@ -98,7 +99,7 @@ namespace Epam.Logic.DAL
 			}
 		}
 
-		public void Create(string email, string password, UserData user)
+		public bool Create(string email, string password, UserData user)
 		{
 			logger.Info("DAL: Process of creating user started");
 
@@ -106,27 +107,48 @@ namespace Epam.Logic.DAL
 			{
 				using (SqlConnection connection = new SqlConnection(_connectionString))
 				{
-					var stProc = "CreateUser";
+					var stProc = "GetEmailCount";
 
 					var command = new SqlCommand(stProc, connection)
 					{
 						CommandType = CommandType.StoredProcedure
 					};
 
-					SqlParameter[] parameters = new SqlParameter[]
+					SqlParameter emailParam = new SqlParameter("@email", email);
+
+					command.Parameters.Add(emailParam);
+					connection.Open();
+
+					if ((int)command.ExecuteScalar() == 0)
 					{
+						stProc = "CreateUser";
+
+						command = new SqlCommand(stProc, connection)
+						{
+							CommandType = CommandType.StoredProcedure
+						};
+
+						SqlParameter[] parameters = new SqlParameter[]
+						{
 						new SqlParameter("@email", email),
 						new SqlParameter("@password", password),
 						new SqlParameter("@name", user.name),
 						new SqlParameter("@birth", user.birth)
-					};
+						};
 
-					command.Parameters.AddRange(parameters);
-					connection.Open();
-					command.ExecuteScalar();
+						command.Parameters.AddRange(parameters);
+
+						command.ExecuteScalar();
+
+						logger.Info("DAL: Process of creating user done");
+						return true;
+					}
+					else
+					{
+						logger.Info("DAL: Process of creating user was unsucsesseful");
+						return false;
+					}
 				}
-
-				logger.Info("DAL: Process of creating user done");
 			}
 			catch (SqlException e)
 			{
@@ -175,7 +197,7 @@ namespace Epam.Logic.DAL
 			}
 		}
 
-		public UserData Get(int id)
+		public UserData GetById(int id)
 		{
 			UserData user = null;
 			logger.Info("DAL: Process of getting user by id started");
@@ -212,7 +234,7 @@ namespace Epam.Logic.DAL
 			}
 		}
 
-		public UserData Get(string email)
+		public UserData GetByEmail(string email)
 		{
 			UserData user = null;
 			logger.Info("DAL: Process of getting user by email started");

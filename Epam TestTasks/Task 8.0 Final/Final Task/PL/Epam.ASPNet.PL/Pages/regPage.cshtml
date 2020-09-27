@@ -1,17 +1,26 @@
-﻿@{
-    Layout = null;
+﻿@using Epam.ASPNet.PL.Models;
+
+@{
+    bool error = false;
+
+    if (CommonData.authError)
+    {
+        CommonData.authError = false;
+        error = true;
+    }
+
+    Page.Title = "Страница регистрации";
+    Page.HeaderText = "Регистрация";
+    Page.SaveButtonName = "Сохранить";
+    Page.Action = "../models/regModel.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-    
+@if (error)
+{
+    <div class="auth-error-baloon">
+        <p>Ошибка регистрации! Возможно, пользователь с таким адресом почты уже зарегестрирован!</p>
     </div>
-</body>
-</html>
+}
+
+
+@RenderPage("~/pages/authPage.cshtml");
