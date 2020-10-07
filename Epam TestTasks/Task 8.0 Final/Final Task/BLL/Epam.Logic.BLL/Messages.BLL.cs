@@ -1,16 +1,17 @@
-﻿using Epam.CommonEntities;
+﻿using System;
+using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 using Epam.CommonLoggerInterface;
 
 namespace Epam.Logic.BLL
 {
     public class MessagesBLL : IMessagesBLL
-    {
-        private readonly ILogger logger;
+	{   // BLL Messages, отвечает за работу с чатами и сообщениями пользователя. Позволяет создать чат, удалить чат, отправить сообщение, удалить сообщение, получить список чатов и сообщений
+
+		private readonly ILogger logger;
         private readonly IMessagesDAL daoMessages;
 
         public MessagesBLL(ILogger logger, IMessagesDAL daoMessages)
@@ -18,6 +19,25 @@ namespace Epam.Logic.BLL
             this.logger = logger;
             this.daoMessages = daoMessages;
         }
+
+		public int CreateChat(int idUser, int idOpponent)
+		{
+			logger.Info("BLL: Chat creating process started");
+
+			try
+			{
+				int temp = daoMessages.CreateChat(idUser, idOpponent);
+
+				logger.Info("BLL: Chat creating  process done");
+				return temp;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("BLL: Chat creating  process failed!");
+				throw new Exception("error while creating chat process", e);
+			}
+		}
+	
 
 		public IEnumerable<Chat> GetAllChatsOfUser(int idUser)
 		{
@@ -37,13 +57,13 @@ namespace Epam.Logic.BLL
 			}
 		}
 
-		public IEnumerable<Message> GetAllMessagesFromChat(int idChat)
+		public IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader)
 		{
 			logger.Info("BLL: Getting chats list of messages process started");
 
 			try
 			{
-				IEnumerable<Message> temp = daoMessages.GetAllMessagesFromChat(idChat);
+				IEnumerable<Message> temp = daoMessages.GetAllMessagesFromChat(idChat, idReader);
 
 				logger.Info("BLL: Getting chats list of messages process done");
 				return temp;
@@ -71,6 +91,40 @@ namespace Epam.Logic.BLL
 			{
 				logger.Error("BLL: Getting chat with user process failed!");
 				throw new Exception("error while getting chat with user", e);
+			}
+		}
+
+		public int GetUnreadedCount(int idUser)
+		{
+			logger.Info("BLL: Getting unreaded chats count with user process started");
+
+			try
+			{
+				int temp = daoMessages.GetUnreadedCount(idUser);
+
+				logger.Info("BLL: Getting unreaded chats count with user process done");
+				return temp;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("BLL: Getting unreaded chats count with user process failed!");
+				throw new Exception("error while getting count of all unreaded chats of user", e);
+			}
+		}
+
+		public void RemoveChat(int idChat)
+		{
+			logger.Info("BLL: Chat removing process started");
+
+			try
+			{
+				daoMessages.RemoveChat(idChat);
+				logger.Info("BLL: Chat removing process done");
+			}
+			catch (SqlException e)
+			{
+				logger.Error("BLL: Chat removing process failed!");
+				throw new Exception("error while process of chat removing", e);
 			}
 		}
 

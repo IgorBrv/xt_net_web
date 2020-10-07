@@ -1,0 +1,46 @@
+﻿@* Элемент окна сообщений *@
+
+@{
+    string hidden = "hidden";
+}
+
+<div class="body-element @Page.position" id="@Page.idMessage">
+    @if (Page.curUserBlocked == null)
+    {
+        <form action="~/Pages/userPage.cshtml" method="post" class="body-element-main">
+            <input type="text" name="idUser" value="@Page.idSender" hidden />
+            <button class="body-element-avatar" style="@if (Page.userEmblem != null) { @Page.userEmblem }">
+                <img src="/Pages/images/user.svg" alt="аватар" class="body-element-avatar-image" @if (Page.userEmblem != null) { @hidden }>
+            </button>
+            <div class="body-element-content">
+                <p class="body-element-header">@Page.senderName</p>
+                <p class="body-element-text">@Page.messageText</p>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="body-element-main">
+            <input type="text" name="idUser" value="@Page.idSender" hidden />
+            <div class="body-element-avatar" style="@if (Page.userEmblem != null) { @Page.userEmblem }">
+                <img src="/Pages/images/user.svg" alt="аватар" class="body-element-avatar-image" @if (Page.userEmblem != null) { @hidden }>
+            </div>
+            <div class="body-element-content">
+                <p class="body-element-header">@Page.senderName</p>
+                <p class="body-element-text">@Page.messageText</p>
+            </div>
+        </div>
+    }
+    <div class="body-element-footer">
+        @if (Page.position == null)
+        {
+            <div class="body-element-button" id="@Page.idMessage" onclick="MessageRemoveButtonClickAlert(this)">
+                <img src="/Pages/images/close.svg" alt="message remove icon" class="body-element-remove-button-img">
+            </div>
+        }
+        else
+        {
+            <div class="body-remove-button-filler"></div>
+        }
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@* Страница чата *@
+
+@using Epam.Interfaces.BLL
+@using Epam.CommonEntities
+@using Epam.ASPNet.PL.Models
+@using Epam.CommonLoggerInterface;
+
+@{
+    ILogger logger = CommonData.GetResolver().GetLogger;
+    int id;
+
+    if (CommonData.idChat != null)
+    {
+        id = (int)CommonData.idChat;
+        CommonData.idChat = null;
+    }
+    else if (!Int32.TryParse(Request["id"], out id))
+    {
+        logger.Info("PL/messages: chat id is null, redirecting to chatspage");
+        Response.Redirect("~/Pages/chatsPage.cshtml");
+    }
+
+    List<Message> messages = null;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+    IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
+    Dictionary<int, UserData> chatPair = new Dictionary<int, UserData>();
+    chatPair.Add((int)CommonData.CurrentUser.id, CommonData.CurrentUser);
+
+    Page.pageName = "Чат";
+    Layout = "/Pages/_socialNetworkLayout.cshtml";
+    Page.curUserBlocked = CommonData.CurrentUser.blockedBy;
+
+
+    try
+    {
+        logger.Info("PL/messages: attepmt to reading messages from database");
+        messages = bloMessages.GetAllMessagesFromChat(id, (int)CommonData.CurrentUser.id).ToList();
+        Message message = messages.Where(item => item.senderId != CommonData.CurrentUser.id).FirstOrDefault();
+
+        if (message != null)
+        {
+            UserData opponent = bloUsers.GetById((int)message.senderId);
+            Page.pageName = $"Чат c {opponent.name.Split(' ')[0]}";
+            chatPair.Add((int)opponent.id, opponent);
+        }
+    }
+    catch (Exception e)
+    {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
+
+        CommonData.commonException = e;
+        logger.Error("PL/messages: attepmt to reading messages from database failure");
+        Response.Redirect("~/Pages/errorPage.cshtml");
+    }
+}
+
+<link rel="stylesheet" href="~/Pages/styles/messages.css">
+<link rel="stylesheet" href="/Pages/styles/cardbox.css">
+<div class="messages-container">
+    @foreach (Message message in messages)
+    {
+        Page.position = null;
+        Page.userEmblem = null;
+        Page.messageText = message.text;
+        Page.idSender = message.senderId;
+        Page.idMessage = message.messageId;
+        Page.senderName = chatPair[message.senderId].name;
+
+        if (message.senderId != (int)CommonData.CurrentUser.id)
+        {
+            Page.position = "body-element-right";
+        }
+        if (chatPair[message.senderId].emblem != null)
+        {
+            Page.userEmblem = $"background-image: url({chatPair[message.senderId].emblem})";
+        }
+
+        @RenderPage("/pages/_messagePartial.cshtml")
+    }
+</div>
+<div class="chat-input">
+    <input type="text" maxlength="1500" class="chat-input-textarea" id="@id" onkeypress="ChatInputKeyPressed(event)">
+    <button class="chat-input-send-button" id="@CommonData.CurrentUser.id" onclick="ChatSendButtonClick(this)">
+        <img src="/Pages/images/send.svg" class="chat-input-send-button-image" alt="">
+    </button>
+</div>
+<script src="/Pages/scripts/messagesPage.js"></script>
+
+

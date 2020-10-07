@@ -1,4 +1,6 @@
-﻿@using Epam.ASPNet.PL.Models
+﻿@* Модель регистрации нового пользователя *@
+
+@using Epam.ASPNet.PL.Models
 @using Epam.DependencyResolver
 
 @{
@@ -6,11 +8,12 @@
     {
         try
         {
+            string name = Request["name"];
             string login = Request["email"];
             string password = Request["password"];
-            string name = Request["name"];
             DateTime date = DateTime.Parse(Request["date"]);
-            Resolver resolver = StaticElements.GetResolver();
+
+            Resolver resolver = CommonData.GetResolver();
 
             if (resolver.GetBloUsers.Create(login, password, name, date))
             {

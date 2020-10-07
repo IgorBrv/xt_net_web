@@ -6,11 +6,15 @@ using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Epam.Logic.BLL
 {
 	public class UsersBLL : IUsersBLL
-	{
+	{   // DAL Users, отвечает за работу с сущностью пользователей, позволяет создавать профили пользователей, редактировать профиль пользователя, присваивать им эмблемы, а так же
+		// получать профиль пользователя, получать список пользоввателей, искать пользователей
+
 		private readonly ILogger logger;
 		private readonly IUsersDAL daoUsers;
 
@@ -32,10 +36,19 @@ namespace Epam.Logic.BLL
 			try
 			{
 				UserData user = new UserData(name, birth);
-				bool result = daoUsers.Create(email, password, user);
+				int idUser = daoUsers.Create(email, user);
 
-				logger.Info("BLL: Process of creating user done");
-				return result;
+				if (idUser >= 0)
+				{
+					string pswd = ComputeSHA256Hash($"{password}{idUser}");
+					daoUsers.SetPassword(idUser, pswd);
+
+					logger.Info("BLL: Process of creating user done");
+					return true;
+				}
+
+				logger.Info("BLL: Process of creating user was unsucssesseful");
+				return false;
 			}
 			catch (SqlException e)
 			{
@@ -175,6 +188,62 @@ namespace Epam.Logic.BLL
 			{
 				logger.Error("BLL: Process of adding emblem to user failed!");
 				throw new Exception("error while adding emblem process", e);
+			}
+		}
+
+		public bool ChangePassword(int id, string oldPassword, string password)
+		{
+			logger.Info("BLL: changing users pasword process started");
+
+			try
+			{
+				password = ComputeSHA256Hash($"{password}{id}");
+				oldPassword = ComputeSHA256Hash($"{oldPassword}{id}");
+				bool result = daoUsers.ChangePassword(id, oldPassword, password);
+
+				logger.Info("BLL: changing users pasword process done");
+				return result;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("BLL: changing users pasword process failed!");
+				throw new Exception("error while changing password of user process", e);
+			}
+		}
+
+		public bool CheckUser(string email, string password)
+		{
+			logger.Info("BLL: checking users password process started");
+
+			try
+			{
+				int? id = daoUsers.GetId(email);
+
+				if (id != null)
+				{
+					password = ComputeSHA256Hash($"{password}{id}");
+
+					bool result = daoUsers.CheckUser(email, password);
+
+					logger.Info("BLL: checking users password process done");
+					return result;
+				}
+
+				logger.Info("BLL: checking users password process was unsucsesseful");
+				return false;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("BLL: checking users password process failed!");
+				throw new Exception("error while checking users auth process", e);
+			}
+		}
+
+		private string ComputeSHA256Hash(string password)
+		{
+			using (var sha256 = new SHA256Managed())
+			{
+				return BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password))).Replace("-", "");
 			}
 		}
 	}

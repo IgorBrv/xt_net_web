@@ -7,11 +7,14 @@ using System.IO;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Data.SqlTypes;
 
 namespace Epam.Logic.DAL
 {
 	public class UsersDAL : IUsersDAL
-	{
+	{	// DAL Users, отвечает за работу с сущностью пользователей, позволяет создавать профили пользователей, назначать им пароли, редактировать профиль пользователя, присваивать им эмблемы, а так же
+		// получать профиль пользователя, получать список пользоввателей, искать пользователей
+
 		private readonly ILogger logger;
 		private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["default"].ConnectionString;
 
@@ -29,7 +32,7 @@ namespace Epam.Logic.DAL
 			try
 			{
 				string emblemName = $"{Guid.NewGuid()}.{ext}";
-				string savePath = $"{Path}\\images\\";
+				string savePath = $"{Path}\\avatars\\";
 
 				if (!Directory.Exists(savePath))
 				{
@@ -47,10 +50,11 @@ namespace Epam.Logic.DAL
 
 				if (user.emblem != null)
 				{
-					File.Delete($"{Path}{user.emblem.Substring(1)}");
+					string p = $"{Path}{user.emblem}";
+					File.Delete(p);
 				}
 
-				user.emblem = $"./images/{emblemName}";
+				user.emblem = $"/avatars/{emblemName}";
 				Update(user);
 
 				logger.Info("DAL: Process of adding emblem to user done");
@@ -79,7 +83,7 @@ namespace Epam.Logic.DAL
 
 				if (user.emblem != null)
 				{
-					File.Delete($"{Path}{user.emblem.Substring(1)}");
+					File.Delete($"{Path}{user.emblem}");
 				}
 
 				user.emblem = null;
@@ -99,7 +103,7 @@ namespace Epam.Logic.DAL
 			}
 		}
 
-		public bool Create(string email, string password, UserData user)
+		public int Create(string email, UserData user)
 		{
 			logger.Info("DAL: Process of creating user started");
 
@@ -130,23 +134,30 @@ namespace Epam.Logic.DAL
 
 						SqlParameter[] parameters = new SqlParameter[]
 						{
-						new SqlParameter("@email", email),
-						new SqlParameter("@password", password),
-						new SqlParameter("@name", user.name),
-						new SqlParameter("@birth", user.birth)
+							new SqlParameter("@email", email),
+							new SqlParameter("@name", user.name),
+							new SqlParameter("@birth", user.birth),
+						};
+
+						SqlParameter output = new SqlParameter
+						{   // выходной параметр
+							ParameterName = "@id",
+							SqlDbType = SqlDbType.Int,
+							Direction = ParameterDirection.Output
 						};
 
 						command.Parameters.AddRange(parameters);
+						command.Parameters.Add(output);
 
 						command.ExecuteScalar();
 
 						logger.Info("DAL: Process of creating user done");
-						return true;
+						return (int)output.Value;
 					}
 					else
 					{
 						logger.Info("DAL: Process of creating user was unsucsesseful");
-						return false;
+						return -1;
 					}
 				}
 			}
@@ -183,7 +194,10 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						usersList.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string));
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						usersList.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy));
 					}
 				}
 
@@ -220,7 +234,10 @@ namespace Epam.Logic.DAL
 
 					if (reader.Read())
 					{
-						user = new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string);
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						user = new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy);
 					}
 				}
 
@@ -257,7 +274,10 @@ namespace Epam.Logic.DAL
 
 					if (reader.Read())
 					{
-						user = new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string);
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						user = new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy);
 					}
 				}
 
@@ -294,7 +314,10 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						usersList.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string));
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						usersList.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy));
 					}
 				}
 
@@ -330,6 +353,13 @@ namespace Epam.Logic.DAL
 						new SqlParameter("@birth", user.birth),
 						new SqlParameter
 						{
+							ParameterName = "@blockedBy",
+							Value = user.blockedBy,
+							SqlDbType = SqlDbType.Int,
+							IsNullable = true
+						},
+						new SqlParameter
+						{
 							ParameterName = "@emblem",
 							Value = user.emblem,
 							SqlDbType = SqlDbType.NVarChar,
@@ -354,6 +384,166 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of updating users data failed!");
+				throw e;
+			}
+		}
+
+		public int? GetId(string email)
+		{
+			logger.Info("DAL: Getting id of user process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "GetUserId";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter sqlParam = new SqlParameter("@email", email);
+
+					command.Parameters.Add(sqlParam);
+					connection.Open();
+
+					int? result = null;
+
+					var reader = command.ExecuteReader();
+
+					if (reader.Read())
+					{
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("id"));
+						result = temp.IsNull ? (int?)null : temp.Value;
+					}
+
+					logger.Info("DAL: Getting id of user process  done");
+					return result;
+				}
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Getting id of user process failed!");
+				throw e;
+			}
+		}
+
+		public void SetPassword(int id, string password)
+		{
+			logger.Info("DAL: Process of password setting started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "SetPasswordById";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter[] sqlParams = new SqlParameter[]
+					{
+						new SqlParameter("@id", id),
+						new SqlParameter("@password", password),
+					};
+
+					command.Parameters.AddRange(sqlParams);
+					connection.Open();
+					command.ExecuteNonQuery();
+				}
+
+				logger.Info("DAL: Process of password setting  done");
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Process of password setting  failed!");
+				throw e;
+			}
+		}
+
+		public bool CheckUser(string email, string password)
+		{
+			logger.Info("DAL: checking users password process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "GetPassword";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter nameParam = new SqlParameter("@email", email);
+					command.Parameters.Add(nameParam);
+					connection.Open();
+					var reader = command.ExecuteReader();
+
+					if (reader.Read())
+					{
+						if (reader["password"] as string == password)
+						{
+							logger.Info("DAL: checking users password process done");
+							return true;
+						}
+					}
+				}
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: checking users password process failed!");
+				throw e;
+			}
+
+			logger.Info("DAL: checking users password process was unsucsesseful");
+			return false;
+		}
+
+		public bool ChangePassword(int id, string oldPassword, string password)
+		{
+			logger.Info("DAL: changing users pasword process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "ChangePasswordOfUser";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@id", id),
+						new SqlParameter("@oldPassword", oldPassword),
+						new SqlParameter("@password", password)
+					};
+
+					command.Parameters.AddRange(parameters);
+					connection.Open();
+
+					int count = (int)command.ExecuteScalar();
+
+					if (count == 1)
+					{
+						logger.Info("DAL: changing users pasword process done");
+						return true;
+					}
+				}
+
+				logger.Info("DAL: changing users pasword process was unsucsessefull");
+				return false;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: changing users pasword process failed!");
 				throw e;
 			}
 		}

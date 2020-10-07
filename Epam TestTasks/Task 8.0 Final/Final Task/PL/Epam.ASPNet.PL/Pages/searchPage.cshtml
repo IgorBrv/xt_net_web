@@ -1,0 +1,67 @@
+﻿@* Страница поиска пользователей *@
+
+@using Epam.Interfaces.BLL
+@using Epam.CommonEntities
+@using Epam.ASPNet.PL.Models
+@using Epam.CommonLoggerInterface;
+
+@{
+    IEnumerable<UserData> searchResults = null;
+    ILogger logger = CommonData.GetResolver().GetLogger;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+
+    Page.pageName = "Страница поиска";
+    Page.idUser = (int)CommonData.CurrentUser.id;
+    Layout = "/Pages/_socialNetworkLayout.cshtml";
+    Page.hidden = "hidden";
+
+    if (IsPost)
+    {
+        try
+        {
+            logger.Info("PL/search: attempt to search users by name");
+
+            if (Request["text"].Replace(" ", "") != "")
+            {
+                searchResults = bloUsers.FindByName((int)CommonData.CurrentUser.id, Request["text"]);
+            }
+            else
+            {
+                searchResults = bloUsers.GetOthers((int)CommonData.CurrentUser.id);
+            }
+        }
+        catch (Exception e)
+        {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
+
+            CommonData.commonException = e;
+            logger.Error("PL/search: attempt to search users by name failed");
+            Response.Redirect("~/Pages/errorPage.cshtml");
+        }
+    }
+}
+
+<link rel="stylesheet" href="/Pages/styles/usercard.css">
+<link rel="stylesheet" href="/Pages/styles/cardbox.css">
+<link rel="stylesheet" href="/Pages/styles/search.css">
+
+@foreach (UserData user in searchResults)
+{
+    Page.name = null;
+    Page.id = user.id;
+    Page.notAddable = false;
+    Page.friendName = user.name;
+    Page.avatarLink = user.emblem;
+    Page.friendBirth = user.birth.ToString("D");
+    Page.friendAge = CommonData.AgeCalc(user.birth);
+
+    if (CommonData.friendInventations.Count(item => item.id == user.id) > 0)
+    {
+        Page.notAddable = true;
+    }
+
+    @RenderPage("/pages/_usercardPartial.cshtml")
+}
+
+
+<script src="/Pages/scripts/userPage.js"></script>
+<script src="/Pages/scripts/searchPage.js"></script>

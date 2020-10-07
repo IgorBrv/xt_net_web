@@ -1,0 +1,103 @@
+/* Ќабор стилей дл€ формы авторизации и регистрации */
+
+.password-editor-window {
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    color: #4f4f4f;
+    overflow: auto;
+    position: fixed;
+    flex-flow: wrap;
+    transition: 0.5s;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.password-editor-window-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.authcontainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    color: #4f4f4f;
+    overflow: auto;
+    position: fixed;
+    flex-flow: wrap;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    font-family: sans-serif;
+}
+
+.authform {
+    width: 300px;
+    padding: 15px;
+    display: flex;
+    flex-flow: column;
+    background: #ffffff;
+    border-radius: 15px;
+    border: 1px solid #4f4f4f;
+    justify-content: space-around;
+    box-shadow: 0px 0px 15px #d6d6d6;
+}
+
+.authhr {
+    border: 1px solid white
+}
+
+.authbuttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.authbutton {
+    border: 0;
+    margin-top: 20px;
+    margin-left: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2px 7px 3px 7px;
+    box-shadow: 1px 1px 10px #4f4f4f;
+}
+
+.authbutton:hover {
+    background: #f0f0f0;
+    box-shadow: 1px 1px 10px #828282;
+}
+
+.auth-error-baloon {
+    top: 1%;
+    left: 1%;
+    padding: 10px;
+    z-index: 9999;
+    color: #4f4f4f;
+    position: fixed;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #4f4f4f;
+    box-shadow: 1px 1px 15px #d6d6d6;
+}
+
+.authinput {
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #4f4f4f;
+}
+
+.authlabel {
+    margin-top: 10px;
+}
+
+
+@media (max-width: 750px) {
+
+    .authheader {
+        font-size: 31px;
+    }
+}

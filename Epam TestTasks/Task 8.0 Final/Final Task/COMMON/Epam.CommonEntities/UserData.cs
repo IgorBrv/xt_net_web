@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Epam.CommonEntities
-{
+{	// Объект пользователя, включает в себя id пользователя, имя, дату рождения, высказывание, ссылку на аватар, и флажок блокировки
+
 	public class UserData
 	{
 		public int? id;
@@ -13,6 +10,7 @@ namespace Epam.CommonEntities
 		public string emblem;
 		public DateTime birth;
 		public string statement;
+		public int? blockedBy;
 
 		public UserData(string name, DateTime birth)
 		{
@@ -24,13 +22,14 @@ namespace Epam.CommonEntities
 			this.statement = null;
 		}
 
-		public UserData(int id, string name, DateTime birth, string statement = null, string emblem = null)
+		public UserData(int id, string name, DateTime birth, string statement = null, string emblem = null, int? blockedBy = null)
 		{
 			this.id = id;
 			this.name = name;
 			this.birth = birth;
 			this.emblem = emblem;
 			this.statement = statement;
+			this.blockedBy = blockedBy;
 		}
 	}
 }

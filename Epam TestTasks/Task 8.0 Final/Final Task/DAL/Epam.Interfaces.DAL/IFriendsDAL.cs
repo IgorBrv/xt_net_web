@@ -4,7 +4,8 @@ using Epam.CommonEntities;
 namespace Epam.Interfaces.DAL
 {
 	public interface IFriendsDAL
-	{
+	{   // DAL Friends, отвечает за работу со списком друзей пользоввателя (Добавление в друзья, отправление заявки, удаление из друзей, подтверждение заявки, получение списка друзей)
+
 		IEnumerable<UserData> GetFriends(int userId);
 
 		IEnumerable<UserData> GetInventations(int userId);

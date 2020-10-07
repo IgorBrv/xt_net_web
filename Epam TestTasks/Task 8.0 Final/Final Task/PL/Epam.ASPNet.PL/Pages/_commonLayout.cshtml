@@ -1,0 +1,21 @@
+﻿@* Задник сайта *@
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Социальная сеть</title>
+    <link rel="stylesheet" href="/Pages/styles/common.css">
+    <link rel="stylesheet" href="/Pages/styles/header.css">
+    <link rel="stylesheet" href="/Pages/styles/body.css">
+</head>
+<body class="body">
+    <form action="/Pages/errorPage.cshtml" method="post" id="fatalErrorForm" hidden>
+        <input name="details" id="fatalErrorDetails">
+    </form>
+    @RenderBody()
+    <script src="/Pages/scripts/common.js"></script>
+</body>
+</html>

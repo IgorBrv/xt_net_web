@@ -3,11 +3,14 @@ using System.Data;
 using System.Data.SqlClient;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Collections.Generic;
 
 namespace Epam.Logic.DAL
 {
 	public class SecurityDataDAL : ISecurityDataDAL
-	{
+	{	// DAL SecurityData, отвечает за работу с ролями пользователя, позволяет получить роли пользователя, добавить роли пользователю
+
+
 		private readonly ILogger logger;
 		private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["default"].ConnectionString;
 
@@ -31,27 +34,32 @@ namespace Epam.Logic.DAL
 						CommandType = CommandType.StoredProcedure
 					};
 
-					SqlParameter nameParam = new SqlParameter("@email", email);
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@email", email),
+						new SqlParameter("@role", role)
+					};
 
-					command.Parameters.Add(nameParam);
-
+					command.Parameters.AddRange(parameters);
 					connection.Open();
 
 					if ((int)command.ExecuteScalar() == 0)
 					{
-						stProc = "CreateRoleForUser";
+						stProc = "AddRoleToUser";
 
 						command = new SqlCommand(stProc, connection)
 						{
 							CommandType = CommandType.StoredProcedure
 						};
 
-						nameParam = new SqlParameter("@email", email);
-						SqlParameter roleParam = new SqlParameter("@role", role);
-						command.Parameters.Add(nameParam);
-						command.Parameters.Add(roleParam);
-						command.ExecuteScalar();
+						parameters = new SqlParameter[]
+						{
+							new SqlParameter("@email", email),
+							new SqlParameter("@role", role)
+						};
 
+						command.Parameters.AddRange(parameters);
+						command.ExecuteNonQuery();
 
 						logger.Info("DAL: process of adding role to user done");
 						return true;
@@ -69,49 +77,9 @@ namespace Epam.Logic.DAL
 			}
 		}
 
-		public bool CheckUser(string email, string password)
+		public IEnumerable<string> GetRolesOfUser(string email)
 		{
-			logger.Info("DAL: checking users password process started");
-
-			try
-			{
-				using (SqlConnection connection = new SqlConnection(_connectionString))
-				{
-					var stProc = "GetPassword";
-
-					var command = new SqlCommand(stProc, connection)
-					{
-						CommandType = CommandType.StoredProcedure
-					};
-
-					SqlParameter nameParam = new SqlParameter("@email", email);
-					command.Parameters.Add(nameParam);
-					connection.Open();
-					var reader = command.ExecuteReader();
-
-					if (reader.Read())
-					{
-						if (reader["password"] as string == password)
-						{
-							logger.Info("DAL: checking users password process done");
-							return true;
-						}
-					}
-				}
-			}
-			catch (SqlException e)
-			{
-				logger.Error("DAL: checking users password process failed!");
-				throw e;
-			}
-
-			logger.Info("DAL: checking users password process was unsucsesseful");
-			return false;
-		}
-
-		public string GetRoleOfUser(string email)
-		{
-			string result = null;
+			List<string> result = new List<string>();
 			logger.Info("DAL: getting users role process started");
 
 			try
@@ -128,8 +96,12 @@ namespace Epam.Logic.DAL
 					SqlParameter nameParam = new SqlParameter("@email", email);
 					command.Parameters.Add(nameParam);
 					connection.Open();
+					var reader = command.ExecuteReader();
 
-					result = command.ExecuteScalar() as string;
+					while (reader.Read())
+					{
+						result.Add(reader["name"] as string);
+					}
 				}
 
 				logger.Info("DAL: getting users role process done");
@@ -138,48 +110,6 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: getting users role process failed!");
-				throw e;
-			}
-		}
-
-		public bool ChangePassword(int id, string oldPassword, string password)
-		{
-			logger.Info("DAL: changing users pasword process started");
-
-			try
-			{
-				using (SqlConnection connection = new SqlConnection(_connectionString))
-				{
-					var stProc = "ChangePasswordOfUser";
-
-					var command = new SqlCommand(stProc, connection)
-					{
-						CommandType = CommandType.StoredProcedure
-					};
-
-					SqlParameter[] parameters = new SqlParameter[]
-					{
-						new SqlParameter("@id", id),
-						new SqlParameter("@oldPassword", oldPassword),
-						new SqlParameter("@password", password)
-					};
-
-					command.Parameters.AddRange(parameters);
-					connection.Open();
-
-					if ((int)command.ExecuteScalar() == 1)
-					{
-						logger.Info("DAL: changing users pasword process done");
-						return true;
-					}
-				}
-
-				logger.Info("DAL: changing users pasword process was unsucsessefull");
-				return false;
-			}
-			catch (SqlException e)
-			{
-				logger.Error("DAL: changing users pasword process failed!");
 				throw e;
 			}
 		}

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Epam.CommonEntities
-{
+{	// Объект сообщения, включает в себя id чата, текст сообщения, id отправителя, дату и id сообщения
 	public class Message
 	{
 		public int chatId;

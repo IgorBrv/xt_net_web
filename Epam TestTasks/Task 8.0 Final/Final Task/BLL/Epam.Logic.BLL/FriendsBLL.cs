@@ -9,8 +9,9 @@ using Epam.CommonLoggerInterface;
 namespace Epam.Logic.BLL
 {
     public class FriendsBLL : IFriendsBLL
-    {
-        private readonly ILogger logger;
+	{   // BLL Friends, отвечает за работу со списком друзей пользоввателя (Добавление в друзья, отправление заявки, удаление из друзей, подтверждение заявки, получение списка друзей)
+
+		private readonly ILogger logger;
         private readonly IFriendsDAL daoFriends;
 
         public FriendsBLL(ILogger logger, IFriendsDAL daoFriends)

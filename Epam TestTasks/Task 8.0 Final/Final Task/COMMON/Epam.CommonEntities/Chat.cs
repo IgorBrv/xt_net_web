@@ -1,24 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Epam.CommonEntities
 {
 	public class Chat
-	{
-		public int? id;
-		public string opponentName;
-		public string lastMessage;
-		public DateTime date;
+	{	// Объект чата, включает в себя id чата, имя отправителя последнего сообщения, последнее сообщение с его датой, эмблему оппонента
 
-		public Chat(int? id, string opponentName, string lastMessage, DateTime date)
+		public int? id;
+		public int? unreaded;
+		public string emblem;
+		public DateTime date;
+		public string lastMessage;
+		public string opponentName;
+
+		public Chat(int? id, string opponentName, string lastMessage, DateTime date, int? unreaded, string emblem = null)
 		{
 			this.id = id;
-			this.opponentName = opponentName;
-			this.lastMessage = lastMessage;
 			this.date = date;
+			this.emblem = emblem;
+			this.unreaded = unreaded;
+			this.lastMessage = lastMessage;
+			this.opponentName = opponentName;
 		}
 	}
 }

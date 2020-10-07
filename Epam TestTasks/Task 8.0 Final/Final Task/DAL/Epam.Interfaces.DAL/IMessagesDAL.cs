@@ -4,7 +4,8 @@ using Epam.CommonEntities;
 namespace Epam.Interfaces.DAL
 {
 	public interface IMessagesDAL
-	{
+	{   // DAL Messages, отвечает за работу с чатами и сообщениями пользователя. Позволяет создать чат, удалить чат, отправить сообщение, удалить сообщение, получить список чатов и сообщений
+
 		Message SendMessage(Message message);
 
 		int? GetChat(int idUser, int idOpponent);
@@ -13,6 +14,12 @@ namespace Epam.Interfaces.DAL
 
 		IEnumerable<Chat> GetAllChatsOfUser(int idUser);
 
-		IEnumerable<Message> GetAllMessagesFromChat(int idChat);
+		IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader);
+
+		int GetUnreadedCount(int idUser);
+
+		int CreateChat(int idUser, int idOpponent);
+
+		void RemoveChat(int idChat);
 	}
 }

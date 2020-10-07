@@ -6,11 +6,13 @@ using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Data.SqlTypes;
 
 namespace Epam.Logic.DAL
 {
     public class FriendsDAL : IFriendsDAL
-    {
+    {	// DAL Friends, отвечает за работу со списком друзей пользоввателя (Добавление в друзья, отправление заявки, удаление из друзей, подтверждение заявки, получение списка друзей)
+
         private readonly ILogger logger;
 		private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["default"].ConnectionString;
 
@@ -78,7 +80,10 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string));
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy));
 					}
 				}
 
@@ -116,7 +121,10 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string));
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy));
 					}
 				}
 
@@ -154,7 +162,10 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string));
+						int? blockedBy;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("blockedBy"));
+						blockedBy = temp.IsNull ? (int?)null : temp.Value;
+						users.Add(new UserData((int)reader["id"], reader["name"] as string, (DateTime)reader["birth"], reader["statement"] as string, reader["emblem"] as string, blockedBy));
 					}
 				}
 

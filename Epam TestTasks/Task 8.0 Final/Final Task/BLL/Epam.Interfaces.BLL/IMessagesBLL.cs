@@ -6,7 +6,8 @@ using Epam.CommonEntities;
 namespace Epam.Interfaces.BLL
 {
 	public interface IMessagesBLL
-	{
+	{   // BLL Messages, отвечает за работу с чатами и сообщениями пользователя. Позволяет создать чат, удалить чат, отправить сообщение, удалить сообщение, получить список чатов и сообщений
+
 		Message SendMessage(int chatId, int senderId, string text, DateTime date);
 
 		int? GetChat(int idUser, int idOpponent);
@@ -15,6 +16,12 @@ namespace Epam.Interfaces.BLL
 
 		IEnumerable<Chat> GetAllChatsOfUser(int idUser);
 
-		IEnumerable<Message> GetAllMessagesFromChat(int idChat);
+		IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader);
+
+		int GetUnreadedCount(int idUser);
+
+		int CreateChat(int idUser, int idOpponent);
+
+		void RemoveChat(int idChat);
 	}
 }

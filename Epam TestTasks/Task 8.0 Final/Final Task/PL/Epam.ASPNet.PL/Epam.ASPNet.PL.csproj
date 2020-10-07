@@ -50,6 +50,9 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -91,26 +94,54 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Pages\css\auth.css" />
-    <Content Include="Pages\css\error.css" />
+    <Content Include="Pages\scripts\adminFunctions.js" />
+    <Content Include="Pages\scripts\authPage.js" />
+    <Content Include="Pages\scripts\chatsPage.js" />
+    <Content Include="Pages\scripts\common.js" />
+    <Content Include="Pages\scripts\editorLayout.js" />
+    <Content Include="Pages\scripts\messagesPage.js" />
+    <Content Include="Pages\scripts\searchPage.js" />
+    <Content Include="Pages\scripts\snLayout.js" />
+    <Content Include="Pages\scripts\userPage.js" />
+    <Content Include="Pages\styles\auth.css" />
+    <Content Include="Pages\styles\blocked.css" />
+    <Content Include="Pages\styles\body.css" />
+    <Content Include="Pages\styles\cardbox.css" />
+    <Content Include="Pages\styles\chats.css" />
+    <Content Include="Pages\styles\common.css" />
+    <Content Include="Pages\styles\unifiedforms.css" />
+    <Content Include="Pages\styles\error.css" />
+    <Content Include="Pages\styles\header.css" />
+    <Content Include="Pages\styles\messages.css" />
+    <Content Include="Pages\styles\search.css" />
+    <Content Include="Pages\styles\usercard.css" />
+    <Content Include="Pages\styles\userpage.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CommonData.cs" />
     <Compile Include="Models\roleProvider.cs" />
-    <Compile Include="Models\StaticElements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Models\authModel.cshtml" />
     <Content Include="Models\regModel.cshtml" />
+    <Content Include="Models\logoutModel.cshtml" />
+    <Content Include="Models\ajaxHub.cshtml" />
     <None Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="Pages\authPage.cshtml" />
     <Content Include="Pages\userPage.cshtml" />
-    <Content Include="Pages\messages.cshtml" />
+    <Content Include="Pages\chatsPage.cshtml" />
     <Content Include="Pages\regPage.cshtml" />
     <Content Include="Pages\errorPage.cshtml" />
+    <Content Include="Pages\_commonLayout.cshtml" />
+    <Content Include="Pages\_socialNetworkLayout.cshtml" />
+    <Content Include="Pages\_usercardPartial.cshtml" />
+    <Content Include="Pages\_chatPartial.cshtml" />
+    <Content Include="Pages\messagesPage.cshtml" />
+    <Content Include="Pages\_messagePartial.cshtml" />
+    <Content Include="Pages\searchPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

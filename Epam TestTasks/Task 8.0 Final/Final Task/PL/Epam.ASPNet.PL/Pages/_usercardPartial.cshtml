@@ -1,0 +1,68 @@
+﻿@* Форма карточки профиля друга *@
+
+@using Epam.ASPNet.PL.Models
+
+@{
+    string hidden = "hidden-box";
+
+    if (Page.avatarLink != null)
+    {
+        Page.avatarLink = $"background-image: url({Page.avatarLink})";
+    }
+}
+
+<form action="/Pages/userPage.cshtml" method="POST" class="body-element  @if (Page.name == "hidden") { @hidden }" id="@Page.id" onclick="UserClick(this)" @if (Page.name != null && Page.name != "hidden") { @Page.name }>
+    <input type="text" name="idUser" value="@Page.id" hidden/>
+    <div class="body-element-main">
+        <div class="body-element-avatar" style='@if (Page.avatarLink != null) { @Page.avatarLink }'>
+            <img src="/Pages/images/user.svg" alt="аватар" class="emblem @if (Page.avatarLink != null) { @Page.hidden} ">
+        </div>
+        <div class="body-element-content">
+            <p class="body-element-header" id="">@Page.friendName</p>
+            <div class="body-element-columns">
+                <div class="column1">
+                    @if (Page.userBlocked == null)
+                    {
+                        <p class="body-element-text">Возраст:</p>
+                        <p class="body-element-text">Дата рождения:</p>
+                    }
+                    else
+                    {
+                        <p class="body-element-text">Пользователь заблокирован</p>
+                    }
+                </div>
+                @if (Page.userBlocked == null)
+                {
+                    <div class="column2">
+                        <p class="body-element-text body-element-age">@Page.friendAge лет</p>
+                        <p class="body-element-text body-element-date" id="">@Page.friendBirth</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="body-element-footer">
+        @if (CommonData.CurrentUser.id != Page.id && CommonData.curUserFriends.Count(item => item.id == Page.id) == 0 && CommonData.friendInventations.Count(item => item.id == Page.id) == 0 && Page.notAddable != true)
+        {
+            <div class="body-element-button" id="@Page.id" onclick="PersonAddButtonClick(this)">
+                <img src="/Pages/images/add2.svg" alt="AddToFriendIcon" class="body-element-remove-button-img">
+            </div>
+        }
+        @if (CommonData.CurrentUser.id != Page.id && Page.userBlocked == null)
+        {
+            <div class="body-element-button" id="@Page.id" onclick="PersonMessageButtonClick(this)">
+                <img src="/Pages/images/message2.svg" alt="Message icon" class="body-element-message-button-img">
+            </div>
+        }
+        else
+        {
+            <div class="button-filler"></div>
+        }
+        @if (CommonData.CurrentUser.id == Page.idUser && Page.userpage == true)
+        {
+            <div class="body-element-button" id="@Page.id" onclick="PersonRemoveButtonClickAlert(this)">
+                <img src="/Pages/images/close.svg" alt="Remove from friens icon" class="body-element-remove-button-img">
+            </div>
+        }
+    </div>
+</form>

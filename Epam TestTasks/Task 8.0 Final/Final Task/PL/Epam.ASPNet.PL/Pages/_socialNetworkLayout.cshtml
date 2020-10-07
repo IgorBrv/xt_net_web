@@ -1,0 +1,145 @@
+﻿@* Основная форма окна соцсети (левое меню и шапка с поиском) *@
+
+@using Epam.ASPNet.PL.Models
+@using Epam.CommonLoggerInterface;
+
+@{
+    int unreadedChats = 0;
+    Layout = "/pages/_commonLayout.cshtml";
+    string opacity = "unified-form-avatar-opacity";
+    ILogger logger = CommonData.GetResolver().GetLogger;
+
+    try
+    {
+        unreadedChats = CommonData.GetResolver().GetBloMessages.GetUnreadedCount((int)CommonData.CurrentUser.id);
+    }
+    catch (Exception e)
+    {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
+
+        CommonData.commonException = e;
+        logger.Info("PL/mainLayoit: getting unreaded chats count failure");
+        Response.Redirect("~/Pages/errorPage.cshtml");
+    }
+}
+
+<!-- <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
+@* Окно оповещения: *@
+<link rel="stylesheet" href="/Pages/styles/unifiedforms.css">
+<div id="alertWindow" class="unified-form-container unified-form-container-hidden" style="z-index: 5; background: 0; background-color: transparent;">
+    <div class="unified-form-wrapper" onclick="HideAlertWindow()">
+        <div class="unified-form" onclick="AlertFormClick()">
+            <div class="unified-form-body">
+                <div class="unified-form-avatar">
+                    <img src="/Pages/images/alert.svg" alt="аватар" class="unified-form-avatar-image">
+                </div>
+                <div class="unified-form-content">
+                    <div class="unified-form-content-header">
+                        <h2 class="unified-form-content-header-title">Внимание!</h2>
+                        <button type="button" class="unified-form-content-header-close-button" onclick="HideAlertWindow()">
+                            <img src="/Pages/images/close.svg" alt="editor window closure icon" class="body-element-remove-button-img">
+                        </button>
+                    </div>
+                    <hr class="unified-form-content-hr">
+                    <p class="unified-form-content-p">Ошибка</p>
+                </div>
+            </div>
+            <div class="unified-form-footer">
+                <button type="button" class="unified-form-footer-button" id="" onclick="">Да</button>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Page.passwordEditorAllowed == true)
+{
+    // Окно изменения пароля пользователя
+    <link rel="stylesheet" href="/Pages/styles/auth.css">
+    <div class="password-editor-window password-editor-window-hidden" onclick="PasswordEditorCloseButtonClick()">
+        <div class="authform" onclick="EditorFormClick()" style="color: #828282;">
+            <h1 class="authheader">Изменение пароля</h1>
+            <hr class="authhr">
+            <p class="authlabel">Старый пароль:</p>
+            <input type="password" required maxlength="50" id="oldpas" class="authinput">
+            <p class="authlabel">Новый пароль:</p>
+            <input type="password" required maxlength="50" id="newpas" class="authinput">
+            <p class="authlabel">Ещё раз:</p>
+            <input type="password" required maxlength="50" id="newpasreply" class="authinput">
+            <button type="button" class="unified-form-footer-button" onclick="PasswordEditorCloseButtonClick()">Выход</button>
+            <button type="submit" class="unified-form-footer-button" onclick="PasswordEditorSaveClick()">Сохранить</button>
+        </div>
+    </div>
+}
+@if (Page.editorAllowed == true)
+{
+    // Окно редактора профиля пользователя
+    <div id="editor" class="unified-form-container unified-form-container-hidden">
+        <div class="unified-form-wrapper" onclick="EditorCloseButtonClick()">
+            <div class="unified-form" onclick="EditorFormClick()">
+                <div class="unified-form-body">
+                    <div class="unified-form-avatar @if (Page.userEmblem != null) {@opacity}" id="@Page.idUser" onclick="RemoveEmblemButtonClickAlert(this)" style='@if (Page.userEmblem != null) {@Page.userEmblem}'>
+                        <img src="/Pages/images/user.svg" alt="аватар" class="unified-form-avatar-image @if (Page.userEmblem != null) {@Page.hidden}">
+                    </div>
+                    <div class="unified-form-content">
+                        <div class="unified-form-content-header">
+                            <input type="text" placeholder="Введите имя пользователя" class="unified-form-content-header-title" id="editorTindowTitle" value="@Page.editorName">
+                            <button type="button" class="unified-form-content-header-close-button" onclick="EditorCloseButtonClick()">
+                                <img src="/Pages/images/close.svg" alt="editor window closure icon" class="body-element-remove-button-img">
+                            </button>
+                        </div>
+                        <hr class="unified-form-content-hr">
+                        <p class="unified-form-content-p">Высказывание:</p>
+                        <input type="text" class="unified-form-content-input-text" name="" id="" value="@Page.editorStatement" placeholder="Введите статус пользователя" maxlength="50">
+                        <p class="unified-form-content-p">Дата рождения:</p>
+                        <input type="date" class="unified-form-content-input" name="" id="" value="@Page.userBirth">
+                    </div>
+                </div>
+                <div class="unified-form-footer">
+                    @if (Page.passwordEditorAllowed == true)
+                    {
+                        <button type="button" class="unified-form-footer-button unified-form-footer-button-padding" id="@Page.idUser" onclick="PasswordEditorButtonClick()">Изменить пароль</button>
+                    }
+                    <input type="file" id="fileSelector" name="@Page.idUser" accept="image/png, image/jpeg" onchange="EmblemButtonClick(this)" hidden />
+                    <div type="button" class="unified-form-footer-button" id="b0"><label for="fileSelector" class="unified-form-footer-button-label">Эмблема</label></div>
+                    <button type="button" class="unified-form-footer-button unified-form-footer-button-padding" id="@Page.idUser" onclick="EditorSaveClick(this)">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/Pages/scripts/editorLayout.js"></script>
+}
+<div class="wrapper">
+    <div class="header-container">
+        <div class="header-text-container">
+            <p class="header-text">@Page.pageName</p>
+        </div>
+        <form action="/Pages/searchPage.cshtml" method="post" class="header-search-container">
+            <div class="search-container" title="Строка поиска">
+                <img src="/Pages/images/search.svg" alt="Search field" class="search-image">
+                <input type="text" maxlength="50" name="text" placeholder="Поиск людей" class="search-input" onkeypress="SearchInputKeyPressed(event)">
+            </div>
+        </form>
+    </div>
+    <div class="left-bar">
+        <button class="left-bar-buttons" onclick="HomeButtonClick()"><p class="button-label">Моя страница</p><img src="/Pages/images/home.svg" alt="home button" class="left-bar-menu-image"></button>
+        @if (Page.curUserBlocked == null || User.IsInRole("admin"))
+        {
+            <button class="left-bar-buttons" onclick="MessagesButtonClick()">
+                <p class="button-label">Сообщения</p>
+                <div class="left-bar-menu-image left-bar-menu-image-box" style="background: url(/Pages/images/message.svg)">
+                    @if (unreadedChats > 0)
+                    {
+                        <div class="messageLed"></div>
+                    }
+                </div>
+            </button>
+        }
+        @if (Page.editorAllowed == true)
+        {
+            <button class="left-bar-buttons" onclick="PageSettingsButtonClick()"><p class="button-label">Настройка страницы</p><img src="/Pages/images/settings.svg" alt="settings button" class="left-bar-menu-image"></button>
+        }
+        <button class="left-bar-buttons" onclick="ExitButtonClick()"><p class="button-label">Выход</p><img src="/Pages/images/logout.svg" alt="logout button" class="left-bar-menu-image"></button>
+    </div>
+    <div class="body-container">
+        @RenderBody()
+    </div>
+</div>
+<script src="/Pages/scripts/snLayout.js"></script>

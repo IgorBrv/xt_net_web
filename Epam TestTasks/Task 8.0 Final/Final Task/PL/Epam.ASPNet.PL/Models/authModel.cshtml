@@ -2,33 +2,26 @@
 @using Epam.DependencyResolver
 
 @{
+    // Страница проверки пары логин/пароль пользователя
+
     if (IsPost)
     {
-        try
+        string login = Request["email"];
+        string password = Request["password"];
+
+        Resolver resolver = CommonData.GetResolver();
+
+        if (resolver.GetBloUsers.CheckUser(login, password))
         {
-            string login = Request["email"];
-            string password = Request["password"];
-            Resolver resolver = StaticElements.GetResolver();
-
-            if (resolver.GetBloSecurityData.CheckUser(login, password))
-            {
-                FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
-
-                CommonData.currentUser = resolver.GetBloUsers.GetByEmail(login);
-
-                Response.Redirect("~/Pages/userPage.cshtml");
-            }
-            else
-            {
-                CommonData.authError = true;
-                Response.Redirect("~/Pages/authPage.cshtml");
-            }
+            FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
+            CommonData.CurrentUser = resolver.GetBloUsers.GetByEmail(login);
+            Page.idUser = CommonData.CurrentUser.id;
+            @RenderPage("~/Pages/userPage.cshtml");
         }
-        catch (Exception e)
-        {   // Перехват сгенерированой в blo ошибки авторизации
-
-            Page.Exception = e;
-            @RenderPage("~/Pages/errorPage.cshtml");
+        else
+        {
+            CommonData.authError = true;
+            Response.Redirect("~/Pages/authPage.cshtml");
         }
     }
 }

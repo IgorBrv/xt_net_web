@@ -6,14 +6,14 @@ using Epam.CommonLogger;
 using Epam.CommonLoggerInterface;
 
 namespace Epam.DependencyResolver
-{
+{	// Распределитель зависимостей
+
 	public class Resolver
 	{
 		private readonly IUsersDAL daoUsers;
 		private readonly IFriendsDAL daoFriends;
 		private readonly IMessagesDAL daoMessages;
 		private readonly ISecurityDataDAL daoSecurityData;
-
 
 		public Resolver()
 		{

@@ -1,35 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Security;
 using Epam.DependencyResolver;
-using Epam.Interfaces.BLL;
 
 namespace Epam.ASPNet.PL.Models
-{
+{	// Самописный RoleProvider
+
 	public class MyRoleProvider : RoleProvider
 	{
-		private readonly Resolver resolver = StaticElements.GetResolver();
+		private readonly Resolver resolver = CommonData.GetResolver();
 
 		public override string[] GetRolesForUser(string username)
 		{
-			return new string[] { resolver.GetBloSecurityData.GetRoleOfUser(username) };
+			try
+			{
+				return resolver.GetBloSecurityData.GetRolesOfUser(username).ToArray();
+			}
+			catch
+			{   // Перехват ошибок сгенерированных в bll
+
+				return new string[] { "user" }; // TODO (возвращаем роль младшего пользоателя в случае ошибки)
+			}
 		}
 
 		public override bool IsUserInRole(string username, string roleName)
 		{
-			return resolver.GetBloSecurityData.IsUserInRole(username, roleName);
+			try
+			{
+				return resolver.GetBloSecurityData.IsUserInRole(username, roleName);
+			}
+			catch
+			{   // Перехват ошибок сгенерированных в bll
+
+				return false;  // TODO (возвращаем false, т.к. проверок на младшего пользователя в коде нет)
+			}
 		}
 
 		public override void AddUsersToRoles(string[] usernames, string[] roleNames)
 		{
-			foreach (string name in usernames)
+			try
 			{
-				foreach (string role in roleNames)
+				foreach (string name in usernames)
 				{
-					resolver.GetBloSecurityData.AddRoleToUser(name, role);
+					foreach (string role in roleNames)
+					{
+						resolver.GetBloSecurityData.AddRoleToUser(name, role);
+					}
 				}
+			}
+			catch
+			{
+				// TODO
 			}
 		}
 

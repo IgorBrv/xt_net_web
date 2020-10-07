@@ -1,0 +1,23 @@
+﻿@* Элемент окна "Чаты" *@
+
+@{
+    string hidden = "hidden";
+}
+
+<form action="/Pages/messagesPage.cshtml" method="POST" class="body-element" id="@Page.id" onclick="ChatClick(this)" style='@Page.unreaded'>
+    <input type="number" name="id" value="@Page.id" hidden/>
+    <div class="body-element-main">
+        <div class="body-element-avatar" style='@if (Page.userEmblem != null) {@Page.userEmblem}'>
+            <img src="/Pages/images/user.svg" alt="аватар" class="emblem @if (Page.userEmblem != null) {@hidden}">
+        </div>
+        <div class="body-element-content">
+            <p class="body-element-header" id="">@Page.chatName</p>
+            <p class="body-element-text">@Page.chatText</p>
+        </div>
+    </div>
+    <div class="body-element-footer">
+        <div type="button" class="body-element-button" id="@Page.id" onclick="RemoveChatButtonClickAlert(this)">
+            <img src="/Pages/images/close.svg" alt="window closure icon" class="body-element-remove-button-img">
+        </div>
+    </div>
+</form>

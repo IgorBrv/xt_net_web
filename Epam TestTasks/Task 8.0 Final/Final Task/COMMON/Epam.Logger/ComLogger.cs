@@ -3,7 +3,8 @@
 namespace Epam.CommonLogger
 {
 	public class ComLogger : ILogger
-	{
+	{	// Общий фасад к классу логгера
+
 		public ComLogger()
 		{
 			Logger.InitLogger();
@@ -13,6 +14,6 @@ namespace Epam.CommonLogger
 
 		public void Info(string message) => Logger.Log.Info(message);
 
-		public void Warn(string message) => Logger.Log.Error(message);
+		public void Warn(string message) => Logger.Log.Warn(message);
 	}
 }

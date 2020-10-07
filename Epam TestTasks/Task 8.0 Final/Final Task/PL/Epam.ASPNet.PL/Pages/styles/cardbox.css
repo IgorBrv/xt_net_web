@@ -1,0 +1,79 @@
+﻿/* Общий набор стилей для форм используемых в качестве карточек пользователей (друзей), сообщений, и чатов */
+
+.body-element {
+    display: flex;
+    padding: 15px;
+    overflow: hidden;
+    flex-flow: column;
+    padding-right: 5px;
+    border-radius: 15px;
+    padding-bottom: 5px;
+    background: #ffffff;
+    align-items: flex-end;
+    border: 1px solid #828282;
+    justify-content: space-between;
+    box-shadow: 0px 0px 10px #828282;
+}
+
+.body-element:hover {
+    box-shadow: 0px 0px 15px #828282;
+}
+
+.body-element-main {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+}
+
+.body-element-button {
+    border: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    margin-left: 3px;
+    border-radius: 50%;
+    align-items: center;
+    background: #828282;
+    justify-content: center;
+}
+
+.body-element-button:hover {
+    background: #e0000f;
+    box-shadow: -1px -1px 10px #ad000c;
+}
+
+.body-element-button:active {
+    background: #7a0008;
+    box-shadow: -1px -1px 10px #ad000c;
+}
+
+.body-element-button-img {
+    width: 8px;
+    height: 8px;
+    margin: auto;
+}
+
+.body-element-remove-button-img {
+    width: 8px;
+    height: 8px;
+    margin: auto;
+}
+
+.body-element-footer {
+    display: flex;
+}
+
+@media (max-width: 750px) {
+
+    .body-element-button {
+        width: 15px;
+        height: 15px;
+        margin-top: 8px;
+    }
+
+    .body-element {
+        padding: 7px;
+        border-radius: 8px;
+    }
+}

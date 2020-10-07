@@ -1,16 +1,16 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Epam.Interfaces.BLL
 {
 	public interface ISecurityDataBLL
-	{
-		string GetRoleOfUser(string email);
+	{   // BLL SecurityData, отвечает за работу с ролями пользователя, позволяет получить роли пользователя, добавить роли пользователю, проверить принадлежность роли пользователю
+
+		IEnumerable<string> GetRolesOfUser(string email);
 
 		bool IsUserInRole(string email, string role);
 
 		bool AddRoleToUser(string email, string role);
 
-		bool CheckUser(string email, string password);
-
-		bool ChangePassword(int id, string oldPassword, string password);
 	}
 }

@@ -1,0 +1,51 @@
+/* Набор правок для страницы чатов */
+
+.body-element {
+    margin: 10px;
+}
+
+.body-element:hover {
+    box-shadow: 0px 0px 15px #3d3d3d;
+}
+.body-element-avatar {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.body-element-content {
+    display: flex;
+    flex-flow: column;
+    width: calc(100% - 92px);
+}
+
+.body-element-header {
+    font-size: 18px;
+    color: #828282;
+    margin-bottom: 10px;
+    font-weight: bolder;
+}
+
+.body-element-text {
+    font-size: 16px;
+    color: #575757;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 750px) {
+
+    .body-element-header {
+        font-size: 13px;
+    }
+
+    .body-element-text {
+        font-size: 12px;
+    }
+
+    .body-element-avatar {
+        width: 35px;
+        height: 35px;
+    }
+}

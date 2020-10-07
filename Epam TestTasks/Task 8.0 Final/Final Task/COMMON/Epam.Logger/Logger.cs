@@ -4,7 +4,8 @@ using log4net.Config;
 namespace Epam.CommonLogger
 {
     public static class Logger
-    {
+    {   // Логгер log4net
+
         private static readonly ILog log = LogManager.GetLogger("LOGGER");
 
         public static ILog Log

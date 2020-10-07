@@ -6,11 +6,13 @@ using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Data.SqlTypes;
 
 namespace Epam.Logic.DAL
 {
     public class MessagesDAL : IMessagesDAL
-    {
+    {	// DAL Messages, отвечает за работу с чатами и сообщениями пользователя. Позволяет создать чат, удалить чат, отправить сообщение, удалить сообщение, получить список чатов и сообщений
+
         private readonly ILogger logger;
 		private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["default"].ConnectionString;
 
@@ -42,7 +44,11 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						chatsList.Add(new Chat((int)reader["idChat"], reader["name"] as string, reader["text"] as string, (DateTime)reader["date"]));
+						int? unreaded;
+						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("unreaded"));
+						unreaded = temp.IsNull ? (int?)null : temp.Value;
+						string text = $"{reader["sname"] as string}: {reader["text"] as string}";
+						chatsList.Add(new Chat((int)reader["idChat"], reader["name"] as string, text, (DateTime)reader["date"], unreaded, reader["emblem"] as string));
 					}
 				}
 
@@ -57,7 +63,7 @@ namespace Epam.Logic.DAL
 			};
 		}
 
-		public IEnumerable<Message> GetAllMessagesFromChat(int idChat)
+		public IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader)
 		{
 			List<Message> messagesList = new List<Message>();
 			logger.Info("DAL: Getting chats list of messages process started");
@@ -73,8 +79,14 @@ namespace Epam.Logic.DAL
 						CommandType = CommandType.StoredProcedure
 					};
 
-					SqlParameter idParam = new SqlParameter("@id", idChat);
-					command.Parameters.Add(idParam);
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@id", idChat),
+						new SqlParameter("@idReader", idReader),
+
+					};
+
+					command.Parameters.AddRange(parameters);
 					connection.Open();
 					var reader = command.ExecuteReader();
 
@@ -147,9 +159,19 @@ namespace Epam.Logic.DAL
 						new SqlParameter("@date", message.date)
 					};
 
+					SqlParameter output = new SqlParameter
+					{   // выходной параметр
+						ParameterName = "@id",
+						SqlDbType = SqlDbType.Int,
+						Direction = ParameterDirection.Output 
+					};
+
 					command.Parameters.AddRange(parameters);
+					command.Parameters.Add(output);
 					connection.Open();
-					message.messageId = (int)command.ExecuteScalar();
+					command.ExecuteNonQuery();
+					message.messageId = (int?)output.Value;
+					Console.WriteLine(message.messageId);
 				}
 
 				logger.Info("DAL: Message sendding process done");
@@ -195,6 +217,116 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting chat with user process failed!");
+				throw e;
+			};
+		}
+
+		public int CreateChat(int idUser, int idOpponent)
+		{
+			logger.Info("DAL: Chat creating process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "CreateChat";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@idPerson1", idUser),
+						new SqlParameter("@idPerson2", idOpponent)
+					};
+
+					SqlParameter output = new SqlParameter
+					{   // выходной параметр
+						ParameterName = "@id",
+						SqlDbType = SqlDbType.Int,
+						Direction = ParameterDirection.Output
+					};
+
+					command.Parameters.AddRange(parameters);
+					command.Parameters.Add(output);
+					connection.Open();
+					command.ExecuteNonQuery();
+
+					int idChat = (int)output.Value;
+
+					logger.Info("DAL: Chat creating  process done");
+					return idChat;
+				}
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Chat creating  process failed!");
+				throw e;
+			};
+		}
+
+		public void RemoveChat(int idChat)
+		{
+			logger.Info("DAL: Chat removing process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "RemoveChat";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter parameter = new SqlParameter("@id", idChat);
+
+					command.Parameters.Add(parameter);
+					connection.Open();
+					command.ExecuteNonQuery();
+				}
+
+				logger.Info("DAL: Chat removing process done");
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Chat removing process failed!");
+				throw e;
+			};
+		}
+
+		public int GetUnreadedCount(int idUser)
+		{
+			logger.Info("DAL: Getting unreaded chats count with user process started");
+			int count;
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "GetUnreadedChatsCount";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter parameter = new SqlParameter("@id", idUser);
+
+					command.Parameters.Add(parameter);
+					connection.Open();
+					count = (int)command.ExecuteScalar();
+				}
+
+				logger.Info("DAL: Getting unreaded chats count with user process done");
+				return count;
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Getting unreaded chats count with user process failed!");
 				throw e;
 			};
 		}

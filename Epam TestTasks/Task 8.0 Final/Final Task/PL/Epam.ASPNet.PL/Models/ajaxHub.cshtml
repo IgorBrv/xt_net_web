@@ -1,0 +1,629 @@
+﻿@using Newtonsoft.Json
+@using Epam.CommonEntities
+@using Epam.Interfaces.BLL
+@using Epam.ASPNet.PL.Models;
+@using Epam.CommonLoggerInterface;
+
+@{
+    // Хаб AJAX запросов для скриптов фронта
+
+    ILogger logger = CommonData.GetResolver().GetLogger;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+    IFriendsBLL bloFriends = CommonData.GetResolver().GetBloFriends;
+    IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
+
+    if (IsPost)
+    {
+        if (Request["type"] == "MessageSendRequest")
+        {
+            // Запрос на отправку сообщения
+
+            logger.Info("PL/AJAX: Message sending request recieved");
+
+            try
+            {
+                int idChat;
+
+                if (Int32.TryParse(Request["idChat"], out idChat))
+                {
+                    Message message = bloMessages.SendMessage(idChat, (int)CommonData.CurrentUser.id, Request["text"], DateTime.Now);
+
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", $"{message.messageId}", CommonData.CurrentUser.name, message.text, CommonData.CurrentUser.emblem }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Message sended");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Message sending failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "MessageRemoveRequest")
+        {
+            // Запрос на удаление сообщения (из чата)
+
+            logger.Info("PL/AJAX: Message removing request recieved");
+
+            try
+            {
+                int idMessage;
+
+                if (Int32.TryParse(Request["id"], out idMessage))
+                {
+                    bloMessages.RemoveMessage(idMessage);
+
+                    logger.Info("PL/AJAX: Message removing done");
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Message removing was unsucsesseful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Message removing failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "PersonAddButtonClick")
+        {
+            // Запрос на отправку приглашения в друзья
+
+            logger.Info("PL/AJAX: Friend inventation request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (CommonData.friendRequests.Select(item => item.id).Contains(idPerson))
+                    {
+                        UserData user = bloUsers.GetById(idPerson);
+                        CommonData.friendRequests.RemoveAll(item => item.id == idPerson);
+                        CommonData.curUserFriends.Add(user);
+                        bloFriends.AcceptFrindRequest((int)CommonData.CurrentUser.id, idPerson);
+                    }
+                    else
+                    {
+                        UserData user = bloUsers.GetById(idPerson);
+                        CommonData.friendInventations.Add(user);
+                        bloFriends.SendInventation((int)CommonData.CurrentUser.id, idPerson);
+                    }
+
+                    logger.Info("PL/AJAX: Friend inventation sended");
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Friend inventation was unsucsesseful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Friend inventation failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "PersonRemoveRequest")
+        {
+            // Запрос на удаление из друзей
+
+            logger.Info("PL/AJAX: Friendship connection removing request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    CommonData.curUserFriends.RemoveAll(item => item.id == idPerson);
+                    CommonData.friendRequests.RemoveAll(item => item.id == idPerson);
+                    CommonData.friendInventations.RemoveAll(item => item.id == idPerson);
+
+                    bloFriends.RemoveFriend((int)CommonData.CurrentUser.id, idPerson);
+
+                    logger.Info("PL/AJAX: Friendship connection was removed");
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Friendship connection removing was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Friendship connection removing was failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "PersonChatRequest")
+        {
+            // Запрос на получение id чата с пользователем
+
+            logger.Info("PL/AJAX: Getting chat with opponent request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    int? idChat = bloMessages.GetChat((int)CommonData.CurrentUser.id, idPerson);
+
+                    if (idChat != null)
+                    {
+                        CommonData.idChat = idChat;
+                    }
+                    else
+                    {
+                        CommonData.idChat = bloMessages.CreateChat((int)CommonData.CurrentUser.id, idPerson);
+                    }
+
+                    logger.Info("PL/AJAX: Getting chat with opponent done");
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString() }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Getting chat with opponent request was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Getting chat with opponent request was failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "ChatRemoveRequest")
+        {
+            // Запрос на получение id чата с пользователем
+
+            logger.Info("PL/AJAX: Chat remove request recieved");
+
+            try
+            {
+                int idChat;
+
+                if (Int32.TryParse(Request["id"], out idChat))
+                {
+                    bloMessages.RemoveChat(idChat);
+
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString() }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Chat was removed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Chat removeding failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "EmblemUploadRequest")
+        {
+            // Запрос на загрузку аватара пользователя на сервер
+
+            logger.Info("PL/AJAX: Emblem upload stream recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (idPerson == CommonData.CurrentUser.id || User.IsInRole("admin"))   // Редактировать профиль пользователя может только сам пользователь или модератор сайта
+                    {
+                        var uploadedFile = Request.Files[0];
+                        string extention = uploadedFile.FileName.Split('.').LastOrDefault();
+                        string path = bloUsers.AddEmblem(idPerson, extention, new BinaryReader(uploadedFile.InputStream));
+                        string pathToReturn = $"url({path})";
+
+
+                        if (idPerson == CommonData.CurrentUser.id)
+                        {
+                            CommonData.CurrentUser.emblem = path;
+                        }
+                        else
+                        {
+                            if (CommonData.curUserFriends.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.curUserFriends.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = path;
+                                }
+                            }
+                            if (CommonData.friendInventations.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.friendInventations.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = path;
+                                }
+                            }
+                            if (CommonData.friendRequests.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.friendRequests.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = path;
+                                }
+                            }
+                        }
+
+                        logger.Info("PL/AJAX: Emblem changed");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "true", pathToReturn }));
+                        return;
+                    }
+                    else
+                    {
+                        logger.Warn("PL/AJAX: trying of unauthorized emblem changing was prevented!");
+                        CommonData.commonException = new UnauthorizedAccessException("Trying of unautorized profile edditing");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+                    }
+                }
+
+                logger.Info("PL/AJAX: Emblem upload was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Emblem upload was failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "EmblemRemoveRequest")
+        {
+            // Запрос на удаление аватара пользователя
+
+            logger.Info("PL/AJAX: Emblem remove request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (idPerson == CommonData.CurrentUser.id || User.IsInRole("admin"))   // Редактировать профиль пользователя может только сам пользователь или модератор сайта
+                    {
+                        bloUsers.RemoveEmblem(idPerson);
+
+                        if (idPerson == CommonData.CurrentUser.id)
+                        {
+                            CommonData.CurrentUser.emblem = null;
+                        }
+                        else
+                        {
+                            if (CommonData.curUserFriends.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.curUserFriends.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = null;
+                                }
+                            }
+                            if (CommonData.friendInventations.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.friendInventations.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = null;
+                                }
+                            }
+                            if (CommonData.friendRequests.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData user = CommonData.friendRequests.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (user != null)
+                                {
+                                    user.emblem = null;
+                                }
+                            }
+                        }
+
+                        logger.Info("PL/AJAX: Emblem removed");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                        return;
+                    }
+                    else
+                    {
+                        logger.Warn("PL/AJAX: attempt of unauthorized emblem removing was prevented");
+                        CommonData.commonException = new UnauthorizedAccessException("Trying of unautorized profile edditing");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+                    }
+                }
+
+                logger.Info("PL/AJAX: Emblem removing was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Emblem removing failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "UserUpdateRequest")
+        {
+            // Запрос на обновление профиля пользователя
+
+            logger.Info("PL/AJAX: User data changing request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (idPerson == CommonData.CurrentUser.id || User.IsInRole("admin"))   // Редактировать профиль пользователя может только сам пользователь или модератор сайта
+                    {
+                        UserData user;
+                        string name = Request["name"];
+                        string statement = Request["statement"];
+                        string[] birthSplitted = Request["birth"].Split('-');
+                        DateTime birth = new DateTime(Int32.Parse(birthSplitted[0]), Int32.Parse(birthSplitted[1]), Int32.Parse(birthSplitted[2]));
+
+                        if (idPerson == CommonData.CurrentUser.id)
+                        {
+                            user = CommonData.CurrentUser;
+                        }
+                        else
+                        {
+                            user = bloUsers.GetById(idPerson);
+                        }
+
+                        if (name == user.name && birth == user.birth && statement == user.statement)
+                        {
+                            Response.Write(JsonConvert.SerializeObject(new string[] { "true", birth.ToString("D"), CommonData.AgeCalc(birth).ToString() }));
+                            return;
+                        }
+                        else if (name != "")
+                        {
+
+                            user.name = name;
+                            user.birth = birth;
+                            user.statement = statement;
+
+                            bloUsers.Update(user);
+
+                            if (idPerson != CommonData.CurrentUser.id)
+                            {
+                                if (CommonData.curUserFriends.Count(item => item.id == idPerson) > 0)
+                                {
+                                    UserData person = CommonData.curUserFriends.Where(item => item.id == idPerson).FirstOrDefault();
+                                    if (person != null)
+                                    {
+                                        CommonData.curUserFriends[CommonData.curUserFriends.IndexOf(person)] = user;
+                                    }
+                                }
+                                if (CommonData.friendInventations.Count(item => item.id == idPerson) > 0)
+                                {
+                                    UserData person = CommonData.friendInventations.Where(item => item.id == idPerson).FirstOrDefault();
+                                    if (person != null)
+                                    {
+                                        CommonData.friendInventations[CommonData.friendInventations.IndexOf(person)] = user;
+                                    }
+                                }
+                                if (CommonData.friendRequests.Count(item => item.id == idPerson) > 0)
+                                {
+                                    UserData person = CommonData.friendRequests.Where(item => item.id == idPerson).FirstOrDefault();
+                                    if (person != null)
+                                    {
+                                        CommonData.friendRequests[CommonData.friendRequests.IndexOf(person)] = user;
+                                    }
+                                }
+                            }
+
+                            logger.Info("PL/AJAX: User data changed");
+                            Response.Write(JsonConvert.SerializeObject(new string[] { "true", birth.ToString("D"), CommonData.AgeCalc(birth).ToString() }));
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        logger.Warn("PL/AJAX: Unauthorized attempt of user data changing was prevented!");
+                        CommonData.commonException = new UnauthorizedAccessException("Trying of unautorized profile edditing");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+                    }
+                }
+
+                logger.Info("PL/AJAX: User data changing was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: User data changing failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "UserBlockRequest")
+        {
+            // Запрос на блокировку профиля пользователя
+
+            logger.Info("PL/AJAX: User profile block request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (User.IsInRole("admin"))   // Блокировать/разблокировать профиль пользователя может только модератор сайта
+                    {
+                        UserData user = bloUsers.GetById(idPerson);
+                        user.blockedBy = CommonData.CurrentUser.id;
+                        bloUsers.Update(user);
+
+                        if (idPerson != CommonData.CurrentUser.id)
+                        {
+                            if (CommonData.curUserFriends.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.curUserFriends.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.curUserFriends[CommonData.curUserFriends.IndexOf(person)] = user;
+                                }
+                            }
+                            if (CommonData.friendInventations.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.friendInventations.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.friendInventations[CommonData.friendInventations.IndexOf(person)] = user;
+                                }
+                            }
+                            if (CommonData.friendRequests.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.friendRequests.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.friendRequests[CommonData.friendRequests.IndexOf(person)] = user;
+                                }
+                            }
+                        }
+
+                        logger.Info("PL/AJAX: User profile blocked");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                        return;
+                    }
+                    else
+                    {
+                        logger.Warn("PL/AJAX: Trying of unauthorized user profile block was prevented");
+                        CommonData.commonException = new UnauthorizedAccessException("Trying of unautorized profile edditing");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+                    }
+                }
+
+                logger.Info("PL/AJAX: User profile blocking was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: User profile blocking failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "UserUnblockRequest")
+        {
+            // Запрос на блокировку профиля пользователя
+
+            logger.Info("PL/AJAX: User profile unblock request recieved");
+
+            try
+            {
+                int idPerson;
+
+                if (Int32.TryParse(Request["id"], out idPerson))
+                {
+                    if (User.IsInRole("admin"))   // Блокировать/разблокировать профиль пользователя может только модератор сайта
+                    {
+                        UserData user = bloUsers.GetById(idPerson);
+                        user.blockedBy = null;
+                        bloUsers.Update(user);
+
+                        if (idPerson != CommonData.CurrentUser.id)
+                        {
+                            if (CommonData.curUserFriends.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.curUserFriends.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.curUserFriends[CommonData.curUserFriends.IndexOf(person)] = user;
+                                }
+                            }
+                            if (CommonData.friendInventations.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.friendInventations.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.friendInventations[CommonData.friendInventations.IndexOf(person)] = user;
+                                }
+                            }
+                            if (CommonData.friendRequests.Count(item => item.id == idPerson) > 0)
+                            {
+                                UserData person = CommonData.friendRequests.Where(item => item.id == idPerson).FirstOrDefault();
+                                if (person != null)
+                                {
+                                    CommonData.friendRequests[CommonData.friendRequests.IndexOf(person)] = user;
+                                }
+                            }
+                        }
+
+                        logger.Info("PL/AJAX: User profile unblocked");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                        return;
+                    }
+                    else
+                    {
+                        logger.Warn("PL/AJAX: Trying of unauthorized user profile unblock was prevented");
+                        CommonData.commonException = new UnauthorizedAccessException("Trying of unautorized profile edditing");
+                        Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+                    }
+                }
+
+                logger.Info("PL/AJAX: User profile unblocking was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: User profile unblocking failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "PasswordUpdateRequest")
+        {
+            // Запрос на изменение пароля
+
+            logger.Info("PL/AJAX: Pasword changing request recieved");
+
+            try
+            {
+                string oldPas = Request["oldpas"];
+                string newPas = Request["newpas"];
+
+                if (oldPas != newPas && bloUsers.ChangePassword((int)CommonData.CurrentUser.id, oldPas, newPas))
+                {
+                    logger.Info("PL/AJAX: Pasword changed");
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true" }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Pasword changing was unsuccessful");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Pasword changing failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+    }
+}

@@ -1,17 +1,235 @@
-﻿@{
-    Layout = null;
+﻿@using Epam.ASPNet.PL.Models
+@using Epam.CommonEntities
+@using Epam.Interfaces.BLL
+@using Epam.CommonLoggerInterface;
+
+@{
+    ILogger logger = CommonData.GetResolver().GetLogger;
+
+    if (CommonData.CurrentUser == null)
+    {
+        logger.Info("PL/userpage: currentUser is null, redirecting to authpage");
+        Response.Redirect("/Models/logoutModel.cshtml");
+    }
+
+    int idUser;
+    UserData user = null;
+    List<UserData> friends = null;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+    IFriendsBLL bloFriends = CommonData.GetResolver().GetBloFriends;
+
+    if (IsPost && Request["idUser"] != null && Int32.TryParse(Request["idUser"], out idUser) && idUser != CommonData.CurrentUser.id)
+    {
+        try
+        {
+            logger.Info("PL/userpage: not current user page, attempt to reading user & friends from database");
+
+            Page.idUser = idUser;
+            user = bloUsers.GetById(idUser);
+            friends = bloFriends.GetFriends(Page.idUser);
+            Page.pageName = user.name;
+        }
+        catch (Exception e)
+        {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
+
+            CommonData.commonException = e;
+            logger.Error("PL/userpage: Attempt to reading user & friends from database failed");
+            Response.Redirect("~/Pages/errorPage.cshtml");
+        }
+    }
+    else
+    {
+        user = CommonData.CurrentUser;
+        friends = CommonData.curUserFriends;
+        Page.idUser = (int)user.id;
+        Page.pageName = "Ваш профиль";
+        logger.Info("PL/userpage: current page is the homepage of user");
+    }
+
+    Page.userpage = true;
+    Page.hidden = "hidden";
+    Page.userEmblem = null;
+    Page.classHidden = "hidden-box";
+    Page.curUserBlocked = user.blockedBy;
+    int age = CommonData.AgeCalc(user.birth);
+
+    if (user.emblem != null)
+    {
+        Page.userEmblem = $"background-image: url({user.emblem})";
+    }
+
+    if (Page.idUser == CommonData.CurrentUser.id || User.IsInRole("admin"))
+    {
+        Page.editorAllowed = true;
+        Page.editorName = user.name;
+        Page.editorStatement = user.statement;
+        Page.userBirth = user.birth.ToString("yyyy-MM-dd");
+
+        if (Page.idUser == CommonData.CurrentUser.id)
+        {
+            Page.passwordEditorAllowed = true;
+        }
+    }
+
+    Layout = "/pages/_socialNetworkLayout.cshtml";
 }
 
-<!DOCTYPE html>
+<link rel="stylesheet" href="/Pages/styles/userpage.css">
+<link rel="stylesheet" href="/Pages/styles/cardbox.css">
+<link rel="stylesheet" href="/Pages/styles/usercard.css">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-        Страница пользователя
+<div>
+    <div class="user-card opacity">
+        @if (Page.curUserBlocked == null || User.IsInRole("admin"))
+        {
+            <div class="user-card-left-panel">
+                <div class="user-card-image-container" style='@if (Page.userEmblem != null) { @Page.userEmblem }'>
+                    <img src="/Pages/images/user.svg" alt="аватар" class="user-card-image @if (Page.userEmblem != null) { @Page.hidden} ">
+                </div>
+
+                @if (Page.idUser != CommonData.CurrentUser.id)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonMessageButtonClick(this)">Мессенджер</button>
+                }
+                @if (Page.idUser != CommonData.CurrentUser.id && CommonData.curUserFriends.Count(item => item.id == Page.idUser) == 0 && CommonData.friendInventations.Count(item => item.id == Page.idUser) == 0)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonAddButtonClick(this)">Добавить в друзья</button>
+                }
+                @if (Page.idUser != CommonData.CurrentUser.id && CommonData.curUserFriends.Count(item => item.id == Page.idUser) > 0 && CommonData.friendInventations.Count(item => item.id == Page.idUser) == 0)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonRemoveButtonClickAlert(this)">Отменить дружбу</button>
+                }
+                else if (Page.idUser != CommonData.CurrentUser.id && CommonData.friendInventations.Count(item => item.id == Page.idUser) > 0)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonRemoveButtonClickAlert(this)">Отменить заявку</button>
+                }
+                @if (Page.idUser != CommonData.CurrentUser.id && User.IsInRole("admin") && Page.curUserBlocked == null)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="BlockUserButtonClick(this)">Заблокировать</button>
+                    <script src="/Pages/scripts/adminFunctions.js"></script>
+                }
+                else if (Page.idUser != CommonData.CurrentUser.id && User.IsInRole("admin") && Page.curUserBlocked != null)
+                {
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="UnblockUserButtonClick(this)">Разблокировать</button>
+                    <script src="/Pages/scripts/adminFunctions.js"></script>
+                }
+            </div>
+
+            <div class="user-card-content-container">
+                <h2 id="username">@user.name</h2>
+                <h3 class="user-card-content-status">@user.statement</h3>
+                <h4>Профиль пользователя:</h4>
+                <div class="data-columns">
+                    <div class="column1 column-offset column-font">
+                        <p>Возраст:</p>
+                        <p>Дата рождения:</p>
+                    </div>
+                    <div class="column2 column-font">
+                        <p id="userage">@age лет</p>
+                        <p id="userbirth">@user.birth.ToString("D")</p>
+                    </div>
+                </div>
+                @if (CommonData.friendRequests.Count > 0 && Page.idUser == CommonData.CurrentUser.id)
+                {
+                    <h4 id="requestsLabel">Заявки в друзья:</h4>
+                    foreach (UserData person in CommonData.friendRequests)
+                    {
+                        Page.id = person.id;
+                        Page.notAddable = false;
+                        Page.name = "name = request";
+                        Page.friendName = person.name;
+                        Page.avatarLink = person.emblem;
+                        Page.userBlocked = person.blockedBy;
+                        Page.friendBirth = person.birth.ToString("D");
+                        Page.friendAge = CommonData.AgeCalc(person.birth);
+
+
+                        @RenderPage("/pages/_usercardPartial.cshtml")
+                    }
+                }
+                <h4 class="user-card-friend-box-label @if (friends.Count == 0){@Page.hidden}">Друзья пользоавтеля:</h4>
+                <div class="user-card-friend-box">
+                    @if (friends.Count > 0)
+                    {
+                        foreach (UserData friend in friends)
+                        {
+                            Page.name = null;
+                            Page.id = friend.id;
+                            Page.notAddable = false;
+                            Page.name = "name = friend";
+                            Page.friendName = friend.name;
+                            Page.avatarLink = friend.emblem;
+                            Page.userBlocked = friend.blockedBy;
+                            Page.friendBirth = friend.birth.ToString("D");
+                            Page.friendAge = CommonData.AgeCalc(friend.birth);
+
+                            if (CommonData.friendInventations.Count(item => item.id == friend.id) > 0)
+                            {
+                                Page.notAddable = true;
+                            }
+
+                            @RenderPage("/pages/_usercardPartial.cshtml")
+                        }
+                    }
+                    @if (CommonData.friendRequests.Count > 0 && CommonData.friendRequests.Count(item => item.id == Page.idUser) == 1)
+                    {
+                        UserData person = CommonData.CurrentUser;
+                        Page.name = "hidden";
+                        Page.id = person.id;
+                        Page.notAddable = true;
+                        Page.friendName = person.name;
+                        Page.avatarLink = person.emblem;
+                        Page.userBlocked = person.blockedBy;
+                        Page.friendBirth = person.birth.ToString("D");
+                        Page.friendAge = CommonData.AgeCalc(person.birth);
+
+                        @RenderPage("/pages/_usercardPartial.cshtml")
+                    }
+                </div>
+                @if (CommonData.friendInventations.Count > 0 && Page.idUser == CommonData.CurrentUser.id)
+                {
+                    <h4 id="inventationLabel">Ожидающие подтверждения:</h4>
+                    foreach (UserData person in CommonData.friendInventations)
+                    {
+
+                        Page.id = person.id;
+                        Page.notAddable = true;
+                        Page.friendName = person.name;
+                        Page.avatarLink = person.emblem;
+                        Page.name = "name = inventation";
+                        Page.userBlocked = person.blockedBy;
+                        Page.friendBirth = person.birth.ToString("D");
+                        Page.friendAge = CommonData.AgeCalc(person.birth);
+
+                        @RenderPage("/pages/_usercardPartial.cshtml")
+                    }
+                }
+
+            </div>
+        }
+        else
+        {
+            <link rel="stylesheet" href="/Pages/styles/blocked.css">
+            <h2 id="username" hidden>@user.name</h2>
+            <h3>Страница заблокирована</h3>
+            <hr class="info" />
+
+            if (Page.idUser == CommonData.CurrentUser.id)
+            {
+                <button class="user-card-button" id="@user.blockedBy" name="@CommonData.CurrentUser.id" onclick="PersonMessageButtonClick(this)">Связь с заблокировавшим</button>
+            }
+            else if (Page.idUser != CommonData.CurrentUser.id && CommonData.curUserFriends.Count(item => item.id == Page.idUser) > 0)
+            {
+                <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonRemoveButtonClickAlert(this)">Отменить дружбу</button>
+            }
+            else if (Page.idUser != CommonData.CurrentUser.id && (CommonData.friendInventations.Count(item => item.id == Page.idUser) > 0 || CommonData.friendRequests.Count(item => item.id == Page.idUser) > 0))
+            {
+                <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="PersonRemoveButtonClickAlert(this)">Отменить заявку</button>
+            }
+        }
     </div>
-</body>
-</html>
+    <div>
+        <p class="filler">f</p>
+    </div>
+</div>
+<script src="/Pages/scripts/userPage.js"></script>

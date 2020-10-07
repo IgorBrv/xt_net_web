@@ -1,0 +1,67 @@
+/* Набор стилей шапки */
+
+.header-text-container {
+    width: 230px;
+    height: 35px;
+    display: flex;
+    overflow: hidden;
+    margin-left: 15px;
+    padding-left: 10px;
+    border-radius: 7px;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.header-text {
+    font-size: 18px;
+    color: #828282;
+}
+
+.header-search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 270px);
+}
+
+.search-container {
+    width: 400px;
+    height: 25px;
+    padding: 5px;
+    display: flex;
+    max-width: 90%;
+    overflow: hidden;
+    border-radius: 7px;
+    align-items: center;
+    background: #f0f0f0;
+}
+
+.search-image {
+    width: 10%;
+    height: 1em;
+    min-width: 1em;
+    padding-left: 1%;
+    padding-right: 4%;
+}
+
+.search-input {
+    border: 0;
+    width: 85%;
+    color: #828282;
+    font-weight: bolder;
+    background: #f0f0f0;
+}
+
+@media (max-width: 980px) {
+
+    .header-text-container {
+        display: none;
+    }
+
+    .header-search-container {
+        width: 100%;
+    }
+}
+
+
+

@@ -1,0 +1,15 @@
+﻿/* Правки по стилям для страниц заблокированых пользователей */
+.body-container {
+    justify-content: center;
+}
+
+
+.user-card {
+    display: flex;
+    flex-flow: column;
+}
+
+.info {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

@@ -1,5 +1,21 @@
-﻿@{
-    Layout = null;
+﻿@* Страница критической ошибки *@
+
+@using Epam.ASPNet.PL.Models;
+@using Epam.CommonLoggerInterface;
+
+@{
+    ILogger logger = CommonData.GetResolver().GetLogger;
+
+    if (IsPost && Request["details"] != null)
+    {
+        Page.Exception = new Exception(Request["details"]);
+        logger.Error($"PL/JS: js exception happend, text: {Request["details"]}");
+    }
+    else if (CommonData.commonException != null)
+    {
+        Page.Exception = CommonData.commonException;
+        CommonData.commonException = null;
+    }
 }
 
 <!DOCTYPE html>
@@ -8,18 +24,21 @@
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link rel="stylesheet" href="~/Pages/css/error.css">
+    <link rel="stylesheet" href="~/Pages/styles/error.css">
     <title>Критическая ошибка</title>
 </head>
 <body>
     <div class="error-container">
         <h1>Произошла критическая ошибка!</h1>
         <hr>
-        <h2>Текст ошибки:</h2>
-        <h3>@Page.Exception.Message</h3>
-        @if (Page.Exception.InnerException != null)
+        @if (Page.Exception != null)
         {
-            <h3>@Page.Exception.InnerException.Message</h3>
+            <h2>Текст ошибки:</h2>
+            <h3>@Page.Exception.Message</h3>
+            if (Page.Exception.InnerException != null)
+            {
+                <h3>@Page.Exception.InnerException.Message</h3>
+            }
         }
     </div>
 </body>

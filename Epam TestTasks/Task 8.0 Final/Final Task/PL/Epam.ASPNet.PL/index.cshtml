@@ -1,28 +1,31 @@
-﻿@using Epam.ASPNet.PL;
-@using Epam.CommonLoggerInterface;
+﻿@using Epam.CommonLoggerInterface;
 @using Epam.DependencyResolver;
 @using Epam.ASPNet.PL.Models;
 @using Epam.Interfaces.BLL;
+@using Epam.ASPNet.PL.Models;
 
 @{
-    Resolver resolver = StaticElements.GetResolver();
+    Resolver resolver = CommonData.GetResolver();
     IUsersBLL bloUsers = resolver.GetBloUsers;
-    bloUsers.SetPath(Server.MapPath(""));
     ILogger logger = resolver.GetLogger;
+    string fspath = Server.MapPath("");
+    bloUsers.SetPath(fspath);
+
 
     if (User.Identity.IsAuthenticated)
     {
-        if (CommonData.currentUser is null)
+        if (CommonData.CurrentUser == null)
         {
-            CommonData.currentUser = bloUsers.GetByEmail(User.Identity.Name);
-            Console.WriteLine(CommonData.currentUser);
+            logger.Info("PL/index: creating new user object");
+            CommonData.CurrentUser = bloUsers.GetByEmail(User.Identity.Name);
         }
 
-        Response.Redirect("~/Pages/userPage.cshtml");
-
+        Page.idUser = CommonData.CurrentUser.id;
+        @RenderPage("~/Pages/userPage.cshtml");
     }
     else
     {
+        logger.Info("PL/index: user not authentificated, redirecting to auth page");
         Response.Redirect("~/Pages/authPage.cshtml");
     }
 }

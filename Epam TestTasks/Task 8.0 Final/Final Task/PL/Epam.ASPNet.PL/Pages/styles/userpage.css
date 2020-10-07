@@ -1,0 +1,154 @@
+﻿/* Набор стилей страницы пользователя */
+
+.body-container {
+    display: flex;
+    color: #4f4f4f;
+    align-items: center;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+}
+
+.user-card {
+    margin: 15px;
+    padding: 30px;
+    display: flex;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border: 1px solid #828282;
+    box-shadow: 1px 1px 20px #4f4f4f;
+}
+
+.user-card-content-container {
+    margin-left: 40px;
+}
+
+.user-card-left-panel {
+    display: flex;
+    flex-flow: column;
+}
+
+.user-card-image-container {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    overflow: hidden;
+    flex-flow: column;
+    align-items: center;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.user-card-image {
+    width: 100%;
+}
+
+.user-card-content-status {
+    color: #828282;
+    font-weight: 500;
+}
+
+.user-card-button {
+    width: 100%;
+    height: 30px;
+    color: #4f4f4f;
+    overflow: hidden;
+    padding-top: 3px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background: #ffffff;
+    padding-bottom: 3px;
+    border-radius: 10px;
+    border: 1px solid #828282;
+    box-shadow: 1px 1px 5px #828282;
+}
+
+.user-card-button:hover {
+    box-shadow: 1px 1px 15px #828282;
+}
+
+.user-card-button:active {
+    background: #d6d6d6;
+}
+
+.data-columns {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.column-offset {
+    margin-left: 10px;
+}
+
+.column-font {
+    font-size: 14px;
+}
+
+.column1 {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.filler {
+    font-size: 2px;
+    color: transparent;
+}
+
+h2,
+h3 {
+    margin-bottom: 5px;
+}
+
+h4 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+@media (max-width: 750px) {
+
+    .user-card-content-container {
+        margin: 0;
+    }
+
+    .user-card-image-container {
+        margin: auto;
+        margin-bottom: 15px;
+    }
+
+    .user-card-button {
+        font-size: 12px;
+        height: 25px;
+        border-radius: 7px;
+    }
+
+    .user-card {
+        margin: 10px;
+        padding: 15px;
+        flex-flow: column;
+    }
+
+    h4 {
+        font-size: 14px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    h3 {
+        font-size: 13px;
+    }
+
+    h2 {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+    .column-font {
+        font-size: 12px;
+    }
+}

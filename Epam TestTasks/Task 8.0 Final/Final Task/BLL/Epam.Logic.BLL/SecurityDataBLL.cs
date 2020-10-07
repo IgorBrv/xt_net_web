@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
 using Epam.CommonLoggerInterface;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epam.Logic.BLL
 {
 	public class SecurityDataBLL : ISecurityDataBLL
-	{
+	{   // BLL SecurityData, отвечает за работу с ролями пользователя, позволяет получить роли пользователя, добавить роли пользователю, проверить принадлежность роли пользователю
+
 		private readonly ILogger logger;
 		private readonly ISecurityDataDAL daoSecurityData;
 
@@ -36,49 +38,13 @@ namespace Epam.Logic.BLL
 			}
 		}
 
-		public bool ChangePassword(int id, string oldPassword, string password)
-		{
-			logger.Info("BLL: changing users pasword process started");
-
-			try
-			{
-				bool result = daoSecurityData.ChangePassword(id, oldPassword, password);
-
-				logger.Info("BLL: changing users pasword process done");
-				return result;
-			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: changing users pasword process failed!");
-				throw new Exception("error while changing password of user process", e);
-			}
-		}
-
-		public bool CheckUser(string email, string password)
-		{
-			logger.Info("BLL: checking users password process started");
-
-			try
-			{
-				bool result = daoSecurityData.CheckUser(email, password);
-
-				logger.Info("BLL: checking users password process done");
-				return result;
-			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: checking users password process failed!");
-				throw new Exception("error while checking users auth process", e);
-			}
-		}
-
-		public string GetRoleOfUser(string email)
+		public IEnumerable<string> GetRolesOfUser(string email)
 		{
 			logger.Info("BLL: getting users role process started");
 
 			try
 			{
-				string result = daoSecurityData.GetRoleOfUser(email);
+				IEnumerable<string> result = daoSecurityData.GetRolesOfUser(email);
 
 				logger.Info("BLL: getting users role process done");
 				return result;
@@ -96,7 +62,7 @@ namespace Epam.Logic.BLL
 
 			try
 			{
-				if (daoSecurityData.GetRoleOfUser(email) == role)
+				if (daoSecurityData.GetRolesOfUser(email).Contains(role))
 				{
 					logger.Info("BLL: checking users role process done");
 					return true;

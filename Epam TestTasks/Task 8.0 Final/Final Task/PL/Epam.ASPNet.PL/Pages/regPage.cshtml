@@ -1,4 +1,6 @@
-﻿@using Epam.ASPNet.PL.Models;
+﻿@* Модель страницы регистрации (использует страницу аутентификации пользователя как базу) *@
+
+@using Epam.ASPNet.PL.Models;
 
 @{
     bool error = false;
@@ -9,10 +11,10 @@
         error = true;
     }
 
-    Page.Title = "Страница регистрации";
     Page.HeaderText = "Регистрация";
     Page.SaveButtonName = "Сохранить";
-    Page.Action = "../models/regModel.cshtml";
+    Page.Title = "Страница регистрации";
+    Page.Action = "/Models/regModel.cshtml";
 }
 
 @if (error)
@@ -21,6 +23,5 @@
         <p>Ошибка регистрации! Возможно, пользователь с таким адресом почты уже зарегестрирован!</p>
     </div>
 }
-
 
 @RenderPage("~/pages/authPage.cshtml");

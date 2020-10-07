@@ -1,0 +1,66 @@
+﻿@* Страница чатов пользователя *@
+
+@using Epam.ASPNet.PL.Models
+@using Epam.CommonEntities
+@using Epam.Interfaces.BLL
+@using Epam.CommonLoggerInterface;
+
+@{
+    IEnumerable<Chat> chats = null;
+    ILogger logger = CommonData.GetResolver().GetLogger;
+    IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
+
+    if (CommonData.CurrentUser == null)
+    {
+        logger.Info("PL/chat: user null, redirecting to authpage");
+        Response.Redirect("~/Pages/authPage.cshtml");
+    }
+    else if (CommonData.CurrentUser.blockedBy != null)
+    {
+        Response.Redirect("~/Pages/userPage.cshtml");
+    }
+
+    try
+    {
+        logger.Info("PL/chat: get user chats attempt");
+        chats = bloMessages.GetAllChatsOfUser((int)CommonData.CurrentUser.id);
+
+        Page.pageName = "Чаты";
+        Layout = "/pages/_socialNetworkLayout.cshtml";
+    }
+    catch (Exception e)
+    {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
+
+        CommonData.commonException = e;
+        logger.Info("PL/chat: getting user chats failure");
+        Response.Redirect("~/Pages/errorPage.cshtml");
+    }
+}
+
+<link rel="stylesheet" href="/Pages/styles/cardbox.css">
+<link rel="stylesheet" href="/Pages/styles/chats.css">
+
+@foreach (Chat chat in chats)
+{
+    Page.id = chat.id;
+    Page.chatName = chat.opponentName;
+    Page.chatText = chat.lastMessage;
+    Page.userEmblem = null;
+    Page.unreaded = null;
+
+    if (chat.unreaded != null && chat.unreaded == CommonData.CurrentUser.id)
+    {
+        Page.unreaded = "border: 2px solid DarkOrange;";
+    }
+
+
+    if (chat.emblem != null)
+    {
+        Page.userEmblem = $"background-image: url({chat.emblem})";
+    }
+
+    @RenderPage("/pages/_chatPartial.cshtml")
+}
+
+<script src="/Pages/scripts/chatsPage.js"></script>
+
