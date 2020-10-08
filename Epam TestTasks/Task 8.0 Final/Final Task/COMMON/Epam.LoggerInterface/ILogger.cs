@@ -1,6 +1,6 @@
 ﻿
 namespace Epam.CommonLoggerInterface
-{	// Интерфейс фасада для логгера
+{	// Интерфейс обёртки для логгера
 
 	public interface ILogger
 	{

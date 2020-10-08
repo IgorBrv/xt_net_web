@@ -75,8 +75,8 @@ function PersonAddButtonClick(button) {
 
                     let label = document.querySelector('.user-card-friend-box-label');
 
-                    if (label && label.classList.contains('hidden')) {
-                        label.classList.remove('hidden');
+                    if (label && label.classList.contains('hidden-box')) {
+                        label.classList.remove('hidden-box');
                     }
                 }
             }
@@ -96,8 +96,8 @@ function PersonAddButtonClick(button) {
                     friendsContainer.appendChild(personElement);
                     let friendsContainerLabel = document.querySelector('.user-card-friend-box-label');
 
-                    if (friendsContainerLabel.classList.contains('hidden')) {
-                        friendsContainerLabel.classList.remove('hidden')
+                    if (friendsContainerLabel.classList.contains('hidden-box')) {
+                        friendsContainerLabel.classList.remove('hidden-box')
                     }
                 }
                 let footer = personElement.querySelector('.body-element-footer')
@@ -151,16 +151,13 @@ function PersonRemoveButtonClick(button) {
                     }
                 }
 
-                console.log(curUserCard);
-                console.log(friendsContainer);
-
                 if (curUserCard) {
                     // Если находится - удаляем пользователя, пересчитываем колличество друзей и в случае необходимости удаляем лейбл:
                     friendsContainer.removeChild(curUserCard);
 
-                    if (document.getElementsByName('friend').length == 0 && !document.querySelector('.user-card-friend-box-label').classList.contains('hidden')) {
+                    if (document.getElementsByName('friend').length == 0 && !document.querySelector('.user-card-friend-box-label').classList.contains('hidden-box')) {
                         let friendsContainerLabel = document.querySelector('.user-card-friend-box-label');
-                        friendsContainerLabel.classList.add('hidden');
+                        friendsContainerLabel.classList.add('hidden-box');
                     }
                 }
             }
@@ -202,9 +199,9 @@ function PersonRemoveButtonClick(button) {
                     container.removeChild(label);
                 }
 
-                if (document.getElementsByName('friend').length == 0 && !document.querySelector('.user-card-friend-box-label').classList.contains('hidden')) {
+                if (document.getElementsByName('friend').length == 0 && !document.querySelector('.user-card-friend-box-label').classList.contains('hidden-box')) {
                     let friendsContainerLabel = document.querySelector('.user-card-friend-box-label');
-                    friendsContainerLabel.classList.add('hidden');
+                    friendsContainerLabel.classList.add('hidden-box');
                 }
             }
         }
@@ -236,7 +233,6 @@ function PersonMessageButtonClick(button) {
             window.location.replace('/Pages/errorPage.cshtml');
         }
         else {
-            console.log(data[1]);
             window.location.replace('/Pages/messagesPage.cshtml');
         }
     }).catch((error) => ErrorReport(error));

@@ -3,7 +3,7 @@
 namespace Epam.CommonLogger
 {
 	public class ComLogger : ILogger
-	{	// Общий фасад к классу логгера
+	{	// Общая обёртка к классу логгера
 
 		public ComLogger()
 		{

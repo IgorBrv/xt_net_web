@@ -42,6 +42,15 @@ function RemoveChatButtonClick(button) {
             let container = document.querySelector('.body-container');
             let chat = document.getElementById(button.id);
             container.removeChild(chat);
+
+            if (data[2] == '0') {
+                let msgBox = document.getElementById('msgbox');
+                let msgLed = document.querySelector('.messageLed');
+
+                if (msgLed && msgBox) {
+                    msgBox.removeChild(msgLed);
+                }
+            }
         }
     }).catch((error) => ErrorReport(error));
 }

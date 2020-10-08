@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Epam.CommonLoggerInterface;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
-using System.IO;
+using System.Data.SqlTypes;
+using System.Configuration;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
-using Epam.CommonLoggerInterface;
-using System.Data.SqlTypes;
+using System.Data;
+using System.IO;
+using System;
+
 
 namespace Epam.Logic.DAL
 {
@@ -48,10 +49,9 @@ namespace Epam.Logic.DAL
 
 				UserData user = GetById(id);
 
-				if (user.emblem != null)
+				if (user.emblem != null && File.Exists($"{Path}{user.emblem}"))
 				{
-					string p = $"{Path}{user.emblem}";
-					File.Delete(p);
+					File.Delete($"{Path}{user.emblem}");
 				}
 
 				user.emblem = $"/avatars/{emblemName}";
@@ -71,6 +71,11 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Process of adding emblem to user failed!");
 				throw e;
 			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of adding emblem to user failed!");
+				throw e;
+			}
 		}
 
 		public void RemoveEmblem(int id)
@@ -81,7 +86,7 @@ namespace Epam.Logic.DAL
 			{
 				UserData user = GetById(id);
 
-				if (user.emblem != null)
+				if (user.emblem != null && File.Exists($"{Path}{user.emblem}"))
 				{
 					File.Delete($"{Path}{user.emblem}");
 				}
@@ -97,6 +102,11 @@ namespace Epam.Logic.DAL
 				throw e;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: Process of removing emblem from user failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: Process of removing emblem from user failed!");
 				throw e;
@@ -166,6 +176,11 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Process of creating user failed!");
 				throw e;
 			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of creating user failed!");
+				throw e;
+			}
 		}
 
 		public List<UserData> FindByName(int curUserId, string text)
@@ -201,12 +216,22 @@ namespace Epam.Logic.DAL
 					}
 				}
 
-				logger.Info("DAL: Process of creating user done");
+				logger.Info("DAL: Process of searching of users done");
 				return usersList;
 			}
 			catch (SqlException e)
 			{
-				logger.Error("DAL: Process of creating user failed!");
+				logger.Error("DAL: Process of searching of users failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Process of searching of users failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of searching of users failed!");
 				throw e;
 			}
 		}
@@ -245,6 +270,16 @@ namespace Epam.Logic.DAL
 				return user;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: Process of getting user by id failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Process of getting user by id failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: Process of getting user by id failed!");
 				throw e;
@@ -289,6 +324,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Process of getting user by email failed!");
 				throw e;
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Process of getting user by email failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of getting user by email failed!");
+				throw e;
+			}
 		}
 
 		public IEnumerable<UserData> GetOthers(int curUserId)
@@ -325,6 +370,16 @@ namespace Epam.Logic.DAL
 				return usersList;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: Process of getting userlist failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Process of getting userlist failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: Process of getting userlist failed!");
 				throw e;
@@ -386,6 +441,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Process of updating users data failed!");
 				throw e;
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Process of updating users data failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of updating users data failed!");
+				throw e;
+			}
 		}
 
 		public int? GetId(string email)
@@ -427,6 +492,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Getting id of user process failed!");
 				throw e;
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting id of user process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting id of user process failed!");
+				throw e;
+			}
 		}
 
 		public void SetPassword(int id, string password)
@@ -462,6 +537,11 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Process of password setting  failed!");
 				throw e;
 			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Process of password setting  failed!");
+				throw e;
+			}
 		}
 
 		public bool CheckUser(string email, string password)
@@ -492,6 +572,9 @@ namespace Epam.Logic.DAL
 							return true;
 						}
 					}
+
+					logger.Info("DAL: checking users password process was unsucsesseful");
+					return false;
 				}
 			}
 			catch (SqlException e)
@@ -499,9 +582,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: checking users password process failed!");
 				throw e;
 			}
-
-			logger.Info("DAL: checking users password process was unsucsesseful");
-			return false;
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: checking users password process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: checking users password process failed!");
+				throw e;
+			}
 		}
 
 		public bool ChangePassword(int id, string oldPassword, string password)
@@ -542,6 +632,16 @@ namespace Epam.Logic.DAL
 				return false;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: changing users pasword process failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: changing users pasword process failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: changing users pasword process failed!");
 				throw e;

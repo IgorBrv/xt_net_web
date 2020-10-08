@@ -1,9 +1,11 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using Epam.Interfaces.DAL;
-using Epam.CommonLoggerInterface;
+﻿using Epam.CommonLoggerInterface;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Configuration;
+using Epam.Interfaces.DAL;
+using System.Data;
+using System;
+
 
 namespace Epam.Logic.DAL
 {
@@ -75,6 +77,11 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: process of adding role to user failed!");
 				throw e;
 			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: process of adding role to user failed!");
+				throw e;
+			}
 		}
 
 		public IEnumerable<string> GetRolesOfUser(string email)
@@ -108,6 +115,16 @@ namespace Epam.Logic.DAL
 				return result;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: getting users role process failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: getting users role process failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: getting users role process failed!");
 				throw e;

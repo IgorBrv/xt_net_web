@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using System.Collections.Generic;
+using Epam.CommonLoggerInterface;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Configuration;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
-using Epam.CommonLoggerInterface;
-using System.Data.SqlTypes;
+using System.Data;
+using System;
 
 namespace Epam.Logic.DAL
 {
@@ -60,7 +60,18 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Getting list of users chats process failed!");
 				throw e;
-			};
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting list of users chats process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting list of users chats process failed!");
+				throw e;
+			}
+
 		}
 
 		public IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader)
@@ -103,7 +114,17 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Getting chats list of messages process failed!");
 				throw e;
-			};
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting chats list of messages process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting chats list of messages process failed!");
+				throw e;
+			}
 		}
 
 		public void RemoveMessage(int idMessage)
@@ -126,14 +147,19 @@ namespace Epam.Logic.DAL
 					connection.Open();
 					command.ExecuteScalar();
 				}
+
+				logger.Info("DAL: Message removing process done");
 			}
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Message removing process failed!");
 				throw e;
-			};
-
-			logger.Info("DAL: Message removing process done");
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Message removing process failed!");
+				throw e;
+			}
 		}
 
 		public Message SendMessage(Message message)
@@ -171,7 +197,6 @@ namespace Epam.Logic.DAL
 					connection.Open();
 					command.ExecuteNonQuery();
 					message.messageId = (int?)output.Value;
-					Console.WriteLine(message.messageId);
 				}
 
 				logger.Info("DAL: Message sendding process done");
@@ -181,7 +206,12 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Message sendding process failed!");
 				throw e;
-			};
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Message sendding process failed!");
+				throw e;
+			}
 		}
 
 		public int? GetChat(int idUser, int idOpponent)
@@ -218,7 +248,17 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Getting chat with user process failed!");
 				throw e;
-			};
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting chat with user process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting chat with user process failed!");
+				throw e;
+			}
 		}
 
 		public int CreateChat(int idUser, int idOpponent)
@@ -264,7 +304,12 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Chat creating  process failed!");
 				throw e;
-			};
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Chat creating  process failed!");
+				throw e;
+			}
 		}
 
 		public void RemoveChat(int idChat)
@@ -295,7 +340,12 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Chat removing process failed!");
 				throw e;
-			};
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Chat removing process failed!");
+				throw e;
+			}
 		}
 
 		public int GetUnreadedCount(int idUser)
@@ -328,7 +378,17 @@ namespace Epam.Logic.DAL
 			{
 				logger.Error("DAL: Getting unreaded chats count with user process failed!");
 				throw e;
-			};
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting unreaded chats count with user process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting unreaded chats count with user process failed!");
+				throw e;
+			}
 		}
 	}
 }

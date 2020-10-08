@@ -8,14 +8,16 @@
     {
         try
         {
+            DateTime date;
             string name = Request["name"];
             string login = Request["email"];
             string password = Request["password"];
-            DateTime date = DateTime.Parse(Request["date"]);
+            bool dateparced = DateTime.TryParse(Request["date"], out date);
 
             Resolver resolver = CommonData.GetResolver();
 
-            if (resolver.GetBloUsers.Create(login, password, name, date))
+            // Супер-простая проерка ввода:
+            if (password.Length > 1 && name.Length > 1 && login.Contains('@') && dateparced && resolver.GetBloUsers.Create(login, password, name, date)) // TODO
             {
                 Response.Redirect("~/Pages/authPage.cshtml");
             }

@@ -1,10 +1,14 @@
-﻿@using Epam.ASPNet.PL.Models
-@using Epam.CommonEntities
+﻿@* Страница пользователя *@
+
 @using Epam.Interfaces.BLL
+@using Epam.CommonEntities
+@using Epam.ASPNet.PL.Models
 @using Epam.CommonLoggerInterface;
 
 @{
     ILogger logger = CommonData.GetResolver().GetLogger;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+    IFriendsBLL bloFriends = CommonData.GetResolver().GetBloFriends;
 
     if (CommonData.CurrentUser == null)
     {
@@ -15,8 +19,6 @@
     int idUser;
     UserData user = null;
     List<UserData> friends = null;
-    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
-    IFriendsBLL bloFriends = CommonData.GetResolver().GetBloFriends;
 
     if (IsPost && Request["idUser"] != null && Int32.TryParse(Request["idUser"], out idUser) && idUser != CommonData.CurrentUser.id)
     {
@@ -47,9 +49,8 @@
     }
 
     Page.userpage = true;
-    Page.hidden = "hidden";
     Page.userEmblem = null;
-    Page.classHidden = "hidden-box";
+    Page.hidden = "hidden-box";
     Page.curUserBlocked = user.blockedBy;
     int age = CommonData.AgeCalc(user.birth);
 
@@ -105,7 +106,7 @@
                 }
                 @if (Page.idUser != CommonData.CurrentUser.id && User.IsInRole("admin") && Page.curUserBlocked == null)
                 {
-                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="BlockUserButtonClick(this)">Заблокировать</button>
+                    <button class="user-card-button" id="@Page.idUser" name="@CommonData.CurrentUser.id" onclick="BlockUserButtonClickAlert(this)">Заблокировать</button>
                     <script src="/Pages/scripts/adminFunctions.js"></script>
                 }
                 else if (Page.idUser != CommonData.CurrentUser.id && User.IsInRole("admin") && Page.curUserBlocked != null)

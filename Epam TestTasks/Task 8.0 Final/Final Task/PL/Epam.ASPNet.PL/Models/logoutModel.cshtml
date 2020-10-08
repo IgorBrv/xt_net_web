@@ -1,6 +1,9 @@
 ﻿@* Модель разлогинивания *@
 
+@using Epam.ASPNet.PL.Models
+
 @{
     FormsAuthentication.SignOut();
+    CommonData.CurrentUser = null;
     Response.Redirect("/Pages/authPage.cshtml");
 }

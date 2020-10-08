@@ -1,9 +1,18 @@
 ﻿//Скрипты подключаемые пользователям с правами модератора
 
+
+function BlockUserButtonClickAlert(button) {
+    // Прослойка для обображения всплывающего окна с вопросом при удалении аватара
+
+    temp = button;
+    event.stopImmediatePropagation();
+    ShowAlertWindow('Подтверждение', 'Вы действительно хотите заблокировать пользователя?', 'BlockUserButtonClick(temp)')
+}
+
 function BlockUserButtonClick(button) {
     // Нажатие на кнопку "Заблокировать пользователя"
 
-    event.stopImmediatePropagation();
+    HideAlertWindow();
 
     let data = new FormData();
     data.append('type', 'UserBlockRequest');
@@ -55,7 +64,7 @@ function UnblockUserButtonClick(button) {
         }
         else {
             button.textContent = 'Заблокировать';
-            button.setAttribute('onclick', 'BlockUserButtonClick(this)');
+            button.setAttribute('onclick', 'BlockUserButtonClickAlert(this)');
         }
     }).catch((error) => ErrorReport(error));
 }

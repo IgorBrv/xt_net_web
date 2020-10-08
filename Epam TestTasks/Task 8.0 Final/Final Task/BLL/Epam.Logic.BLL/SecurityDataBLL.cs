@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using Epam.CommonLoggerInterface;
 using System.Data.SqlClient;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
-using Epam.CommonLoggerInterface;
-using System.Collections.Generic;
 using System.Linq;
+using System;
+
 
 namespace Epam.Logic.BLL
 {
@@ -36,6 +37,11 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: process of adding role to user failed!");
 				throw new Exception("error while adding role to user process", e);
 			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: process of adding role to user failed!");
+				throw new Exception("error while adding role to user process", e);
+			}
 		}
 
 		public IEnumerable<string> GetRolesOfUser(string email)
@@ -50,6 +56,16 @@ namespace Epam.Logic.BLL
 				return result;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("BLL: getting users role process failed!");
+				throw new Exception("error while getting role of user", e);
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("BLL: getting users role process failed!");
+				throw new Exception("error while getting role of user", e);
+			}
+			catch (Exception e)
 			{
 				logger.Error("BLL: getting users role process failed!");
 				throw new Exception("error while getting role of user", e);
@@ -72,6 +88,11 @@ namespace Epam.Logic.BLL
 				return false;
 			}
 			catch (SqlException e)
+			{
+				logger.Info("BLL: checking users role process failed");
+				throw new Exception("error while checking users role", e);
+			}
+			catch (Exception e)
 			{
 				logger.Info("BLL: checking users role process failed");
 				throw new Exception("error while checking users role", e);

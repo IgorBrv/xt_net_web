@@ -50,7 +50,6 @@ function ChatSendButtonClick(button) {
             }
             else {
                 inputField.value = null;
-                console.log(data[4]);
                 DrawMessage(data[1], data[2], data[3], true, data[4]);
             }
         }).catch((error) => ErrorReport(error));

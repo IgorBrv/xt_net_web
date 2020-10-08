@@ -7,6 +7,9 @@
 
 @{
     ILogger logger = CommonData.GetResolver().GetLogger;
+    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
+    IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
+
     int id;
 
     if (CommonData.idChat != null)
@@ -21,15 +24,12 @@
     }
 
     List<Message> messages = null;
-    IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
-    IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
     Dictionary<int, UserData> chatPair = new Dictionary<int, UserData>();
     chatPair.Add((int)CommonData.CurrentUser.id, CommonData.CurrentUser);
 
     Page.pageName = "Чат";
     Layout = "/Pages/_socialNetworkLayout.cshtml";
     Page.curUserBlocked = CommonData.CurrentUser.blockedBy;
-
 
     try
     {

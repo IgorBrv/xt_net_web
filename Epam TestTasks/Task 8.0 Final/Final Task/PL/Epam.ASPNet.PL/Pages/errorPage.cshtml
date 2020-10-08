@@ -8,7 +8,7 @@
 
     if (IsPost && Request["details"] != null)
     {
-        Page.Exception = new Exception(Request["details"]);
+        Page.Exception = new Exception($"JS exception: {Request["details"]}");
         logger.Error($"PL/JS: js exception happend, text: {Request["details"]}");
     }
     else if (CommonData.commonException != null)
@@ -28,18 +28,35 @@
     <title>Критическая ошибка</title>
 </head>
 <body>
-    <div class="error-container">
-        <h1>Произошла критическая ошибка!</h1>
-        <hr>
-        @if (Page.Exception != null)
-        {
-            <h2>Текст ошибки:</h2>
-            <h3>@Page.Exception.Message</h3>
-            if (Page.Exception.InnerException != null)
+    <div class="wrapper">
+        <div class="image-container">
+            <img class="error-img" src="/Pages/images/error.png" alt="Error emblem" />
+        </div>
+        <form class="error-container" action="/Models/logoutModel.cshtml" method="post">
+            <h1 class="header">Критическая ошибка</h1>
+            @if (Page.Exception != null)
             {
-                <h3>@Page.Exception.InnerException.Message</h3>
+                <div class="columns">
+                    <div class="c1">
+                        <p class="text title">Перехваченное исключение:</p>
+                        @if (Page.Exception.InnerException != null)
+                        {
+                            <p class="text title">Внутреннее исключение:</p>
+                        }
+                    </div>
+                    <div class="c2">
+                        <p class="text">'@Page.Exception.Message'</p>
+                        @if (Page.Exception.InnerException != null)
+                        {
+                            <p class="text">'@Page.Exception.InnerException.Message'</p>
+                        }
+                    </div>
+                </div>
             }
-        }
+            <button class="reload-button">Перезапустить сеанс</button>
+        </form>
     </div>
 </body>
 </html>
+
+

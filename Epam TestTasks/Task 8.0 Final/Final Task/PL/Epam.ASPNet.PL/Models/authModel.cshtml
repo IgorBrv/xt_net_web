@@ -11,17 +11,26 @@
 
         Resolver resolver = CommonData.GetResolver();
 
-        if (resolver.GetBloUsers.CheckUser(login, password))
+        try
         {
-            FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
-            CommonData.CurrentUser = resolver.GetBloUsers.GetByEmail(login);
-            Page.idUser = CommonData.CurrentUser.id;
-            @RenderPage("~/Pages/userPage.cshtml");
+            if (resolver.GetBloUsers.CheckUser(login, password))
+            {
+                FormsAuthentication.SetAuthCookie(login, createPersistentCookie: true);
+                CommonData.CurrentUser = resolver.GetBloUsers.GetByEmail(login);
+                Page.idUser = CommonData.CurrentUser.id;
+                @RenderPage("~/Pages/userPage.cshtml");
+            }
+            else
+            {
+                CommonData.authError = true;
+                Response.Redirect("~/Pages/authPage.cshtml");
+            }
         }
-        else
-        {
-            CommonData.authError = true;
-            Response.Redirect("~/Pages/authPage.cshtml");
+        catch (Exception e)
+        {   // Перехват сгенерированой в blo ошибки аутентификации и случайных ошибок
+
+            Page.Exception = e;
+            @RenderPage("~/Pages/errorPage.cshtml");
         }
     }
 }

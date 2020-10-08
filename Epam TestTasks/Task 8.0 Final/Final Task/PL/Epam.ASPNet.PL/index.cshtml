@@ -1,15 +1,15 @@
-﻿@using Epam.CommonLoggerInterface;
+﻿@* Стартовая страница, корень приложения *@
+
+@using Epam.CommonLoggerInterface;
 @using Epam.DependencyResolver;
 @using Epam.ASPNet.PL.Models;
 @using Epam.Interfaces.BLL;
-@using Epam.ASPNet.PL.Models;
 
 @{
     Resolver resolver = CommonData.GetResolver();
     IUsersBLL bloUsers = resolver.GetBloUsers;
     ILogger logger = resolver.GetLogger;
-    string fspath = Server.MapPath("");
-    bloUsers.SetPath(fspath);
+    bloUsers.SetPath(Server.MapPath(""));
 
 
     if (User.Identity.IsAuthenticated)
@@ -18,6 +18,11 @@
         {
             logger.Info("PL/index: creating new user object");
             CommonData.CurrentUser = bloUsers.GetByEmail(User.Identity.Name);
+
+            if (CommonData.CurrentUser == null)
+            {
+                Response.Redirect("~/Models/logoutModel.cshtml");
+            }
         }
 
         Page.idUser = CommonData.CurrentUser.id;

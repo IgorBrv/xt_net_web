@@ -201,8 +201,9 @@
                 if (Int32.TryParse(Request["id"], out idChat))
                 {
                     bloMessages.RemoveChat(idChat);
+                    int unreaded = bloMessages.GetUnreadedCount((int)CommonData.CurrentUser.id);
 
-                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString() }));
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString(), unreaded.ToString() }));
                     return;
                 }
 
@@ -382,6 +383,11 @@
                         string statement = Request["statement"];
                         string[] birthSplitted = Request["birth"].Split('-');
                         DateTime birth = new DateTime(Int32.Parse(birthSplitted[0]), Int32.Parse(birthSplitted[1]), Int32.Parse(birthSplitted[2]));
+
+                        if (statement == "")
+                        {
+                            statement = null;
+                        }
 
                         if (idPerson == CommonData.CurrentUser.id)
                         {

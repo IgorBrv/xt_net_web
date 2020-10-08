@@ -128,11 +128,17 @@ function EmblemButtonClick(input) {
             mainEmblemContainer = document.querySelector('.user-card-image-container');
             editorEmblem = editor.querySelector('.unified-form-avatar-image');
             editorEmblemContainer = editor.querySelector('.unified-form-avatar');
+            editorEmblem.classList.add("hidden-box");
 
-            mainEmblem.classList.add("hidden");
-            editorEmblem.classList.add("hidden");
-            mainEmblemContainer.style.backgroundImage = data[1];
-            editorEmblemContainer.style.backgroundImage = data[1];
+            if (editorEmblemContainer) {
+                editorEmblemContainer.setAttribute('onclick', 'RemoveEmblemButtonClickAlert(this)');
+                editorEmblemContainer.style.backgroundImage = data[1];
+            }
+
+            if (mainEmblem && mainEmblemContainer) {
+                mainEmblem.classList.add("hidden-box");
+                mainEmblemContainer.style.backgroundImage = data[1];
+            }
 
             if (!editorEmblemContainer.classList.contains('unified-form-avatar-opacity')) {
 
@@ -146,7 +152,7 @@ function EmblemButtonClick(input) {
 function RemoveEmblemButtonClick(button) {
     // Нажатие на кнопку удаления аватара пользователя
 
-    HideAlertWindow()
+    HideAlertWindow();
 
     let data = new FormData();
     data.append('type', 'EmblemRemoveRequest');
@@ -171,11 +177,20 @@ function RemoveEmblemButtonClick(button) {
             mainEmblemContainer = document.querySelector('.user-card-image-container');
             editorEmblem = editor.querySelector('.unified-form-avatar-image');
             editorEmblemContainer = editor.querySelector('.unified-form-avatar');
-
-            mainEmblem.classList.remove("hidden");
-            editorEmblem.classList.remove("hidden");
-            mainEmblemContainer.style.backgroundImage = "";
             editorEmblemContainer.style.backgroundImage = "";
+
+            if (editorEmblem.classList.contains("hidden-box")) {
+                editorEmblem.classList.remove("hidden-box");
+            }
+
+            if (editorEmblemContainer) {
+                editorEmblemContainer.setAttribute('onclick', '');
+            }
+
+            if (mainEmblem && mainEmblemContainer) {
+                mainEmblem.classList.remove("hidden-box");
+                mainEmblemContainer.style.backgroundImage = "";
+            }
 
             if (editorEmblemContainer.classList.contains('unified-form-avatar-opacity')) {
 

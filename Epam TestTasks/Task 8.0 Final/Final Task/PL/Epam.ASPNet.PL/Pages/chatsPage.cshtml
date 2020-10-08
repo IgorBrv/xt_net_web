@@ -1,14 +1,18 @@
 ﻿@* Страница чатов пользователя *@
 
-@using Epam.ASPNet.PL.Models
 @using Epam.CommonEntities
 @using Epam.Interfaces.BLL
+@using Epam.ASPNet.PL.Models
 @using Epam.CommonLoggerInterface;
 
 @{
+
     IEnumerable<Chat> chats = null;
     ILogger logger = CommonData.GetResolver().GetLogger;
     IMessagesBLL bloMessages = CommonData.GetResolver().GetBloMessages;
+
+    Page.pageName = "Чаты";
+    Layout = "/pages/_socialNetworkLayout.cshtml";
 
     if (CommonData.CurrentUser == null)
     {
@@ -24,9 +28,6 @@
     {
         logger.Info("PL/chat: get user chats attempt");
         chats = bloMessages.GetAllChatsOfUser((int)CommonData.CurrentUser.id);
-
-        Page.pageName = "Чаты";
-        Layout = "/pages/_socialNetworkLayout.cshtml";
     }
     catch (Exception e)
     {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
@@ -43,16 +44,15 @@
 @foreach (Chat chat in chats)
 {
     Page.id = chat.id;
-    Page.chatName = chat.opponentName;
-    Page.chatText = chat.lastMessage;
-    Page.userEmblem = null;
     Page.unreaded = null;
+    Page.userEmblem = null;
+    Page.chatText = chat.lastMessage;
+    Page.chatName = chat.opponentName;
 
     if (chat.unreaded != null && chat.unreaded == CommonData.CurrentUser.id)
     {
         Page.unreaded = "border: 2px solid DarkOrange;";
     }
-
 
     if (chat.emblem != null)
     {

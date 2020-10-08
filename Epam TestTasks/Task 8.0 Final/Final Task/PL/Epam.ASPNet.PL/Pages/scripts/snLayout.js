@@ -44,16 +44,28 @@ function ShowAlertWindow(title, text, func) {
     let awTitle = alert.querySelector('.unified-form-content-header-title');
     let awText = alert.querySelector('.unified-form-content-p');
     let awButton = alert.querySelector('.unified-form-footer-button');
+    let awButtonFiller = alert.querySelector('.button-filler');
 
     awTitle.textContent = title;
     awText.textContent = text;
 
     if (func != null) {
         awButton.setAttribute('onclick', func);
-        awButton.hidden = false;
+
+        if (awButton && awButton.classList.contains('hidden-box')) {
+            awButton.classList.remove('hidden-box');
+        }
+        if (awButtonFiller &&!awButtonFiller.classList.contains('hidden-box')) {
+            awButtonFiller.classList.add('hidden-box');
+        }
     }
     else {
-        awButton.hidden = true;
+        if (awButton && !awButton.classList.contains('hidden-box')) {
+            awButton.classList.add('hidden-box');
+        }
+        if (awButtonFiller && awButtonFiller.classList.contains('hidden-box')) {
+            awButtonFiller.classList.remove('hidden-box');
+        }
     }
     if (alert && alert.classList.contains('unified-form-container-hidden')) {
         alert.classList.remove('unified-form-container-hidden');   

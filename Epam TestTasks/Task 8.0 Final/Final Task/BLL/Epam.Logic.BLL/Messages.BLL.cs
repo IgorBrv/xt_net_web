@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using Epam.CommonLoggerInterface;
+using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-using Epam.CommonLoggerInterface;
+using System;
+
 
 namespace Epam.Logic.BLL
 {
@@ -36,6 +37,11 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: Chat creating  process failed!");
 				throw new Exception("error while creating chat process", e);
 			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Chat creating  process failed!");
+				throw new Exception("error while creating chat process", e);
+			}
 		}
 	
 
@@ -55,6 +61,16 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: Getting list of users chats process failed!");
 				throw new Exception("error while getting list of users chats", e);
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("BLL: Getting list of users chats process failed!");
+				throw new Exception("error while getting list of users chats", e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Getting list of users chats process failed!");
+				throw new Exception("error while getting list of users chats", e);
+			}
 		}
 
 		public IEnumerable<Message> GetAllMessagesFromChat(int idChat, int idReader)
@@ -69,6 +85,16 @@ namespace Epam.Logic.BLL
 				return temp;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("BLL: Getting chats list of messages process failed!");
+				throw new Exception("error while getting all messages from chat", e);
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("BLL: Getting chats list of messages process failed!");
+				throw new Exception("error while getting all messages from chat", e);
+			}
+			catch (Exception e)
 			{
 				logger.Error("BLL: Getting chats list of messages process failed!");
 				throw new Exception("error while getting all messages from chat", e);
@@ -92,6 +118,16 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: Getting chat with user process failed!");
 				throw new Exception("error while getting chat with user", e);
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("BLL: Getting chat with user process failed!");
+				throw new Exception("error while getting chat with user", e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Getting chat with user process failed!");
+				throw new Exception("error while getting chat with user", e);
+			}
 		}
 
 		public int GetUnreadedCount(int idUser)
@@ -106,6 +142,16 @@ namespace Epam.Logic.BLL
 				return temp;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("BLL: Getting unreaded chats count with user process failed!");
+				throw new Exception("error while getting count of all unreaded chats of user", e);
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("BLL: Getting unreaded chats count with user process failed!");
+				throw new Exception("error while getting count of all unreaded chats of user", e);
+			}
+			catch (Exception e)
 			{
 				logger.Error("BLL: Getting unreaded chats count with user process failed!");
 				throw new Exception("error while getting count of all unreaded chats of user", e);
@@ -126,6 +172,11 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: Chat removing process failed!");
 				throw new Exception("error while process of chat removing", e);
 			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Chat removing process failed!");
+				throw new Exception("error while process of chat removing", e);
+			}
 		}
 
 		public void RemoveMessage(int idMessage)
@@ -138,6 +189,11 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Message removing process done");
 			}
 			catch (SqlException e)
+			{
+				logger.Error("BLL: Message removing process failed!");
+				throw new Exception("error while process of message removing", e);
+			}
+			catch (Exception e)
 			{
 				logger.Error("BLL: Message removing process failed!");
 				throw new Exception("error while process of message removing", e);
@@ -161,6 +217,11 @@ namespace Epam.Logic.BLL
 				logger.Error("BLL: Message sendding process failed!");
 				throw new Exception("error while process of message sending", e);
 			}
-        }
+			catch (Exception e)
+			{
+				logger.Error("BLL: Message sendding process failed!");
+				throw new Exception("error while process of message sending", e);
+			}
+		}
     }
 }

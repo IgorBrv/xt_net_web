@@ -10,10 +10,10 @@
     ILogger logger = CommonData.GetResolver().GetLogger;
     IUsersBLL bloUsers = CommonData.GetResolver().GetBloUsers;
 
+    Page.hidden = "hidden-box";
     Page.pageName = "Страница поиска";
     Page.idUser = (int)CommonData.CurrentUser.id;
     Layout = "/Pages/_socialNetworkLayout.cshtml";
-    Page.hidden = "hidden";
 
     if (IsPost)
     {
@@ -61,7 +61,6 @@
 
     @RenderPage("/pages/_usercardPartial.cshtml")
 }
-
 
 <script src="/Pages/scripts/userPage.js"></script>
 <script src="/Pages/scripts/searchPage.js"></script>

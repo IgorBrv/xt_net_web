@@ -4,10 +4,12 @@
 @using Epam.CommonLoggerInterface;
 
 @{
-    int unreadedChats = 0;
     Layout = "/pages/_commonLayout.cshtml";
-    string opacity = "unified-form-avatar-opacity";
     ILogger logger = CommonData.GetResolver().GetLogger;
+
+    int unreadedChats = 0;
+    string opacity = "unified-form-avatar-opacity";
+    string avatarClick = "RemoveEmblemButtonClickAlert(this)";
 
     try
     {
@@ -44,6 +46,7 @@
                 </div>
             </div>
             <div class="unified-form-footer">
+                <div class="button-filler hidden-box"></div>
                 <button type="button" class="unified-form-footer-button" id="" onclick="">Да</button>
             </div>
         </div>
@@ -75,7 +78,7 @@
         <div class="unified-form-wrapper" onclick="EditorCloseButtonClick()">
             <div class="unified-form" onclick="EditorFormClick()">
                 <div class="unified-form-body">
-                    <div class="unified-form-avatar @if (Page.userEmblem != null) {@opacity}" id="@Page.idUser" onclick="RemoveEmblemButtonClickAlert(this)" style='@if (Page.userEmblem != null) {@Page.userEmblem}'>
+                    <div class="unified-form-avatar @if (Page.userEmblem != null) {@opacity}" id="@Page.idUser" onclick="@if (Page.userEmblem != null){@avatarClick}" style='@if (Page.userEmblem != null) {@Page.userEmblem}'>
                         <img src="/Pages/images/user.svg" alt="аватар" class="unified-form-avatar-image @if (Page.userEmblem != null) {@Page.hidden}">
                     </div>
                     <div class="unified-form-content">
@@ -120,11 +123,11 @@
     </div>
     <div class="left-bar">
         <button class="left-bar-buttons" onclick="HomeButtonClick()"><p class="button-label">Моя страница</p><img src="/Pages/images/home.svg" alt="home button" class="left-bar-menu-image"></button>
-        @if (Page.curUserBlocked == null || User.IsInRole("admin"))
+        @if (CommonData.CurrentUser.blockedBy == null || User.IsInRole("admin"))
         {
             <button class="left-bar-buttons" onclick="MessagesButtonClick()">
                 <p class="button-label">Сообщения</p>
-                <div class="left-bar-menu-image left-bar-menu-image-box" style="background: url(/Pages/images/message.svg)">
+                <div class="left-bar-menu-image left-bar-menu-image-box" id="msgbox" style="background: url(/Pages/images/message.svg)">
                     @if (unreadedChats > 0)
                     {
                         <div class="messageLed"></div>

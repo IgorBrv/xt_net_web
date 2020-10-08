@@ -5,7 +5,8 @@ using System.Linq;
 using Epam.DependencyResolver;
 
 namespace Epam.ASPNet.PL.Models
-{	// Пространство общих переменных PL
+{	// Пространство общих переменных, свойств и мини-методов PL
+
 	public static class CommonData
 	{
 		public static int? idChat = null;
@@ -26,10 +27,21 @@ namespace Epam.ASPNet.PL.Models
 			set
 			{
 				GetResolver();
-				currentUser = value;
-				curUserFriends = resolver.GetBloFriends.GetFriends((int)currentUser.id).ToList();
-				friendRequests = resolver.GetBloFriends.GetFriendRequests((int)currentUser.id).ToList();
-				friendInventations = resolver.GetBloFriends.GetInventations((int)currentUser.id).ToList();
+
+				if (value != null)
+				{
+					currentUser = value;
+					curUserFriends = resolver.GetBloFriends.GetFriends((int)currentUser.id).ToList();
+					friendRequests = resolver.GetBloFriends.GetFriendRequests((int)currentUser.id).ToList();
+					friendInventations = resolver.GetBloFriends.GetInventations((int)currentUser.id).ToList();
+				}
+				else
+				{
+					currentUser = value;
+					curUserFriends = null;
+					friendRequests = null;
+					friendInventations = null;
+				}
 			}
 		}
 

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Epam.CommonLoggerInterface;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
+using System.Data.SqlTypes;
 using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
-using Epam.CommonLoggerInterface;
-using System.Data.SqlTypes;
+using System.Data;
+using System;
+
 
 namespace Epam.Logic.DAL
 {
@@ -44,16 +45,21 @@ namespace Epam.Logic.DAL
 
 					command.Parameters.AddRange(parameters);
 					connection.Open();
-					command.ExecuteScalar();
+					command.ExecuteNonQuery();
 				}
+
+				logger.Info("DAL: Accepting friend request process done");
 			}
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Accepting friend request process failed!");
 				throw e;
 			}
-
-			logger.Info("DAL: Accepting friend request process done");
+			catch (Exception e)
+			{
+				logger.Error("DAL: Accepting friend request process failed!");
+				throw e;
+			}
 		}
 
 		public IEnumerable<UserData> GetFriendRequests(int userId)
@@ -92,6 +98,16 @@ namespace Epam.Logic.DAL
 				return users;
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: Getting friends requests list process failed!");
+				throw e;
+			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting friends requests list process failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: Getting friends requests list process failed!");
 				throw e;
@@ -137,6 +153,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Getting friends list process failed!");
 				throw e;
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting friends list process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting friends list process failed!");
+				throw e;
+			}
 		}
 
 		public IEnumerable<UserData> GetInventations(int userId)
@@ -177,6 +203,16 @@ namespace Epam.Logic.DAL
 				logger.Error("DAL: Getting self inventations list process failed!");
 				throw e;
 			}
+			catch (IndexOutOfRangeException e)
+			{
+				logger.Error("DAL: Getting self inventations list process failed!");
+				throw e;
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Getting self inventations list process failed!");
+				throw e;
+			}
 		}
 
 		public void RemoveFriend(int userId, int opponentId)
@@ -202,10 +238,15 @@ namespace Epam.Logic.DAL
 
 					command.Parameters.AddRange(parameters);
 					connection.Open();
-					command.ExecuteScalar();
+					command.ExecuteNonQuery();
 				}
 			}
 			catch (SqlException e)
+			{
+				logger.Info("DAL: Person removing from friendslist process failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Info("DAL: Person removing from friendslist process failed!");
 				throw e;
@@ -237,10 +278,15 @@ namespace Epam.Logic.DAL
 
 					command.Parameters.AddRange(parameters);
 					connection.Open();
-					command.ExecuteScalar();
+					command.ExecuteNonQuery();
 				}
 			}
 			catch (SqlException e)
+			{
+				logger.Error("DAL: Inventation sending process failed!");
+				throw e;
+			}
+			catch (Exception e)
 			{
 				logger.Error("DAL: Inventation sending process failed!");
 				throw e;

@@ -3,15 +3,13 @@
 @using Epam.ASPNet.PL.Models
 
 @{
-    string hidden = "hidden-box";
-
     if (Page.avatarLink != null)
     {
         Page.avatarLink = $"background-image: url({Page.avatarLink})";
     }
 }
 
-<form action="/Pages/userPage.cshtml" method="POST" class="body-element  @if (Page.name == "hidden") { @hidden }" id="@Page.id" onclick="UserClick(this)" @if (Page.name != null && Page.name != "hidden") { @Page.name }>
+<form action="/Pages/userPage.cshtml" method="POST" class="body-element  @if (Page.name == "hidden") { @Page.hidden }" id="@Page.id" onclick="UserClick(this)" @if (Page.name != null && Page.name != "hidden") { @Page.name }>
     <input type="text" name="idUser" value="@Page.id" hidden/>
     <div class="body-element-main">
         <div class="body-element-avatar" style='@if (Page.avatarLink != null) { @Page.avatarLink }'>
@@ -45,7 +43,7 @@
         @if (CommonData.CurrentUser.id != Page.id && CommonData.curUserFriends.Count(item => item.id == Page.id) == 0 && CommonData.friendInventations.Count(item => item.id == Page.id) == 0 && Page.notAddable != true)
         {
             <div class="body-element-button" id="@Page.id" onclick="PersonAddButtonClick(this)">
-                <img src="/Pages/images/add2.svg" alt="AddToFriendIcon" class="body-element-remove-button-img">
+                <img src="/Pages/images/addfriend.svg" alt="AddToFriendIcon" class="body-element-remove-button-img">
             </div>
         }
         @if (CommonData.CurrentUser.id != Page.id && Page.userBlocked == null)
