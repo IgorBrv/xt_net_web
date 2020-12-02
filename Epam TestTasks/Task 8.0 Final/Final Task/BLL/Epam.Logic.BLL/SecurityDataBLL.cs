@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Epam.CommonLoggerInterface;
-using System.Data.SqlClient;
+using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: process of adding role to user done");
 				return result;
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: process of adding role to user failed!");
 				throw new Exception("error while adding role to user process", e);
@@ -55,12 +55,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: getting users role process done");
 				return result;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: getting users role process failed!");
-				throw new Exception("error while getting role of user", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: getting users role process failed!");
 				throw new Exception("error while getting role of user", e);
@@ -87,7 +82,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: checking users role process was unsucsesseful");
 				return false;
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Info("BLL: checking users role process failed");
 				throw new Exception("error while checking users role", e);

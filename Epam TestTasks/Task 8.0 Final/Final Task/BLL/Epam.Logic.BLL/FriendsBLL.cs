@@ -1,6 +1,5 @@
 ﻿using Epam.CommonLoggerInterface;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
@@ -31,7 +30,7 @@ namespace Epam.Logic.BLL
 
 				logger.Info("BLL: Accepting friend request process done");
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Accepting friend request process failed!");
 				throw new Exception("exeption while accepting friend request", e);
@@ -54,12 +53,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting friends requests list process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting friends requests list process failed!");
-				throw new Exception("exeption while accepting friend requests list", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting friends requests list process failed!");
 				throw new Exception("exeption while accepting friend requests list", e);
@@ -81,12 +75,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting friends list process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting friends list process failed!");
-				throw new Exception("exeption while recieving list of friends", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting friends list process failed!");
 				throw new Exception("exeption while recieving list of friends", e);
@@ -109,12 +98,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting self inventations list process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting self inventations list process failed!");
-				throw new Exception("exeption while recieving friends inventations list", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting self inventations list process failed!");
 				throw new Exception("exeption while recieving friends inventations list", e);
@@ -136,7 +120,7 @@ namespace Epam.Logic.BLL
 
 				logger.Info("BLL: Person removing from friendslist process done");
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Person removing from friendslist process failed!");
 				throw new Exception("exeption while removing friends", e);
@@ -158,7 +142,7 @@ namespace Epam.Logic.BLL
 
 				logger.Info("BLL: Inventation sending process done");
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Inventation sending process failed!");
 				throw new Exception("exeption while sending inventation to friends", e);

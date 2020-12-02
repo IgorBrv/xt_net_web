@@ -69,7 +69,22 @@
         {
             Page.position = "body-element-right";
         }
-        if (chatPair[message.senderId].emblem != null)
+
+        if (message.userLeft == true || message.userJoined == true)
+        {
+
+            if (message.userLeft == true)
+            {
+                Page.messageText = "покинул чат";
+            }
+            else if (message.userJoined == true)
+            {
+                Page.messageText = "присоединился к чату";
+            }
+
+            Page.userEmblem = $"background-image: url(/Pages/images/exclamation.svg)";
+        }
+        else if (chatPair[message.senderId].emblem != null)
         {
             Page.userEmblem = $"background-image: url({chatPair[message.senderId].emblem})";
         }
@@ -78,7 +93,7 @@
     }
 </div>
 <div class="chat-input">
-    <input type="text" maxlength="1500" class="chat-input-textarea" id="@id" onkeypress="ChatInputKeyPressed(event)">
+    <input autofocus type="text" maxlength="1500" class="chat-input-textarea" id="@id" onkeypress="ChatInputKeyPressed(event)">
     <button class="chat-input-send-button" id="@CommonData.CurrentUser.id" onclick="ChatSendButtonClick(this)">
         <img src="/Pages/images/send.svg" class="chat-input-send-button-image" alt="">
     </button>

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Configuration;
+using Epam.CommonEntities;
 using Epam.Interfaces.DAL;
 using System.Data;
 using System;
-
 
 namespace Epam.Logic.DAL
 {
@@ -75,12 +75,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: process of adding role to user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: process of adding role to user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -117,17 +117,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: getting users role process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: getting users role process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: getting users role process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 	}

@@ -44,11 +44,40 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						int? unreaded;
-						SqlInt32 temp = reader.GetSqlInt32(reader.GetOrdinal("unreaded"));
-						unreaded = temp.IsNull ? (int?)null : temp.Value;
-						string text = $"{reader["sname"] as string}: {reader["text"] as string}";
-						chatsList.Add(new Chat((int)reader["idChat"], reader["name"] as string, text, (DateTime)reader["date"], unreaded, reader["emblem"] as string));
+						bool? unreaded;
+
+						SqlBoolean temp = reader.GetSqlBoolean(reader.GetOrdinal("unreaded"));
+						unreaded = temp.IsNull ? (bool?)null : temp.Value;
+
+						int id = (int)reader["idChat"];
+						bool abandoned = (bool)reader["userLeft"];
+						string emblem = reader["chatEmblem"] as string;
+						string lastmessage = reader["mtext"] as string;
+						string chatTitle = reader["chatName"] as string;
+						DateTime messageDate = (DateTime)reader["mdate"];
+						List<ChatMember> members = new List<ChatMember>();
+						string messageSenderName = reader["sname"] as string;
+
+						foreach (string member in (reader["members"] as string).Split(';'))
+						{
+							bool hasLeavedChat = false;
+							bool hasAdminRights = false;
+							string[] details = member.Split(',');
+
+							if (details[4] as string == "1")
+							{
+								hasLeavedChat = true;
+							}
+
+							if (details[3] as string == "1")
+							{
+								hasAdminRights = true;
+							}
+
+							members.Add(new ChatMember(id, Int32.Parse(details[0]), details[1], details[2], hasLeavedChat, hasAdminRights));
+						}
+
+						chatsList.Add(new Chat(id, abandoned, members, emblem, lastmessage, messageSenderName, messageDate, unreaded, chatTitle));
 					}
 				}
 
@@ -59,17 +88,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting list of users chats process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting list of users chats process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting list of users chats process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 
 		}
@@ -103,7 +132,16 @@ namespace Epam.Logic.DAL
 
 					while (reader.Read())
 					{
-						messagesList.Add(new Message((int)reader["idChat"], (int)reader["idSender"], reader["text"] as string, (DateTime)reader["date"], (int)reader["idMessage"]));
+						bool? userLeft;
+						bool? userJoined;
+						string text = reader["mtext"] as string;
+
+						SqlBoolean temp = reader.GetSqlBoolean(reader.GetOrdinal("userLeft"));
+						userLeft = temp.IsNull ? (bool?)null : temp.Value;
+						temp = reader.GetSqlBoolean(reader.GetOrdinal("userJoined"));
+						userJoined = temp.IsNull ? (bool?)null : temp.Value;
+
+						messagesList.Add(new Message((int)reader["idChat"], (int)reader["idSender"], text, (DateTime)reader["mdate"], (int)reader["idMessage"], userLeft, userJoined));
 					}
 				}
 
@@ -113,17 +151,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting chats list of messages process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting chats list of messages process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting chats list of messages process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -153,12 +191,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Message removing process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Message removing process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -205,12 +243,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Message sendding process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Message sendding process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -247,17 +285,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting chat with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting chat with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting chat with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -278,8 +316,7 @@ namespace Epam.Logic.DAL
 
 					SqlParameter[] parameters = new SqlParameter[]
 					{
-						new SqlParameter("@idPerson1", idUser),
-						new SqlParameter("@idPerson2", idOpponent)
+						new SqlParameter("@idPerson", idUser),
 					};
 
 					SqlParameter output = new SqlParameter
@@ -296,6 +333,22 @@ namespace Epam.Logic.DAL
 
 					int idChat = (int)output.Value;
 
+					stProc = "AddUserToChat";
+
+					command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					parameters = new SqlParameter[]
+					{
+						new SqlParameter("@idChat", idChat),
+						new SqlParameter("@idPerson", idOpponent)
+					};
+
+					command.Parameters.AddRange(parameters);
+					command.ExecuteNonQuery();
+
 					logger.Info("DAL: Chat creating  process done");
 					return idChat;
 				}
@@ -303,12 +356,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Chat creating  process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Chat creating  process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -327,7 +380,7 @@ namespace Epam.Logic.DAL
 						CommandType = CommandType.StoredProcedure
 					};
 
-					SqlParameter parameter = new SqlParameter("@id", idChat);
+					SqlParameter parameter = new SqlParameter("@idChat", idChat);
 
 					command.Parameters.Add(parameter);
 					connection.Open();
@@ -339,12 +392,92 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Chat removing process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Chat removing process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
+			}
+		}
+
+		public void LeaveChat(int idChat, int idUser)
+		{
+			logger.Info("DAL: Chat leaving process started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "LeaveChat";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@idChat", idChat),
+						new SqlParameter("@idUser", idUser)
+					};
+
+					command.Parameters.AddRange(parameters);
+					connection.Open();
+					command.ExecuteNonQuery();
+				}
+
+				logger.Info("DAL: Chat leaving process done");
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Chat leaving process failed!");
+				throw new StorageException(e.Message, e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Chat removing process failed!");
+				throw new StorageException(e.Message, e);
+			}
+		}
+
+		public void ReturnToChat(int idChat, int idUser)
+		{
+			logger.Info("DAL: Returning to chat procedure started");
+
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(_connectionString))
+				{
+					var stProc = "ReturnToChat";
+
+					var command = new SqlCommand(stProc, connection)
+					{
+						CommandType = CommandType.StoredProcedure
+					};
+
+					SqlParameter[] parameters = new SqlParameter[]
+					{
+						new SqlParameter("@idChat", idChat),
+						new SqlParameter("@idUser", idUser)
+					};
+
+					command.Parameters.AddRange(parameters);
+					connection.Open();
+					command.ExecuteNonQuery();
+				}
+
+				logger.Info("DAL: Returning to chat procedure done");
+			}
+			catch (SqlException e)
+			{
+				logger.Error("DAL: Returning to chat procedure failed!");
+				throw new StorageException(e.Message, e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("DAL: Returning to chat procedure failed!");
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -377,17 +510,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting unreaded chats count with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting unreaded chats count with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting unreaded chats count with user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 	}

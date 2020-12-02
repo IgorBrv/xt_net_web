@@ -53,12 +53,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Accepting friend request process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Accepting friend request process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -100,17 +100,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting friends requests list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting friends requests list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting friends requests list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -151,17 +151,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting friends list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting friends list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting friends list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -201,17 +201,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting self inventations list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting self inventations list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting self inventations list process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -244,12 +244,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Info("DAL: Person removing from friendslist process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Info("DAL: Person removing from friendslist process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 
 			logger.Info("DAL: Person removing from friendslist process done");
@@ -284,12 +284,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Inventation sending process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Inventation sending process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 
 			logger.Info("DAL: Inventation sending process done");

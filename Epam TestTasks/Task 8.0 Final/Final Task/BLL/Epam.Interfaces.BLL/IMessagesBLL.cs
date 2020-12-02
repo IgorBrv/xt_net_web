@@ -23,5 +23,9 @@ namespace Epam.Interfaces.BLL
 		int CreateChat(int idUser, int idOpponent);
 
 		void RemoveChat(int idChat);
+
+		void LeaveChat(int idChat, int idUser);
+
+		void ReturnToChat(int idChat, int idUser);
 	}
 }

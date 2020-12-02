@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Epam.CommonLoggerInterface;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
@@ -51,7 +50,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of creating user was unsucssesseful");
 				return false;
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of creating user failed!");
 				throw new Exception("error while creating user", e);
@@ -74,12 +73,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of getting user by id done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Process of getting user by id failed!");
-				throw new Exception("error while process of getting user by id", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of getting user by id failed!");
 				throw new Exception("error while process of getting user by id", e);
@@ -102,12 +96,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of getting user by email done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Process of getting user by email failed!");
-				throw new Exception("error while process of getting user by email", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of getting user by email failed!");
 				throw new Exception("error while process of getting user by email", e);
@@ -128,12 +117,7 @@ namespace Epam.Logic.BLL
 				daoUsers.Update(user);
 				logger.Info("BLL: Process of updating users data done");
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Process of updating users data failed!");
-				throw new Exception("error while process of updating users data", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of updating users data failed!");
 				throw new Exception("error while process of updating users data", e);
@@ -156,12 +140,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of getting userlist done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Process of getting userlist failed!");
-				throw new Exception("error while getting userlist process", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of getting userlist failed!");
 				throw new Exception("error while getting userlist process", e);
@@ -184,12 +163,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of creating user done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Process of searching of users failed!");
-				throw new Exception("error while users search procecss", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of searching of users failed!");
 				throw new Exception("error while users search procecss", e);
@@ -211,12 +185,7 @@ namespace Epam.Logic.BLL
 
 				logger.Info("BLL: Process of removing emblem from user done");
 			}
-			catch (IOException e)
-			{
-				logger.Error("BLL: Process of removing emblem from user failed!");
-				throw new Exception("error while removing emblem process", e);
-			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of removing emblem from user failed!");
 				throw new Exception("error while removing emblem process", e);
@@ -239,12 +208,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Process of adding emblem to user done");
 				return temp;
 			}
-			catch (IOException e)
-			{
-				logger.Error("BLL: Process of adding emblem to user failed!");
-				throw new Exception("error while adding emblem process", e);
-			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Process of adding emblem to user failed!");
 				throw new Exception("error while adding emblem process", e);
@@ -269,12 +233,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: changing users pasword process done");
 				return result;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: changing users pasword process failed!");
-				throw new Exception("error while changing password of user process", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: changing users pasword process failed!");
 				throw new Exception("error while changing password of user process", e);
@@ -307,12 +266,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: checking users password process was unsucsesseful");
 				return false;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: checking users password process failed!");
-				throw new Exception("error while checking users auth process", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: checking users password process failed!");
 				throw new Exception("error while checking users auth process", e);
@@ -333,7 +287,7 @@ namespace Epam.Logic.BLL
 					return BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password))).Replace("-", "");
 				}
 			}
-			catch (ArgumentNullException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Computing SHA256 Hash failed!");
 				throw new Exception("error while computing SHA256 hash", e);

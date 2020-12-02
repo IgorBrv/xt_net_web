@@ -26,8 +26,10 @@
 
     try
     {
+
         logger.Info("PL/chat: get user chats attempt");
         chats = bloMessages.GetAllChatsOfUser((int)CommonData.CurrentUser.id);
+        chats = chats.OrderBy(item => item.abandoned);
     }
     catch (Exception e)
     {   // Перехват ошибок сгенерированных в bll (и случайных ошибок)
@@ -41,25 +43,127 @@
 <link rel="stylesheet" href="/Pages/styles/cardbox.css">
 <link rel="stylesheet" href="/Pages/styles/chats.css">
 
-@foreach (Chat chat in chats)
+<div class="body-element-chats-container">
+    @foreach (Chat chat in chats.Where(item => !item.abandoned))
+    {
+        Page.id = chat.id;
+        Page.owner = false;
+        Page.unreaded = null;
+        Page.userEmblem = null;
+
+
+        if (chat.unreaded != null && chat.unreaded == true)
+        {
+            Page.unreaded = "border: 2px solid DarkOrange;";
+        }
+
+        if (chat.members.Count(item => !item.hasLeavedChat) < 2)
+        {
+            Page.unreaded = "border: 2px solid Red;";
+        }
+
+        if (chat.emblem != null)
+        {
+            Page.userEmblem = $"background-image: url({chat.emblem})";
+        }
+        else if (chat.members.Count == 2)
+        {
+            string opponentEmblem = chat.members.Where(item => item.idMember != (int)CommonData.CurrentUser.id).FirstOrDefault().emblem;
+
+            if (opponentEmblem.Length > 0)
+            {
+                Page.userEmblem = $"background-image: url({opponentEmblem})";
+            }
+        }
+
+        if (CommonData.CurrentUser.id != null && chat.members.Count(item => item.idMember == (int)CommonData.CurrentUser.id && item.hasAdminRights == true) > 0)
+        {
+            Page.owner = true;
+        }
+
+        if (chat.members.Count < 3 && chat.title == null)
+        {
+            Page.chatName = $"Чат с {chat.members.Where(item => item.idMember != (int)CommonData.CurrentUser.id).FirstOrDefault().name}";
+        }
+        else if (chat.title == null)
+        {
+            Page.chatName = "Коллективный чат";
+        }
+        else
+        {
+            Page.chatName = chat.title;
+        }
+
+        if (chat.lastMessage != null)
+        {
+            Page.chatText = $"{chat.messageSenderName}: {chat.lastMessage}";
+        }
+        else
+        {
+            Page.chatText = $"Сообщение от {chat.messageSenderName}";
+        }
+
+        @RenderPage("/pages/_chatPartial.cshtml")
+    }
+</div>
+
+@if (chats.Count(item => item.abandoned) > 0)
 {
-    Page.id = chat.id;
-    Page.unreaded = null;
-    Page.userEmblem = null;
-    Page.chatText = chat.lastMessage;
-    Page.chatName = chat.opponentName;
+    <div class="body-element-leaved-container">
+        <div class="body-element-divider">Покинутые чаты:</div>
 
-    if (chat.unreaded != null && chat.unreaded == CommonData.CurrentUser.id)
-    {
-        Page.unreaded = "border: 2px solid DarkOrange;";
-    }
 
-    if (chat.emblem != null)
-    {
-        Page.userEmblem = $"background-image: url({chat.emblem})";
-    }
+        @foreach (Chat chat in chats.Where(item => item.abandoned))
+        {
+            Page.id = chat.id;
+            Page.userEmblem = null;
+            Page.chatLeaved = true;
 
-    @RenderPage("/pages/_chatPartial.cshtml")
+            if (chat.emblem != null)
+            {
+                Page.userEmblem = $"background-image: url({chat.emblem})";
+            }
+            else if (chat.members.Count == 2)
+            {
+                string opponentEmblem = chat.members.Where(item => item.idMember != (int)CommonData.CurrentUser.id).FirstOrDefault().emblem;
+
+                if (opponentEmblem.Length > 0)
+                {
+                    Page.userEmblem = $"background-image: url({opponentEmblem})";
+                }
+            }
+
+            if (chat.members.Count < 3 && chat.title == null)
+            {
+                Page.chatName = $"Чат с {chat.members.Where(item => item.idMember != (int)CommonData.CurrentUser.id).FirstOrDefault().name}";
+            }
+            else if (chat.title == null)
+            {
+                Page.chatName = "Коллективный чат";
+            }
+            else
+            {
+                Page.chatName = chat.title;
+            }
+
+            if (chat.lastMessage != null)
+            {
+                Page.chatText = $"{chat.messageSenderName}: {chat.lastMessage}";
+            }
+            else
+            {
+                Page.chatText = $"Сообщение от {chat.messageSenderName}";
+            }
+
+            @RenderPage("/pages/_chatPartial.cshtml")
+        }
+    </div>
+}
+else
+{
+    <div class="body-element-leaved-container hidden">
+        <div class="body-element-divider">Покинутые чаты:</div>
+    </div>
 }
 
 <script src="/Pages/scripts/chatsPage.js"></script>

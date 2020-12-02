@@ -1,11 +1,13 @@
 ﻿@* Элемент окна "Чаты" *@
 
+@using Epam.ASPNet.PL.Models
+
 @{
     string hidden = "hidden";
 }
 
 <form action="/Pages/messagesPage.cshtml" method="POST" class="body-element" id="@Page.id" onclick="ChatClick(this)" style='@Page.unreaded'>
-    <input type="number" name="id" value="@Page.id" hidden/>
+    <input type="number" name="id" value="@Page.id" hidden />
     <div class="body-element-main">
         <div class="body-element-avatar" style='@if (Page.userEmblem != null) {@Page.userEmblem}'>
             <img src="/Pages/images/user.svg" alt="аватар" class="emblem @if (Page.userEmblem != null) {@hidden}">
@@ -15,9 +17,30 @@
             <p class="body-element-text">@Page.chatText</p>
         </div>
     </div>
-    <div class="body-element-footer">
-        <div type="button" class="body-element-button" id="@Page.id" onclick="RemoveChatButtonClickAlert(this)">
-            <img src="/Pages/images/close.svg" alt="window closure icon" class="body-element-remove-button-img">
+    @if (Page.owner == true && Page.chatLeaved != true)
+    {
+        <div class="body-element-footer">
+            <div type="button" class="body-element-button" id="@Page.id" onclick="RemoveChatButtonClickAlert(this)">
+                <img src="/Pages/images/close.svg" alt="window closure icon" class="body-element-remove-button-img">
+            </div>
         </div>
-    </div>
+    }
+    else if (Page.chatLeaved == true)
+    {
+        <div class="body-element-footer">
+            <div type="button" class="body-element-button" id="@Page.id" onclick="ReturnToChatButtonClickAlert(this)">
+                <img src="/Pages/images/return.svg" alt="window closure icon" class="body-element-leave-button-img returnbutton">
+                <img src="/Pages/images/exit.svg" alt="window closure icon" class="body-element-leave-button-img exitbutton hidden">
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="body-element-footer">
+            <div type="button" class="body-element-button" id="@Page.id" onclick="LeaveChatButtonClickAlert(this)">
+                <img src="/Pages/images/return.svg" alt="window closure icon" class="body-element-leave-button-img returnbutton hidden">
+                <img src="/Pages/images/exit.svg" alt="window closure icon" class="body-element-leave-button-img exitbutton">
+            </div>
+        </div>
+    }
 </form>

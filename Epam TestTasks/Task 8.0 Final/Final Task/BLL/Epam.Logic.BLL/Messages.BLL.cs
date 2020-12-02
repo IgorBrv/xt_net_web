@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Epam.CommonLoggerInterface;
-using System.Data.SqlClient;
 using Epam.CommonEntities;
 using Epam.Interfaces.BLL;
 using Epam.Interfaces.DAL;
@@ -32,7 +31,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Chat creating  process done");
 				return temp;
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Chat creating  process failed!");
 				throw new Exception("error while creating chat process", e);
@@ -56,12 +55,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting list of users chats process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting list of users chats process failed!");
-				throw new Exception("error while getting list of users chats", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting list of users chats process failed!");
 				throw new Exception("error while getting list of users chats", e);
@@ -84,12 +78,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting chats list of messages process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting chats list of messages process failed!");
-				throw new Exception("error while getting all messages from chat", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting chats list of messages process failed!");
 				throw new Exception("error while getting all messages from chat", e);
@@ -113,12 +102,7 @@ namespace Epam.Logic.BLL
 				return temp;
 
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting chat with user process failed!");
-				throw new Exception("error while getting chat with user", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting chat with user process failed!");
 				throw new Exception("error while getting chat with user", e);
@@ -141,12 +125,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Getting unreaded chats count with user process done");
 				return temp;
 			}
-			catch (SqlException e)
-			{
-				logger.Error("BLL: Getting unreaded chats count with user process failed!");
-				throw new Exception("error while getting count of all unreaded chats of user", e);
-			}
-			catch (IndexOutOfRangeException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Getting unreaded chats count with user process failed!");
 				throw new Exception("error while getting count of all unreaded chats of user", e);
@@ -167,7 +146,7 @@ namespace Epam.Logic.BLL
 				daoMessages.RemoveChat(idChat);
 				logger.Info("BLL: Chat removing process done");
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Chat removing process failed!");
 				throw new Exception("error while process of chat removing", e);
@@ -176,6 +155,48 @@ namespace Epam.Logic.BLL
 			{
 				logger.Error("BLL: Chat removing process failed!");
 				throw new Exception("error while process of chat removing", e);
+			}
+		}
+
+		public void LeaveChat(int idChat, int idUser)
+		{
+			logger.Info("BLL: Chat leaving process started");
+
+			try
+			{
+				daoMessages.LeaveChat(idChat, idUser);
+				logger.Info("BLL: Chat removing process done");
+			}
+			catch (StorageException e)
+			{
+				logger.Error("BLL: Chat leaving process failed!");
+				throw new Exception("error while process of chat leaving", e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Chat leaving process failed!");
+				throw new Exception("error while process of chat leaving", e);
+			}
+		}
+
+		public void ReturnToChat(int idChat, int idUser)
+		{
+			logger.Info("BLL: Returning to chat procedure started");
+
+			try
+			{
+				daoMessages.ReturnToChat(idChat, idUser);
+				logger.Info("BLL: Returning to chat procedure done");
+			}
+			catch (StorageException e)
+			{
+				logger.Error("BLL: Returning to chat procedure failed!");
+				throw new Exception("error while process of returning to chat", e);
+			}
+			catch (Exception e)
+			{
+				logger.Error("BLL: Returning to chat procedure failed!");
+				throw new Exception("error while process of returning to chat", e);
 			}
 		}
 
@@ -188,7 +209,7 @@ namespace Epam.Logic.BLL
 				daoMessages.RemoveMessage(idMessage);
 				logger.Info("BLL: Message removing process done");
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Message removing process failed!");
 				throw new Exception("error while process of message removing", e);
@@ -212,7 +233,7 @@ namespace Epam.Logic.BLL
 				logger.Info("BLL: Message sendding process done");
 				return message;
 			}
-			catch (SqlException e)
+			catch (StorageException e)
 			{
 				logger.Error("BLL: Message sendding process failed!");
 				throw new Exception("error while process of message sending", e);

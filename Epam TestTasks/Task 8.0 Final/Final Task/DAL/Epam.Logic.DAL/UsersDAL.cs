@@ -64,17 +64,17 @@ namespace Epam.Logic.DAL
 			catch (IOException e)
 			{
 				logger.Error("DAL: Process of adding emblem to user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of adding emblem to user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of adding emblem to user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -99,17 +99,17 @@ namespace Epam.Logic.DAL
 			catch (IOException e)
 			{
 				logger.Error("DAL: Process of removing emblem from user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of removing emblem from user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of removing emblem from user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -174,12 +174,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of creating user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of creating user failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -222,17 +222,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of searching of users failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Process of searching of users failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of searching of users failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -272,17 +272,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of getting user by id failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Process of getting user by id failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of getting user by id failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -322,17 +322,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of getting user by email failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Process of getting user by email failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of getting user by email failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -372,17 +372,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of getting userlist failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Process of getting userlist failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of getting userlist failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -439,17 +439,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of updating users data failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Process of updating users data failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of updating users data failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -490,17 +490,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Getting id of user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: Getting id of user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Getting id of user process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -535,12 +535,12 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: Process of password setting  failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: Process of password setting  failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -580,17 +580,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: checking users password process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: checking users password process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: checking users password process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 
@@ -634,17 +634,17 @@ namespace Epam.Logic.DAL
 			catch (SqlException e)
 			{
 				logger.Error("DAL: changing users pasword process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (IndexOutOfRangeException e)
 			{
 				logger.Error("DAL: changing users pasword process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 			catch (Exception e)
 			{
 				logger.Error("DAL: changing users pasword process failed!");
-				throw e;
+				throw new StorageException(e.Message, e);
 			}
 		}
 	}

@@ -190,7 +190,7 @@
         }
         if (Request["type"] == "ChatRemoveRequest")
         {
-            // Запрос на получение id чата с пользователем
+            // Запрос на удаление чата с пользователем
 
             logger.Info("PL/AJAX: Chat remove request recieved");
 
@@ -215,6 +215,68 @@
             {
                 CommonData.commonException = e;
                 logger.Error("PL/AJAX: Chat removeding failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "ChatLeaveRequest")
+        {
+            // Запрос на  id чата с пользователем
+
+            logger.Info("PL/AJAX: Chat remove request recieved");
+
+            try
+            {
+                int idChat;
+                int idUser;
+
+                if (Int32.TryParse(Request["id"], out idChat) && Int32.TryParse($"{CommonData.CurrentUser.id}", out idUser))
+                {
+                    bloMessages.LeaveChat(idChat, idUser);
+                    int unreaded = bloMessages.GetUnreadedCount(idUser);
+
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString(), unreaded.ToString() }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Chat was leaved");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Chat leaving failed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
+            }
+        }
+        if (Request["type"] == "ReturnToChatRequest")
+        {
+            // Запрос на  id чата с пользователем
+
+            logger.Info("PL/AJAX: Chat remove request recieved");
+
+            try
+            {
+                int idChat;
+                int idUser;
+
+                if (Int32.TryParse(Request["id"], out idChat) && Int32.TryParse($"{CommonData.CurrentUser.id}", out idUser))
+                {
+                    bloMessages.ReturnToChat(idChat, idUser);
+                    int unreaded = bloMessages.GetUnreadedCount(idUser);
+
+                    Response.Write(JsonConvert.SerializeObject(new string[] { "true", CommonData.idChat.ToString(), unreaded.ToString() }));
+                    return;
+                }
+
+                logger.Info("PL/AJAX: Return request sucseed");
+                Response.Write(JsonConvert.SerializeObject(new string[] { "false" }));
+                return;
+            }
+            catch (Exception e)
+            {
+                CommonData.commonException = e;
+                logger.Error("PL/AJAX: Return to chat failed");
                 Response.Write(JsonConvert.SerializeObject(new string[] { "error" }));
             }
         }

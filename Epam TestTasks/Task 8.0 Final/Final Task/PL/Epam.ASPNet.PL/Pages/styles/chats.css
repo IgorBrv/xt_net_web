@@ -4,6 +4,23 @@
     margin: 10px;
 }
 
+.body-element-divider {
+    display: flex;
+    margin: 10px;
+    padding: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #ffffff;
+    align-items: center;
+    border: 1px solid #828282;
+    justify-content: center;
+    box-shadow: 0px 0px 10px #828282;
+    font-weight: bold;
+    color: #828282;
+}
+
 .body-element:hover {
     box-shadow: 0px 0px 15px #3d3d3d;
 }
@@ -32,6 +49,14 @@
     font-size: 16px;
     color: #575757;
     white-space: pre-wrap;
+}
+
+.body-element-leave-button-img {
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    margin: auto;
+    position: relative;
 }
 
 @media (max-width: 750px) {
